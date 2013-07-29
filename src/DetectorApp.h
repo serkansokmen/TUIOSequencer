@@ -3,31 +3,9 @@
 #include "ofMain.h"
 #include "ofxFlob.h"
 #include "ofxUI.h"
+#include "SegmentRectangle.h"
 
-class SegmentRectangle {
-    
-public:
-    SegmentRectangle();
-    SegmentRectangle(const ofRectangle &r){
-        rect.set(r);
-        bContainsBlob = false;
-    }
-    
-    void checkIntersectsBlob(const ABlob &blob){
-        
-        bContainsBlob = ofRectangle(blob.bx, blob.by, blob.dimx, blob.dimy).intersects(rect);
-        
-        if (bContainsBlob){
-            color = ofColor(ofColor::blue);
-        } else {
-            color = ofColor(ofColor::green);
-        }
-    };
-    
-    ofRectangle rect;
-    bool        bContainsBlob;
-    ofColor     color;
-};
+using namespace std;
 
 class DetectorApp : public ofBaseApp {
     
@@ -63,7 +41,9 @@ public:
     ofVideoGrabber 		vidGrabber;
     Flob                flob;
 	vector<ABlob*>      *blobs;
+    float               threshold;
     float               fade;
+    bool                bDrawBlobs;
     
     ofxUICanvas         *gui;
 };
