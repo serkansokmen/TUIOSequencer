@@ -58,10 +58,12 @@ public:
     // used by the gui
     float   columns, rows;
     bool    bInitGrid;
+    bool    bDrawVideo;
     
     ofVideoGrabber 		vidGrabber;
     Flob                flob;
 	vector<ABlob*>      *blobs;
+    float               fade;
     
     ofxUICanvas         *gui;
 };

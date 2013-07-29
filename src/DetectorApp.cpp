@@ -26,11 +26,11 @@ void DetectorApp::setup(){
     createGrid((int)columns, (int)rows);
     
     blobs = NULL;
-
+    fade = 25;
     flob.setup(camWidth, camHeight, scanRect.getWidth(), scanRect.getHeight());
 	flob.setOm(Flob::CONTINUOUS_DIFFERENCE)
                 ->setColormode(Flob::LUMA601)
-                ->setFade(25)->setThresh(12)
+                ->setFade(fade)->setThresh(12)
                 ->setThresholdmode(Flob::ABSDIF)
                 ->setMirror(true, false);
     
@@ -80,6 +80,11 @@ void DetectorApp::draw(){
     ofRect(0, 0, scanRect.getWidth(), scanRect.getHeight());
     ofPopStyle();
     
+    if (bDrawVideo) {
+        ofSetColor(ofColor::white);
+        flob.videotex->draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+    }
+    
 	std::vector<SegmentRectangle>::iterator segment;
     for (segment = segments.begin(); segment != segments.end(); segment++){
         ofPushStyle();
@@ -97,9 +102,9 @@ void DetectorApp::draw(){
     if (blobs != NULL){
 		for(int i=0; i<blobs->size();i++){
 			ABlob &aBlob = *(blobs->at(i));
-			ofSetColor(0,0,255,100);
+			ofSetColor(ofColor::pink, 100);
 			ofRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-			ofSetColor(0,255,0,200);
+			ofSetColor(ofColor::plum, 200);
 			ofRect(aBlob.cx, aBlob.cy, 10, 10);
 		}
 	}
@@ -150,6 +155,8 @@ void DetectorApp::initGUI(){
     gui->autoSizeToFitWidgets();
     
     gui->addToggle("mirror x", true);
+    gui->addSlider("fade", 1.0f, 80.0f, &fade);
+    gui->addToggle("draw video", &bDrawVideo);
     gui->addSpacer();
     
     gui->autoSizeToFitWidgets();
