@@ -1,8 +1,5 @@
 #include "DetectorApp.h"
 
-int camWidth = 320;
-int camHeight = 240;
-
 //--------------------------------------------------------------
 void DetectorApp::setup(){
     ofSetVerticalSync(true);
@@ -12,23 +9,42 @@ void DetectorApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetLineWidth(0.1);
     
+    // Setup GUI first for loading initial values from previously saved XML
+    initGUI();
+    
+#ifdef USE_KINECT
+    
+    // Kinect setup
+    kinect.init(true, true, false);
+    kinect.open();
+    
+	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
+	grayThreshNear.allocate(kinect.getWidth(), kinect.getHeight());
+	grayThreshFar.allocate(kinect.getWidth(), kinect.getHeight());
+    
+    // Init scan rect
+    scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), kinect.getWidth(), kinect.getHeight());
+#else
+    
+    camWidth = 320;
+    camHeight = 240;
+    
     // Init scan rect
     scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), camWidth * 2.5, camHeight * 2.5);
     
     vidGrabber.setVerbose(true);
+    vidGrabber.setDeviceID(0);
     vidGrabber.initGrabber(camWidth, camHeight);
-    vidGrabber.setVerbose(true);
     
-    initGUI();
-    
+    // Flob setup
     blobs = NULL;
     flob.setup(camWidth, camHeight, scanRect.getWidth(), scanRect.getHeight());
 	flob.setOm(Flob::CONTINUOUS_DIFFERENCE)
         ->setColormode(Flob::LUMA601)
         ->setFade(fade)
         ->setThresh(threshold)
-        ->setThresholdmode(Flob::ABSDIF)
-        ->setMirror(true, false);
+        ->setThresholdmode(Flob::ABSDIF);
+#endif
     
     bInitGrid = true;
 }
@@ -43,23 +59,77 @@ void DetectorApp::update(){
         createGrid((int)columns, (int)rows);
         bInitGrid = false;
     }
+
+#ifdef USE_KINECT
+    kinect.update();
     
+    // there is a new frame and we are connected
+	if (kinect.isFrameNew()) {
+        
+		// load grayscale depth image from the kinect source
+		grayImage.setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight());
+        
+		// we do two thresholds - one for the far plane and one for the near plane
+		// we then do a cvAnd to get the pixels which are a union of the two thresholds
+        grayThreshNear = grayImage;
+        grayThreshFar = grayImage;
+        grayThreshNear.threshold(nearThreshold, true);
+        grayThreshFar.threshold(farThreshold);
+        cvAnd(grayThreshNear.getCvImage(), grayThreshFar.getCvImage(), grayImage.getCvImage(), NULL);
+        
+		// update the cv images
+		grayImage.flagImageChanged();
+        
+        // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
+		// also, find holes is set to true so we will get interior contours as well....
+		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 40, true);
+        
+        // Reset segment touch states
+        vector<GridSegment>::iterator segment;
+        for (segment = segments.begin(); segment != segments.end(); segment++){
+            segment->bTouchesBlob = false;
+        }
+        
+        if (contourFinder.nBlobs > 0){
+            for (int i=0; i<segments.size(); i++) {
+                GridSegment *segmentPtr = &segments[i];
+                
+                for(int i=0; i<contourFinder.blobs.size(); i++){
+                    ofxCvBlob &aBlob = contourFinder.blobs[i];
+                    
+                    if (aBlob.boundingRect.intersects(segmentPtr->rect)){
+                        segmentPtr->bTouchesBlob = true;
+                    }
+                }
+            }
+        }
+	}
+#else
     vidGrabber.update();
+    
+    flob.setMirror(bMirrorX, bMirrorY);
     
 	if (vidGrabber.isFrameNew()){
         blobs = flob.calc(flob.binarize(vidGrabber.getPixels(), camWidth, camHeight));
 	}
     
-    vector<SegmentRectangle>::iterator segment;
     if (blobs != NULL && blobs->size() > 0){
         for(int i=0; i<blobs->size();i++){
             ABlob &aBlob = *(blobs->at(i));
             
+            vector<GridSegment>::iterator segment;
             for (segment = segments.begin(); segment != segments.end(); segment++){
                 segment->checkIntersectsBlob(aBlob);
             }
         }
     }
+#endif
+    
+    vector<GridSegment>::iterator segment;
+    for (segment = segments.begin(); segment != segments.end(); segment++){
+        segment->update();
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -71,15 +141,24 @@ void DetectorApp::draw(){
     
     if (bDrawVideo) {
         ofSetColor(ofColor::white);
+#ifdef USE_KINECT
+        grayImage.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+#else
         flob.videotex->draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+#endif
     }
     
-    vector<SegmentRectangle>::iterator segment;
+    vector<GridSegment>::iterator segment;
     for (segment = segments.begin(); segment != segments.end(); segment++){
         segment->draw();
     }
     
-    if (blobs != NULL && blobs->size() > 0 && bDrawBlobs){
+#ifdef USE_KINECT
+    if (bDrawBlobs && contourFinder.nBlobs > 0) {
+        contourFinder.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+    }
+#else
+    if (bDrawBlobs && blobs != NULL && blobs->size() > 0){
 		for(int i=0; i<blobs->size();i++){
 			ABlob &aBlob = *(blobs->at(i));
 			ofSetColor(ofColor::pink, 100);
@@ -88,6 +167,8 @@ void DetectorApp::draw(){
 			ofRect(aBlob.cx, aBlob.cy, 10, 10);
 		}
 	}
+#endif
+
     ofPushStyle();
     ofNoFill();
     ofSetColor(ofColor::greenYellow);
@@ -116,7 +197,7 @@ void DetectorApp::createGrid(int columns, int rows){
             rect.setWidth(rectW);
             rect.setHeight(rectH);
             
-            segments.push_back(SegmentRectangle(rect));
+            segments.push_back(GridSegment(rect));
         }
     }
 }
@@ -129,48 +210,71 @@ void DetectorApp::initGUI(){
     gui->addSpacer();
     gui->addSlider("columns", 1.0f, 10.0f, &columns);
     gui->addSlider("rows", 1.0f, 10.0f, &rows);
-    gui->addToggle("init grid", &bInitGrid);
-    
+    gui->addLabelToggle("init grid", &bInitGrid);
     gui->addSpacer();
-    gui->addFPSSlider("fps");
-    
-    gui->autoSizeToFitWidgets();
-    
-    gui->addToggle("mirror x", true);
+
+#ifdef USE_KINECT
+    gui->addLabel("Kinect");
+    gui->addSlider("Near Threshold", 40.0f, 250.0f, &nearThreshold);
+    gui->addSlider("Far Threshold", 40.0f, 250.0f, &farThreshold);
+#else
+    gui->addLabel("Flob");
     gui->addSlider("threshold", 1.0f, 80.0f, &threshold);
     gui->addSlider("fade", 1.0f, 100.0f, &fade);
-    gui->addToggle("draw video", &bDrawVideo);
+#endif
+    gui->addToggle("mirror x", &bMirrorX);
+    gui->addToggle("mirror y", &bMirrorY);
     gui->addToggle("draw blobs", &bDrawBlobs);
+    gui->addToggle("draw video", &bDrawVideo);
     gui->addSpacer();
     
+    gui->addFPSSlider("fps");
     gui->autoSizeToFitWidgets();
-    
-    ofAddListener(gui->newGUIEvent, this, &DetectorApp::guiEvent);
     
     gui->setPosition(10, 10);
     
     gui->loadSettings("GUI/guiSettings.xml");
     gui->setVisible(true);
+    
+    ofAddListener(gui->newGUIEvent, this, &DetectorApp::guiEvent);
 }
 
 //--------------------------------------------------------------
 void DetectorApp::guiEvent(ofxUIEventArgs &e){
-    if (e.widget->getName() == "mirror x") {
-        ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-        flob.setMirror(toggle->getValue(), false);
+#ifndef USE_KINECT
+    if (e.widget->getName() == "threshold"){
+        flob.setThresh(threshold);
     }
     
-    if (e.widget->getName() == "threshold")
-        flob.setThresh(threshold);
-    
-    if (e.widget->getName() == "fade")
+    if (e.widget->getName() == "fade") {
         flob.setFade(fade);
+    }
+#endif
 }
 
 //--------------------------------------------------------------
 void DetectorApp::keyPressed(int key){
-    if (key=='s') {
-        gui->toggleVisible();
+    
+    switch (key) {
+        case 's':
+            gui->toggleVisible();
+            break;
+            
+#ifdef USE_KINECT
+        case OF_KEY_UP:
+			angle++;
+			if(angle > 30) angle = 30;
+			kinect.setCameraTiltAngle(angle);
+			break;
+            
+		case OF_KEY_DOWN:
+			angle--;
+			if(angle < -30) angle = -30;
+			kinect.setCameraTiltAngle(angle);
+			break;
+#endif
+        default:
+            break;
     }
 }
 
@@ -216,6 +320,12 @@ void DetectorApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void DetectorApp::exit(){
+    
+#ifdef USE_KINECT
+    kinect.setCameraTiltAngle(0);
+	kinect.close();
+#endif
+    
     gui->saveSettings("GUI/guiSettings.xml");
     delete gui;
 }
