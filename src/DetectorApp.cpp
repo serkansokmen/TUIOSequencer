@@ -28,7 +28,6 @@ void DetectorApp::setup(){
     // Kinect setup
     kinect.init(true, true, false);
     kinect.open();
-//    kinect.setCameraTiltAngle(15);
     
 	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshNear.allocate(kinect.getWidth(), kinect.getHeight());
@@ -176,8 +175,9 @@ void DetectorApp::initGUI(){
 
 #ifdef USE_KINECT
     gui->addLabel("Kinect");
-    gui->addSlider("Near Threshold", 40.0f, 250.0f, &nearThreshold);
-    gui->addSlider("Far Threshold", 40.0f, 250.0f, &farThreshold);
+    gui->addSlider("near threshold", 40.0f, 250.0f, &nearThreshold);
+    gui->addSlider("far threshold", 40.0f, 250.0f, &farThreshold);
+    gui->addSlider("tilt angle", -30.0f, 30.0f, &angle);
 #else
     gui->addLabel("Flob");
     gui->addSlider("threshold", 1.0f, 80.0f, &threshold);
@@ -185,6 +185,8 @@ void DetectorApp::initGUI(){
 #endif
     gui->addToggle("mirror x", &bMirrorX);
     gui->addToggle("mirror y", &bMirrorY);
+    gui->addSpacer();
+    gui->addLabel("Debug");
     gui->addToggle("draw blobs", &bDrawBlobs);
     gui->addToggle("draw video", &bDrawVideo);
     gui->addSpacer();
@@ -206,7 +208,11 @@ void DetectorApp::initGUI(){
 
 //--------------------------------------------------------------
 void DetectorApp::guiEvent(ofxUIEventArgs &e){
-#ifndef USE_KINECT
+#ifdef USE_KINECT
+    if (e.widget->getName() == "tilt angle"){
+        kinect.setCameraTiltAngle(angle);
+    }
+#else
     if (e.widget->getName() == "threshold"){
         flob.setThresh(threshold);
     }
@@ -224,20 +230,7 @@ void DetectorApp::keyPressed(int key){
         case 's':
             gui->toggleVisible();
             break;
-            
-#ifdef USE_KINECT
-        case OF_KEY_UP:
-			angle++;
-			if(angle > 30) angle = 30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-            
-		case OF_KEY_DOWN:
-			angle--;
-			if(angle < -30) angle = -30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-#endif
+        
         default:
             break;
     }
