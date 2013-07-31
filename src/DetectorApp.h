@@ -1,3 +1,11 @@
+//
+//  SegmentsContainer.cpp
+//  PresenceDetectorGrid
+//
+//  Created by Serkan Sškmen on 29.07.2013.
+//
+//
+
 #pragma once
 
 #include "ofMain.h"
@@ -5,11 +13,12 @@
 #include "ofxFlob.h"
 #include "ofxKinect.h"
 #include "ofxUI.h"
-#include "GridSegment.h"
+#include "SegmentsContainer.h"
 
-using namespace std;
 
+// Comment to use video camera input
 #define USE_KINECT
+
 
 class DetectorApp : public ofBaseApp {
     
@@ -29,19 +38,13 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    // Creates segmented grid
-    void createGrid(int columns, int rows);
-    
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
     
-    vector<GridSegment>     segments;
+    SegmentsContainer       *segmentsContainer;
     ofRectangle             scanRect;
-    float                   columns;
-    float                   rows;
     
-#ifdef USE_KINECT
-
+#ifdef USE_KINECT    
     // OpenCV
 	ofxCvGrayscaleImage grayImage;      // grayscale depth image
 	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
@@ -69,6 +72,8 @@ public:
     
     // GUI
     ofxUICanvas         *gui;
+    float               columns;
+    float               rows;
     bool                bInitGrid;
     bool                bMirrorX;
     bool                bMirrorY;

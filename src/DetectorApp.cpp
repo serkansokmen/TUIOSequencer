@@ -1,4 +1,13 @@
+//
+//  SegmentsContainer.h
+//  PresenceDetectorGrid
+//
+//  Created by Serkan Sškmen on 29.07.2013.
+//
+//
+
 #include "DetectorApp.h"
+
 
 //--------------------------------------------------------------
 void DetectorApp::setup(){
@@ -12,11 +21,14 @@ void DetectorApp::setup(){
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
     
-#ifdef USE_KINECT
+    // Initialize segments container
+    segmentsContainer = new SegmentsContainer;
     
+#ifdef USE_KINECT
     // Kinect setup
     kinect.init(true, true, false);
     kinect.open();
+//    kinect.setCameraTiltAngle(15);
     
 	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshNear.allocate(kinect.getWidth(), kinect.getHeight());
@@ -46,6 +58,7 @@ void DetectorApp::setup(){
         ->setThresholdmode(Flob::ABSDIF);
 #endif
     
+    // Create initial grid on update
     bInitGrid = true;
 }
 
@@ -56,7 +69,7 @@ void DetectorApp::update(){
     rows = (int)rows;
     
     if (bInitGrid) {
-        createGrid((int)columns, (int)rows);
+        segmentsContainer->initGrid(scanRect, (int)columns, (int)rows);
         bInitGrid = false;
     }
 
@@ -84,25 +97,7 @@ void DetectorApp::update(){
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 40, true);
         
-        // Reset segment touch states
-        vector<GridSegment>::iterator segment;
-        for (segment = segments.begin(); segment != segments.end(); segment++){
-            segment->bTouchesBlob = false;
-        }
-        
-        if (contourFinder.nBlobs > 0){
-            for (int i=0; i<segments.size(); i++) {
-                GridSegment *segmentPtr = &segments[i];
-                
-                for(int i=0; i<contourFinder.blobs.size(); i++){
-                    ofxCvBlob &aBlob = contourFinder.blobs[i];
-                    
-                    if (aBlob.boundingRect.intersects(segmentPtr->rect)){
-                        segmentPtr->bTouchesBlob = true;
-                    }
-                }
-            }
-        }
+        segmentsContainer->checkSegments(contourFinder.blobs);
 	}
 #else
     vidGrabber.update();
@@ -114,21 +109,11 @@ void DetectorApp::update(){
 	}
     
     if (blobs != NULL && blobs->size() > 0){
-        for(int i=0; i<blobs->size();i++){
-            ABlob &aBlob = *(blobs->at(i));
-            
-            vector<GridSegment>::iterator segment;
-            for (segment = segments.begin(); segment != segments.end(); segment++){
-                segment->checkIntersectsBlob(aBlob);
-            }
-        }
+        segmentsContainer->checkSegments(blobs);
     }
 #endif
     
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->update();
-    }
+    segmentsContainer->update();
     
 }
 
@@ -148,10 +133,7 @@ void DetectorApp::draw(){
 #endif
     }
     
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->draw();
-    }
+    segmentsContainer->draw();
     
 #ifdef USE_KINECT
     if (bDrawBlobs && contourFinder.nBlobs > 0) {
@@ -178,27 +160,6 @@ void DetectorApp::draw(){
     
     if (gui->isVisible()) {
         gui->draw();
-    }
-}
-
-//--------------------------------------------------------------
-void DetectorApp::createGrid(int columns, int rows){
-    
-    segments.clear();
-    
-    float rectW = scanRect.getWidth() / rows;
-    float rectH = scanRect.getHeight() / columns;
-    
-    for (int y = 0; y < columns; y++) {
-        for (int x = 0; x < rows; x++) {
-            
-            ofRectangle rect;
-            rect.setPosition(x * rectW, y * rectH);
-            rect.setWidth(rectW);
-            rect.setHeight(rectH);
-            
-            segments.push_back(GridSegment(rect));
-        }
     }
 }
 
@@ -232,8 +193,12 @@ void DetectorApp::initGUI(){
     gui->autoSizeToFitWidgets();
     
     gui->setPosition(10, 10);
-    
-    gui->loadSettings("GUI/guiSettings.xml");
+
+#ifdef USE_KINECT
+    gui->loadSettings("GUI/guiSettingsKinect.xml");
+#else
+    gui->loadSettings("GUI/guiSettingsFlob.xml");
+#endif
     gui->setVisible(true);
     
     ofAddListener(gui->newGUIEvent, this, &DetectorApp::guiEvent);
@@ -324,8 +289,11 @@ void DetectorApp::exit(){
 #ifdef USE_KINECT
     kinect.setCameraTiltAngle(0);
 	kinect.close();
+    
+    gui->saveSettings("GUI/guiSettingsKinect.xml");
+#else
+    gui->saveSettings("GUI/guiSettingsFlob.xml");
 #endif
     
-    gui->saveSettings("GUI/guiSettings.xml");
     delete gui;
 }
