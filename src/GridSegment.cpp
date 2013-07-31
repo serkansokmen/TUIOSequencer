@@ -1,38 +1,34 @@
 //
-//  Segment.cpp
+//  GridSegment.cpp
 //  PresenceDetectorGrid
 //
 //  Created by Serkan Sökmen on 31.07.2013.
 //
 //
 
-#include "Segment.h"
-
+#include "GridSegment.h"
 
 //--------------------------------------------------------------
-Segment::Segment(const ofRectangle &r){
+void GridSegment::setup(const ofRectangle &r, int segId){
     rect.set(r);
+    
+    segmentId = segId;
+    frequency = 100.0f + 155.0f * segId;
+    colorOn.set(100, frequency, 100);
+    colorOff.set(ofColor::green);
+    
     bTouchesBlob = false;
 }
 
 //--------------------------------------------------------------
-void Segment::update(){
-    if (bTouchesBlob){
-        color = ofColor(ofColor::blue);
-    } else {
-        color = ofColor(ofColor::green);
-    }
-};
-
-//--------------------------------------------------------------
-void Segment::draw(){
+void GridSegment::draw(){
     ofPushStyle();
     if (bTouchesBlob) {
         ofFill();
-        ofSetColor(color, 200);
+        ofSetColor(colorOn);
     } else {
         ofNoFill();
-        ofSetColor(color, 50);
+        ofSetColor(colorOff);
     }
     ofRect(rect);
     ofPopStyle();

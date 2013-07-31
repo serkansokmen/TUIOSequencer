@@ -13,14 +13,15 @@
 #include "ofxFlob.h"
 #include "ofxKinect.h"
 #include "ofxUI.h"
-#include "SegmentsContainer.h"
+#include "Sequencer.h"
+#include "Oscillator.h"
 
 
 // Comment to use video camera input
 #define USE_KINECT
 
 
-class DetectorApp : public ofBaseApp {
+class SynthApp : public ofBaseApp {
     
 public:
     void setup();
@@ -41,8 +42,10 @@ public:
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
     
-    SegmentsContainer       *segmentsContainer;
-    ofRectangle             scanRect;
+    void audioOut(float *input, int bufferSize, int nChannels);
+    
+    Sequencer           *sequencer;
+    ofRectangle         scanRect;
     
 #ifdef USE_KINECT    
     // OpenCV
@@ -69,6 +72,12 @@ public:
     float               threshold;
     float               fade;
 #endif
+    
+    // Sound
+    ofSoundStream       stream;
+    float               *soundBuffer;
+    
+    Oscillator          carrierWave;
     
     // GUI
     ofxUICanvas         *gui;

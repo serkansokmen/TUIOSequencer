@@ -1,16 +1,16 @@
 //
-//  SegmentsContainer.h
+//  sequencer.h
 //  PresenceDetectorGrid
 //
 //  Created by Serkan Sškmen on 29.07.2013.
 //
 //
 
-#include "DetectorApp.h"
+#include "SynthApp.h"
 
 
 //--------------------------------------------------------------
-void DetectorApp::setup(){
+void SynthApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
@@ -22,7 +22,7 @@ void DetectorApp::setup(){
     initGUI();
     
     // Initialize segments container
-    segmentsContainer = new SegmentsContainer;
+    sequencer = new Sequencer();
     
 #ifdef USE_KINECT
     // Kinect setup
@@ -59,16 +59,24 @@ void DetectorApp::setup(){
     
     // Create initial grid on update
     bInitGrid = true;
+    
+    // Setup sound
+    stream.setup(this, 2, 0, 44100, 512, 4);
+    soundBuffer = new float[512];
+    
+    carrierWave.setup(44100);
+    carrierWave.setFrequency(0.0);
+    carrierWave.setVolume(0.3);
 }
 
 //--------------------------------------------------------------
-void DetectorApp::update(){
+void SynthApp::update(){
     
     columns = (int)columns;
     rows = (int)rows;
     
     if (bInitGrid) {
-        segmentsContainer->initGrid(scanRect, (int)columns, (int)rows);
+        sequencer->setup(scanRect, (int)columns, (int)rows, 500, SEQ_DIRECTION_VERTICAL);
         bInitGrid = false;
     }
 
@@ -98,7 +106,7 @@ void DetectorApp::update(){
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 20, true);
         
-        segmentsContainer->checkSegments(contourFinder.blobs);
+        sequencer->checkSegments(contourFinder.blobs);
 	}
 #else
     vidGrabber.update();
@@ -110,16 +118,18 @@ void DetectorApp::update(){
 	}
     
     if (blobs != NULL && blobs->size() > 0){
-        segmentsContainer->checkSegments(blobs);
+        sequencer->checkSegments(blobs);
     }
 #endif
     
-    segmentsContainer->update();
+    sequencer->update();
     
+    // don't give this a negative frequency
+    carrierWave.setFrequency(max(1, (int)sequencer->carrierFrequency));
 }
 
 //--------------------------------------------------------------
-void DetectorApp::draw(){
+void SynthApp::draw(){
     
     // Draw scan rect
     ofPushMatrix();
@@ -134,7 +144,7 @@ void DetectorApp::draw(){
 #endif
     }
     
-    segmentsContainer->draw();
+    sequencer->draw();
     
 #ifdef USE_KINECT
     if (bDrawBlobs && contourFinder.nBlobs > 0) {
@@ -165,7 +175,7 @@ void DetectorApp::draw(){
 }
 
 //--------------------------------------------------------------
-void DetectorApp::initGUI(){
+void SynthApp::initGUI(){
     gui = new ofxUICanvas();
     gui->setFont("GUI/EnvyCodeR.ttf");
     gui->addLabel("MotionSynth");
@@ -205,11 +215,11 @@ void DetectorApp::initGUI(){
 #endif
     gui->setVisible(true);
     
-    ofAddListener(gui->newGUIEvent, this, &DetectorApp::guiEvent);
+    ofAddListener(gui->newGUIEvent, this, &SynthApp::guiEvent);
 }
 
 //--------------------------------------------------------------
-void DetectorApp::guiEvent(ofxUIEventArgs &e){
+void SynthApp::guiEvent(ofxUIEventArgs &e){
 #ifdef USE_KINECT
     if (e.widget->getName() == "tilt angle"){
         kinect.setCameraTiltAngle(angle);
@@ -226,7 +236,21 @@ void DetectorApp::guiEvent(ofxUIEventArgs &e){
 }
 
 //--------------------------------------------------------------
-void DetectorApp::keyPressed(int key){
+void SynthApp::audioOut(float * output, int bufferSize, int nChannels){
+    
+	for (int i = 0; i < bufferSize; i++){
+        
+        float sample = carrierWave.getSample();
+        
+        output[i*nChannels    ] = sample;
+        output[i*nChannels + 1] = sample;
+        
+        soundBuffer[i] = sample;
+	}
+}
+
+//--------------------------------------------------------------
+void SynthApp::keyPressed(int key){
     
     switch (key) {
         case 's':
@@ -239,47 +263,47 @@ void DetectorApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void DetectorApp::keyReleased(int key){
+void SynthApp::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::mouseMoved(int x, int y ){
+void SynthApp::mouseMoved(int x, int y ){
     
 }
 
 //--------------------------------------------------------------
-void DetectorApp::mouseDragged(int x, int y, int button){
+void SynthApp::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::mousePressed(int x, int y, int button){
+void SynthApp::mousePressed(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::mouseReleased(int x, int y, int button){
+void SynthApp::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::windowResized(int w, int h){
+void SynthApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::gotMessage(ofMessage msg){
+void SynthApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::dragEvent(ofDragInfo dragInfo){ 
+void SynthApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
 
 //--------------------------------------------------------------
-void DetectorApp::exit(){
+void SynthApp::exit(){
     
 #ifdef USE_KINECT
 	kinect.close();
@@ -289,6 +313,6 @@ void DetectorApp::exit(){
     gui->saveSettings("GUI/guiSettingsFlob.xml");
 #endif
     
-    delete segmentsContainer;
+    delete sequencer;
     delete gui;
 }

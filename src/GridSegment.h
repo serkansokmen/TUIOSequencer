@@ -11,16 +11,17 @@
 #include "ofMain.h"
 #include "ofxCvBlob.h"
 
-class Segment {
+class GridSegment {
     
 public:
-    Segment(const ofRectangle &r);
     
-    void update();
+    void setup(const ofRectangle &r, int segId);
     void draw();
     
     ofRectangle     rect;
     bool            bTouchesBlob;
-    ofColor         color;
+    ofColor         colorOn;
+    ofColor         colorOff;
     int             segmentId;
+    float           frequency;
 };
