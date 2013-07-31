@@ -84,3 +84,5 @@ Desktop.ini
 .mailmap
 
 bin/data/sounds/
+bin/data/GUI/guiSettingsKinect.xml
+bin/data/GUI/guiSettingsFlob.xml
