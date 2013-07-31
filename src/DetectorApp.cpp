@@ -96,7 +96,7 @@ void DetectorApp::update(){
         
         // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 40, true);
+		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 20, true);
         
         segmentsContainer->checkSegments(contourFinder.blobs);
 	}
