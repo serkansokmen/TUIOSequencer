@@ -294,5 +294,6 @@ void DetectorApp::exit(){
     gui->saveSettings("GUI/guiSettingsFlob.xml");
 #endif
     
+    delete segmentsContainer;
     delete gui;
 }
