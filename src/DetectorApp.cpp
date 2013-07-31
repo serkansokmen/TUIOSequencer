@@ -287,7 +287,6 @@ void DetectorApp::dragEvent(ofDragInfo dragInfo){
 void DetectorApp::exit(){
     
 #ifdef USE_KINECT
-    kinect.setCameraTiltAngle(0);
 	kinect.close();
     
     gui->saveSettings("GUI/guiSettingsKinect.xml");
