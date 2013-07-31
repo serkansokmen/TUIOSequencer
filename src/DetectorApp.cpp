@@ -168,10 +168,10 @@ void DetectorApp::draw(){
 void DetectorApp::initGUI(){
     gui = new ofxUICanvas();
     gui->setFont("GUI/EnvyCodeR.ttf");
-    gui->addLabel("Presence Detector Grid");
+    gui->addLabel("MotionSynth");
     gui->addSpacer();
-    gui->addSlider("columns", 1.0f, 10.0f, &columns);
-    gui->addSlider("rows", 1.0f, 10.0f, &rows);
+    gui->addSlider("columns", 1.0f, 15.0f, &columns);
+    gui->addSlider("rows", 1.0f, 15.0f, &rows);
     gui->addLabelToggle("init grid", &bInitGrid);
     gui->addSpacer();
 
