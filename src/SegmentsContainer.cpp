@@ -63,7 +63,7 @@ void SegmentsContainer::checkSegments(const vector<ofxCvBlob> &blobs){
             Segment *segmentPtr = &segments[i];
             
             for(int i=0; i<blobs.size(); i++){
-                if (blobs[i].boundingRect.intersects(segmentPtr->rect)){
+                if (segmentPtr->rect.inside(blobs[i].boundingRect)){
                     segmentPtr->bTouchesBlob = true;
                 }
             }
@@ -79,7 +79,7 @@ void SegmentsContainer::checkSegments(const vector<ABlob *> *blobs){
         for(int i=0; i<blobs->size(); i++){
             ABlob &aBlob = *(blobs->at(i));
             ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-            if (blobRect.intersects(segmentPtr->rect)){
+            if (segmentPtr->rect.inside(blobRect)){
                 segmentPtr->bTouchesBlob = true;
             }
         }

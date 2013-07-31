@@ -25,8 +25,10 @@ public:
     // Creates grid
     void initGrid(const ofRectangle rect, int columns, int rows);
     
-    // Check segments against blobs
+    // Check segments against OpenCV blobs
     void checkSegments(const vector<ofxCvBlob> &blobs);
+    
+    // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);
     
     // Grid segments
