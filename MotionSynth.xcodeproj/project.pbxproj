@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04bfa09e012998240b6d10d5e96e03e8 /* ofxTransitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c5178405ca9b380ac3b3844181a84add /* ofxTransitions.cpp */; };
 		0546d1a38e13bd319cc9755b5ca7e1a0 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9bf3aa0d4faa89d0f8a0e545403162be /* OscReceivedElements.cpp */; };
 		169d3c72fde6c5590a1616f500a456b4 /* ofxCvFloatImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7b6a03390302d5a2c9f0e4ab630ae8d6 /* ofxCvFloatImage.cpp */; };
 		1d5f3298c2fa073628012944b1efde88 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c76de5c29bdbd2caa1dd0021a7376220 /* ofxCvContourFinder.cpp */; };
@@ -14,6 +15,7 @@
 		25b5f5bef8dbe3aac6c2fa6add5243ae /* ofxFlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3fdde4404c3f2036e6109f7b9e122881 /* ofxFlob.cpp */; };
 		28090deb5109115003e8f1c540f04092 /* UdpSocketWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5928aa323f5c2690b06c837d8d036f55 /* UdpSocketWin.cpp */; };
 		3459f3becfe8cb6a6683889e1690f01a /* usb_libusb10.c in Sources */ = {isa = PBXBuildFile; fileRef = f6e2c302207d61564228b7b1fa9ee346 /* usb_libusb10.c */; };
+		360d5b74d6c18fc57e0a099d1e801160 /* ofxTweener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = d852339534d186876f18a318b9301aca /* ofxTweener.cpp */; };
 		510cafe035e576a4e1502d52c11243bb /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = e6def695b88ba5faaceaa93785a12fd9 /* UdpSocket.cpp */; };
 		5864ad82e20f15536d054ea319473de3 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = df49d76c45d5db505a234880104e4dc7 /* ofxOscMessage.cpp */; };
 		5a4349e9754d6fa14c0f2a3a1abc30b6 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = fc5da1c87211d4f6377da7199d8c5a1e /* tinyxmlparser.cpp */; };
@@ -113,10 +115,12 @@
 		15c99204ff4d8d72ad034b63f410265d /* ofxUINumberDialer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUINumberDialer.h; path = ../../../addons/ofxUI/src/ofxUINumberDialer.h; sourceTree = SOURCE_ROOT; };
 		15e69017b5db282ef100ee15e7bce594 /* ofxUICustomImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUICustomImageButton.h; path = ../../../addons/ofxUI/src/ofxUICustomImageButton.h; sourceTree = SOURCE_ROOT; };
 		1902452f5e510a2dbc1e5bd6d62db983 /* ofxUIMultiImageToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageToggle.h; path = ../../../addons/ofxUI/src/ofxUIMultiImageToggle.h; sourceTree = SOURCE_ROOT; };
+		193b78fc56a59a581d17a40baa4139a9 /* ofxTweener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTweener.h; path = ../../../addons/ofxTweener/src/ofxTweener.h; sourceTree = SOURCE_ROOT; };
 		1b6f1db734ac1e823f66ec8ad668427f /* baseBlob.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = baseBlob.h; path = ../../../addons/ofxFlob/src/baseBlob.h; sourceTree = SOURCE_ROOT; };
 		1c43cdb79bf40ea7424b96804209f474 /* ofxUISuperCanvas.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUISuperCanvas.h; path = ../../../addons/ofxUI/src/ofxUISuperCanvas.h; sourceTree = SOURCE_ROOT; };
 		1e29c7e8c47e3e2db1c5876646df436b /* ofxUIRectangle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRectangle.h; path = ../../../addons/ofxUI/src/ofxUIRectangle.h; sourceTree = SOURCE_ROOT; };
 		1e95efd35ed9c5d97f2f015ed292592d /* timer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = timer.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/timer.h; sourceTree = SOURCE_ROOT; };
+		20205AAB17B3EF2A00122982 /* OSCPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCPoint.h; sourceTree = "<group>"; };
 		20f35afadaf0068b067e713fa3152568 /* OscReceivedElements.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscReceivedElements.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h; sourceTree = SOURCE_ROOT; };
 		23640f57df6c4bb6bfc5da4c2199c7dd /* PacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = PacketListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/PacketListener.h; sourceTree = SOURCE_ROOT; };
 		2a5b1fad3f30c8065c396acbb72e5d95 /* NetworkingUtilsWin.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtilsWin.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/win32/NetworkingUtilsWin.cpp; sourceTree = SOURCE_ROOT; };
@@ -212,6 +216,7 @@
 		8e79cf8911dfabafe23ea45b335d18dd /* ofxCvConstants.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvConstants.h; path = ../../../addons/ofxOpenCv/src/ofxCvConstants.h; sourceTree = SOURCE_ROOT; };
 		926347db42d593e38f3cfc898b0d77a9 /* TBlob.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = TBlob.cpp; path = ../../../addons/ofxFlob/src/TBlob.cpp; sourceTree = SOURCE_ROOT; };
 		946187321200ac04e570e6ec3a224c55 /* hierarchical_clustering_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = hierarchical_clustering_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/hierarchical_clustering_index.h; sourceTree = SOURCE_ROOT; };
+		959d2212b3c31b65852b5dfb413be672 /* ofxTransitions.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTransitions.h; path = ../../../addons/ofxTweener/src/ofxTransitions.h; sourceTree = SOURCE_ROOT; };
 		961de8b564ef22e65c9480ae3fc5936a /* ofxUI2DPad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUI2DPad.h; path = ../../../addons/ofxUI/src/ofxUI2DPad.h; sourceTree = SOURCE_ROOT; };
 		974aacf856a0a1b7d8f259e05ba8ae12 /* result_set.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = result_set.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/result_set.h; sourceTree = SOURCE_ROOT; };
 		97cfad0b2f2db004a8a3bc0bfe4f838a /* objdetect.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = objdetect.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect/objdetect.hpp; sourceTree = SOURCE_ROOT; };
@@ -274,6 +279,7 @@
 		c2fac65c491d4231379f3298ec59c6e9 /* ofxOscReceiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscReceiver.cpp; path = ../../../addons/ofxOsc/src/ofxOscReceiver.cpp; sourceTree = SOURCE_ROOT; };
 		c38d6dcc3ab9aae213a64015b75adbd4 /* ofxUIScrollableCanvas.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIScrollableCanvas.h; path = ../../../addons/ofxUI/src/ofxUIScrollableCanvas.h; sourceTree = SOURCE_ROOT; };
 		c4fb85020773da0f09b8b6ce6ecf99e8 /* ts_gtest.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ts_gtest.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ts/ts_gtest.h; sourceTree = SOURCE_ROOT; };
+		c5178405ca9b380ac3b3844181a84add /* ofxTransitions.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxTransitions.cpp; path = ../../../addons/ofxTweener/src/ofxTransitions.cpp; sourceTree = SOURCE_ROOT; };
 		c58862c6d212c8e8a83810f4246811b1 /* ofxOscMessage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscMessage.h; path = ../../../addons/ofxOsc/src/ofxOscMessage.h; sourceTree = SOURCE_ROOT; };
 		c6151136d101f857dae12722e3c42f4a /* ofxCvImage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxCvImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvImage.cpp; sourceTree = SOURCE_ROOT; };
 		c61d3dace506e4a1c3a6d782852cee28 /* highgui.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = highgui.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/highgui/highgui.hpp; sourceTree = SOURCE_ROOT; };
@@ -297,6 +303,7 @@
 		d671883d5b2df658685a47881642ed80 /* GridSegment.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = GridSegment.h; path = src/GridSegment.h; sourceTree = SOURCE_ROOT; };
 		d76a59e7b3601e76351c9bdb38a0ea4f /* cvaux.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = cvaux.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/cvaux.h; sourceTree = SOURCE_ROOT; };
 		d847ebe484f4f500f9cf25492c7beddc /* ofxCvImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvImage.h; sourceTree = SOURCE_ROOT; };
+		d852339534d186876f18a318b9301aca /* ofxTweener.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxTweener.cpp; path = ../../../addons/ofxTweener/src/ofxTweener.cpp; sourceTree = SOURCE_ROOT; };
 		d902eb2409214285bcf5f1914864e8b9 /* stream_accessor.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = stream_accessor.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/stream_accessor.hpp; sourceTree = SOURCE_ROOT; };
 		d9bffbbf4cc43dee890b3c3e8f7d792c /* OscTypes.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OscTypes.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.cpp; sourceTree = SOURCE_ROOT; };
 		db8653d6433e14bf06f3efaf1c39f40a /* cvwimage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = cvwimage.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/cvwimage.h; sourceTree = SOURCE_ROOT; };
@@ -478,6 +485,14 @@
 				6e54289412d2d94f45a051132369530c /* libs */,
 			);
 			name = ofxXmlSettings;
+			sourceTree = "<group>";
+		};
+		1fdd577cd8b9901d5774d6c73bef3bdd /* ofxTweener */ = {
+			isa = PBXGroup;
+			children = (
+				abdafdb1f6294114432947614e19f68e /* src */,
+			);
+			name = ofxTweener;
 			sourceTree = "<group>";
 		};
 		2bafe2217ae72626143526277340a187 /* include */ = {
@@ -681,6 +696,7 @@
 				1f4fb5c423662b96adfdcc0badec1cb0 /* ofxXmlSettings */,
 				a016993a674fa7c14ce716f2de829ff7 /* ofxFlob */,
 				9683228c705ca3ff4f2ea945072137db /* ofxKinect */,
+				1fdd577cd8b9901d5774d6c73bef3bdd /* ofxTweener */,
 				a492ce86424ab8905550bfd831201a16 /* ofxUI */,
 			);
 			name = addons;
@@ -756,6 +772,7 @@
 				4324679e4db7f91de15a2ead6ad96a6d /* Sequencer.h */,
 				3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */,
 				d671883d5b2df658685a47881642ed80 /* GridSegment.h */,
+				20205AAB17B3EF2A00122982 /* OSCPoint.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -816,6 +833,17 @@
 				f9f05170cb9bdf47da2b6e6a336e724d /* include */,
 			);
 			name = opencv;
+			sourceTree = "<group>";
+		};
+		abdafdb1f6294114432947614e19f68e /* src */ = {
+			isa = PBXGroup;
+			children = (
+				c5178405ca9b380ac3b3844181a84add /* ofxTransitions.cpp */,
+				959d2212b3c31b65852b5dfb413be672 /* ofxTransitions.h */,
+				d852339534d186876f18a318b9301aca /* ofxTweener.cpp */,
+				193b78fc56a59a581d17a40baa4139a9 /* ofxTweener.h */,
+			);
+			name = src;
 			sourceTree = "<group>";
 		};
 		ba6760ac87647dd61a92bd416dbd7a9c /* win32 */ = {
@@ -1044,6 +1072,8 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "MotionSynth" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -1138,6 +1168,8 @@
 				80a6d051bb53a1425de78d5db4adfbc9 /* registration.c in Sources */,
 				bc626c637c0629535ffeb02fed2f8fc8 /* tilt.c in Sources */,
 				3459f3becfe8cb6a6683889e1690f01a /* usb_libusb10.c in Sources */,
+				04bfa09e012998240b6d10d5e96e03e8 /* ofxTransitions.cpp in Sources */,
+				360d5b74d6c18fc57e0a099d1e801160 /* ofxTweener.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1218,46 +1250,30 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18)",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
 					../../../addons/ofxKinect/src,
+					../../../addons/ofxTweener/libs,
+					../../../addons/ofxTweener/src,
 					../../../addons/ofxUI/libs,
 					../../../addons/ofxUI/src,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64";
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -1268,7 +1284,7 @@
 					../../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
 					"../../../addons/ofxKinect/libs/libusb/osx/libs/usb-1.0.a",
 				);
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1339,46 +1355,30 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18)",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
 					../../../addons/ofxKinect/src,
+					../../../addons/ofxTweener/libs,
+					../../../addons/ofxTweener/src,
 					../../../addons/ofxUI/libs,
 					../../../addons/ofxUI/src,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64";
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -1389,7 +1389,7 @@
 					../../../addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a,
 					"../../../addons/ofxKinect/libs/libusb/osx/libs/usb-1.0.a",
 				);
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1476,6 +1476,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				SDKROOT = macosx10.8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1562,6 +1563,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

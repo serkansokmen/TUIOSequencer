@@ -3,4 +3,5 @@ ofxOsc
 ofxXmlSettings
 ofxFlob
 ofxKinect
+ofxTweener
 ofxUI
