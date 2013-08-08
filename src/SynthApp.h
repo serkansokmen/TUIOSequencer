@@ -44,9 +44,11 @@ public:
     
     Sequencer           *sequencer;
     ofRectangle         scanRect;
+    float               speed;
     
 #ifdef USE_KINECT    
     // OpenCV
+    ofxCvColorImage     colorImg;       // color image
 	ofxCvGrayscaleImage grayImage;      // grayscale depth image
 	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
 	ofxCvGrayscaleImage grayThreshFar;  // the far thresholded image
@@ -71,6 +73,11 @@ public:
     float               fade;
 #endif
     
+    bool                bMirrorX;
+    bool                bMirrorY;
+    bool                bDrawBlobs;
+    bool                bDrawVideo;
+    
     // Sound
     ofSoundStream       stream;
     float               *soundBuffer;
@@ -80,8 +87,4 @@ public:
     float               columns;
     float               rows;
     bool                bInitGrid;
-    bool                bMirrorX;
-    bool                bMirrorY;
-    bool                bDrawBlobs;
-    bool                bDrawVideo;
 };
