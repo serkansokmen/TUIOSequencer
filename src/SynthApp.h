@@ -12,14 +12,22 @@
 #include "ofxOpenCv.h"
 #include "ofxFlob.h"
 #include "ofxKinect.h"
+#include "ofxTweener.h"
 #include "ofxUI.h"
 #include "Sequencer.h"
 
+//#define USE_KINECT
+//#define USE_FLOB
+#define USE_OSC
 
-// Comment to use video camera input
-#define USE_KINECT
-#define DEBUG_MODE
+#define OSC_HOST            "192.168.1.103"
+#define OSC_RECEIVE_PORT    8000
+#define OSC_SEND_PORT       9000
 
+
+#ifdef USE_OSC
+#include "OSCPoint.h"
+#endif
 
 class SynthApp : public ofBaseApp {
     
@@ -46,6 +54,14 @@ public:
     ofRectangle         scanRect;
     float               speed;
     
+#ifdef USE_OSC
+    // OSC
+    ofxOscReceiver      oscReceiver;
+    ofxOscSender        oscSender;
+    
+    vector <OSCPoint>   oscPoints;
+#endif
+    
 #ifdef USE_KINECT    
     // OpenCV
     ofxCvColorImage     colorImg;       // color image
@@ -61,10 +77,10 @@ public:
     
     // Kinect
     ofxKinect           kinect;
-#else
+#endif
+    
+#ifdef USE_FLOB
     ofVideoGrabber 		vidGrabber;
-    int                 camWidth;
-    int                 camHeight;
     
     // ofxFlob
     Flob                flob;
@@ -73,14 +89,13 @@ public:
     float               fade;
 #endif
     
+    int                 camWidth;
+    int                 camHeight;
     bool                bMirrorX;
     bool                bMirrorY;
     bool                bDrawBlobs;
     bool                bDrawVideo;
-    
-    // Sound
-    ofSoundStream       stream;
-    float               *soundBuffer;
+    bool                bDebugMode;
     
     // GUI
     ofxUICanvas         *gui;

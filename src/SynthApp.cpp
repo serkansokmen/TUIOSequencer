@@ -15,23 +15,37 @@ void SynthApp::setup(){
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
     ofEnableAlphaBlending();
-    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetLogLevel(OF_LOG_SILENT);
     ofSetLineWidth(0.1);
     
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
+    bDebugMode = true;
     
     // Initialize segments container
     sequencer = new Sequencer;
     
+    Tweener.setMode(TWEENMODE_OVERRIDE);
+    
+#ifdef USE_OSC
+    camWidth = 798;
+    camHeight = 600;
+    // Setup OSC
+    oscReceiver.setup(OSC_RECEIVE_PORT);
+    oscSender.setup(OSC_HOST, OSC_SEND_PORT);
+    
+    oscPoints.assign(5, OSCPoint());
+    
+    // Init scan rect
+    scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), camWidth, camHeight);
+#endif
+    
 #ifdef USE_KINECT
     
-#ifndef DEBUG_MODE
     // Kinect setup
     //    kinect.init(true, true, false);
     kinect.init();
     kinect.open();
-#endif
     
     colorImg.allocate(kinect.getWidth(), kinect.getHeight());
 	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
@@ -40,7 +54,9 @@ void SynthApp::setup(){
     
     // Init scan rect
     scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), kinect.getWidth(), kinect.getHeight());
-#else
+#endif
+
+#ifdef USE_FLOB
     camWidth = 320;
     camHeight = 240;
     
@@ -71,10 +87,105 @@ void SynthApp::update(){
     columns = (int)columns;
     rows = (int)rows;
     
-    if (bInitGrid) {
-        sequencer->setup(scanRect, (int)columns, (int)rows, speed, SEQ_DIRECTION_HORIZONTAL);
-        bInitGrid = false;
-    }
+    sequenceDirection direction = SEQ_DIRECTION_HORIZONTAL;
+    
+    Tweener.update();
+    
+#ifdef USE_OSC
+    
+    // check for waiting messages
+    while (oscReceiver.hasWaitingMessages()){
+        
+        // get the next message
+		ofxOscMessage m;
+		oscReceiver.getNextMessage(&m);
+        
+        // check for position message
+        
+        for (int i=0; i<5; i++) {
+            
+            string indexStr = ofToString(i);
+            OSCPoint &p = oscPoints[i];
+            p.position.set(-OSC_POINT_DRAW_RADIUS * 4, -OSC_POINT_DRAW_RADIUS * 4);
+            Tweener.addTween(p.alpha, 0, .5, &ofxTransitions::easeOutSine);
+            p.isOn = false;
+            
+            bool bCheckPoints = false;
+            
+            if (m.getAddress() == "/controller/blobs/" + indexStr){
+                
+                float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, scanRect.getWidth());
+                float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, scanRect.getHeight());
+                
+                p.isOn = true;
+
+//                p.position.set(posX, posY);
+                Tweener.addTween(p.alpha, 255.0f, .4, &ofxTransitions::easeOutSine);
+                Tweener.addTween(p.position.x, posX, .1, &ofxTransitions::easeOutSine);
+                Tweener.addTween(p.position.y, posY, .1, &ofxTransitions::easeOutSine);
+                
+                ofLog(OF_LOG_NOTICE, "Watching Blob " + indexStr);
+                ofLog(OF_LOG_NOTICE, "X: " + ofToString(posX));
+                ofLog(OF_LOG_NOTICE, "Y: " + ofToString(posY));
+                
+                bCheckPoints = true;
+            }
+            
+            if (bCheckPoints) {
+                sequencer->checkSegments(oscPoints);
+            }
+        }
+        
+        // check for horizontal message
+		if (m.getAddress() == "/controller/direction"){
+            switch ((int)m.getArgAsFloat(0)) {
+                case 0:
+                    direction = SEQ_DIRECTION_HORIZONTAL;
+                    break;
+                case 1:
+                    direction = SEQ_DIRECTION_VERTICAL;
+                    break;
+                default:
+                    break;
+            }
+            bInitGrid = true;
+            ofLog(OF_LOG_NOTICE, "Direction changed");
+		}
+        
+        // check for horizontal message
+		if (m.getAddress() == "/controller/columns"){
+            columns = (int)m.getArgAsFloat(0);
+            bInitGrid = true;
+            ofLog(OF_LOG_NOTICE, "Initializing columns: " + ofToString(columns));
+		}
+        
+        // check for vertical message
+		else if (m.getAddress() == "/controller/rows"){
+            rows = (int)m.getArgAsFloat(0);
+            bInitGrid = true;
+            ofLog(OF_LOG_NOTICE, "Initializing rows: " + ofToString(rows));
+		}
+        
+        // check for speed message
+		else if (m.getAddress() == "/controller/speed"){
+            speed = m.getArgAsFloat(0);
+            sequencer->setSpeed(speed);
+            ofLog(OF_LOG_NOTICE, "Speed: " + ofToString(speed));
+		}
+        
+        // check debug message
+		else if (m.getAddress() == "/controller/debug"){
+			bDebugMode = !(m.getArgAsFloat(0) == 0.0f);
+            ofLog(OF_LOG_NOTICE, "Debug mode:" + ofToString(bDebugMode));
+		}
+        
+        // check for init message
+		else if (m.getAddress() == "/controller/init"){
+			bInitGrid = !(m.getArgAsFloat(0) == 0.0f);
+            ofLog(OF_LOG_NOTICE, "initializing grid...");
+		}
+	}
+#endif
 
 #ifdef USE_KINECT
     kinect.update();
@@ -108,7 +219,9 @@ void SynthApp::update(){
         
         sequencer->checkSegments(contourFinder.blobs);
 	}
-#else
+#endif
+
+#ifdef USE_FLOB
     vidGrabber.update();
     
     flob.setMirror(bMirrorX, bMirrorY);
@@ -122,6 +235,12 @@ void SynthApp::update(){
     }
 #endif
     
+    // Re-init sequencer
+    if (bInitGrid) {
+        sequencer->setup(scanRect, (int)columns, (int)rows, speed, direction);
+        bInitGrid = false;
+    }
+    // Update sequencer
     sequencer->update();
 }
 
@@ -137,7 +256,9 @@ void SynthApp::draw(){
         ofSetColor(ofColor::white);
         //grayImage.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
         colorImg.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
-#else
+#endif
+        
+#ifdef USE_FLOB
         ofSetColor(ofColor::white);
         flob.videotex->draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
 #endif
@@ -147,7 +268,9 @@ void SynthApp::draw(){
     if (bDrawBlobs && contourFinder.nBlobs > 0) {
         contourFinder.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
     }
-#else
+#endif
+    
+#ifdef USE_FLOB
     if (bDrawBlobs && blobs != NULL && blobs->size() > 0){
 		for(int i=0; i<blobs->size();i++){
 			ABlob &aBlob = *(blobs->at(i));
@@ -167,8 +290,22 @@ void SynthApp::draw(){
     
     sequencer->draw();
     
-    ofPopMatrix();
+#ifdef USE_OSC
+    if (bDebugMode) {
+        vector<OSCPoint>::iterator point;
+        for (point = oscPoints.begin(); point != oscPoints.end(); *point++){
+            ofPushMatrix();
+            ofPushStyle();
+            ofSetColor(0, 255, 0, point->alpha);
+            ofCircle(point->position, 44);
+            ofPopStyle();
+            ofPopMatrix();
+        }
+    }
+#endif
     
+    ofPopMatrix();
+    gui->setVisible(bDebugMode);
     if (gui->isVisible()) {
         gui->draw();
     }
@@ -179,6 +316,8 @@ void SynthApp::initGUI(){
     gui = new ofxUICanvas();
     gui->setFont("GUI/EnvyCodeR.ttf");
     gui->addLabel("MotionSynth");
+    gui->addSpacer();
+    gui->addFPSSlider("fps");
     gui->addSpacer();
     gui->addSlider("columns", 1.0f, 15.0f, &columns);
     gui->addSlider("rows", 1.0f, 15.0f, &rows);
@@ -191,11 +330,15 @@ void SynthApp::initGUI(){
     gui->addSlider("near threshold", 40.0f, 250.0f, &nearThreshold);
     gui->addSlider("far threshold", 40.0f, 250.0f, &farThreshold);
     gui->addSlider("tilt angle", -30.0f, 30.0f, &angle);
-#else
+#endif
+    
+#ifdef USE_FLOB
     gui->addLabel("Flob");
     gui->addSlider("threshold", 1.0f, 80.0f, &threshold);
     gui->addSlider("fade", 1.0f, 100.0f, &fade);
 #endif
+    
+#ifndef USE_OSC
     gui->addToggle("mirror x", &bMirrorX);
     gui->addToggle("mirror y", &bMirrorY);
     gui->addSpacer();
@@ -203,19 +346,26 @@ void SynthApp::initGUI(){
     gui->addToggle("draw blobs", &bDrawBlobs);
     gui->addToggle("draw video", &bDrawVideo);
     gui->addSpacer();
+#endif
     
-    gui->addFPSSlider("fps");
     gui->autoSizeToFitWidgets();
-    
     gui->setPosition(10, 10);
 
 #ifdef USE_KINECT
     gui->loadSettings("GUI/guiSettingsKinect.xml");
-#else
-    gui->loadSettings("GUI/guiSettingsFlob.xml");
 #endif
     
+#ifdef USE_FLOB
+    gui->loadSettings("GUI/guiSettingsFlob.xml");
+#endif
+
+#ifdef USE_OSC
+    gui->loadSettings("GUI/guiSettingsOSC.xml");
+#endif
+    
+#ifndef USE_OSC
     gui->setVisible(true);
+#endif
     
     ofAddListener(gui->newGUIEvent, this, &SynthApp::guiEvent);
 }
@@ -229,7 +379,9 @@ void SynthApp::guiEvent(ofxUIEventArgs &e){
     if (e.widget->getName() == "speed"){
         sequencer->setSpeed(speed);
     }
-#else
+#endif
+    
+#ifdef USE_FLOB
     if (e.widget->getName() == "threshold"){
         flob.setThresh(threshold);
     }
@@ -270,13 +422,12 @@ void SynthApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void SynthApp::mousePressed(int x, int y, int button){
-#ifdef DEBUG_MODE
-    
-    float rx = x - scanRect.getX();
-    float ry = y - scanRect.getY();
-    
-    sequencer->toggleSegment(rx, ry);
-#endif
+    if (bDebugMode){
+        float rx = x - scanRect.getX();
+        float ry = y - scanRect.getY();
+        
+        sequencer->toggleSegment(rx, ry);
+    }
 }
 
 //--------------------------------------------------------------
@@ -306,8 +457,14 @@ void SynthApp::exit(){
 	kinect.close();
     
     gui->saveSettings("GUI/guiSettingsKinect.xml");
-#else
+#endif
+    
+#ifdef USE_FLOB
     gui->saveSettings("GUI/guiSettingsFlob.xml");
+#endif
+    
+#ifdef USE_OSC
+    gui->saveSettings("GUI/guiSettingsOSC.xml");
 #endif
     
     delete sequencer;

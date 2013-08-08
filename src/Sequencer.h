@@ -12,11 +12,7 @@
 #include "ofxOsc.h"
 #include "ABlob.h"
 #include "GridSegment.h"
-
-// OSC
-#define OSC_HOST            "localhost"
-#define OSC_RECEIVE_PORT    8000
-#define OSC_SEND_PORT       9000
+#include "OSCPoint.h"
 
 
 using namespace std;
@@ -31,7 +27,7 @@ enum sequenceDirection{
 class Sequencer {
     
     void initTimer();
-    void sendGridStateViaOSC();
+//    void sendGridStateViaOSC();
     
     sequenceDirection   direction;
     ofPoint             lineStartPos;
@@ -45,15 +41,10 @@ class Sequencer {
     float               startTime;      // store when we start time timer
     float               endTime;        // when we want to stop the timer
     
-    // OSC
-    ofxOscSender        oscSender;
-    
 public:
     
-    // Constructor
-    Sequencer();
-    
-    void setup(const ofRectangle rect, int columnCount, int rowCount, float speed=1000, sequenceDirection dir=SEQ_DIRECTION_HORIZONTAL);
+    void setup(const ofRectangle rect, int columnCount, int rowCount,
+               float speed=1000, sequenceDirection dir=SEQ_DIRECTION_HORIZONTAL);
     void update();
     void draw();
     
@@ -64,6 +55,9 @@ public:
     
     // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);
+    
+    // Check segments against ofPoint objects
+    void checkSegments(const vector<OSCPoint> &points);
     
     // Toggles segment by coordinate
     void toggleSegment(int x, int y);

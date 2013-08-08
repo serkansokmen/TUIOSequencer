@@ -175,7 +175,9 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
             GridSegment *segmentPtr = &segments[i];
             
             for(int i=0; i<points.size(); i++){
-                if (segmentPtr->rect.inside(ofVec2f(points[i].x, points[i].y)) && segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
+                if (segmentPtr->rect.inside(ofVec2f(points[i].position)) &&
+                    segmentPtr->rect.intersects(lineStartPos, lineEndPos) &&
+                    points[i].isOn){
                     segmentPtr->bTouchesBlob = true;
                 }
             }
