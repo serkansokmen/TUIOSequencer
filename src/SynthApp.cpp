@@ -68,7 +68,7 @@ void SynthApp::update(){
     rows = (int)rows;
     
     if (bInitGrid) {
-        sequencer->setup(scanRect, (int)columns, (int)rows, 500, SEQ_DIRECTION_VERTICAL);
+        sequencer->setup(scanRect, (int)columns, (int)rows, speed, SEQ_DIRECTION_HORIZONTAL);
         bInitGrid = false;
     }
 
