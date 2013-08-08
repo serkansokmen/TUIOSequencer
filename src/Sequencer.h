@@ -44,6 +44,7 @@ public:
     void update();
     void draw();
     
+    void setSpeed(float speed);
     
     // Check segments against OpenCV blobs
     void checkSegments(const vector<ofxCvBlob> &blobs);
