@@ -91,6 +91,7 @@ void Sequencer::draw(){
     ofPushMatrix();
     ofPushStyle();
     ofSetColor(255, 0, 0);
+    // TODO: draw a prettier track line
     ofLine(lineStartPos, lineEndPos);
     ofPopStyle();
     ofPopMatrix();
