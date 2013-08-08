@@ -9,8 +9,14 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxOsc.h"
 #include "ABlob.h"
 #include "GridSegment.h"
+
+// OSC
+#define OSC_HOST            "localhost"
+#define OSC_RECEIVE_PORT    8000
+#define OSC_SEND_PORT       9000
 
 
 using namespace std;
@@ -25,6 +31,7 @@ enum sequenceDirection{
 class Sequencer {
     
     void initTimer();
+    void sendGridStateViaOSC();
     
     sequenceDirection   direction;
     ofPoint             lineStartPos;
@@ -38,7 +45,13 @@ class Sequencer {
     float               startTime;      // store when we start time timer
     float               endTime;        // when we want to stop the timer
     
+    // OSC
+    ofxOscSender        oscSender;
+    
 public:
+    
+    // Constructor
+    Sequencer();
     
     void setup(const ofRectangle rect, int columnCount, int rowCount, float speed=1000, sequenceDirection dir=SEQ_DIRECTION_HORIZONTAL);
     void update();

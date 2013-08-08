@@ -10,6 +10,16 @@
 
 
 //--------------------------------------------------------------
+Sequencer::Sequencer(){
+
+    // Setup OSC
+    oscSender.setup(OSC_HOST, OSC_SEND_PORT);
+    
+    
+}
+
+
+//--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, float speed, sequenceDirection dir){
     
     columns = columCount;
@@ -21,8 +31,9 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
     trackSpeed = speed;
     direction = dir;
     
-    // Clear segments vector
+	// Clear segments vector
     segments.clear();
+    
     // Create segments
     for (int y = 0; y < columns; y++) {
         for (int x = 0; x < rows; x++) {
@@ -79,6 +90,8 @@ void Sequencer::update(){
         default:
             break;
     }
+    
+    sendGridStateViaOSC();
 };
 
 //--------------------------------------------------------------
