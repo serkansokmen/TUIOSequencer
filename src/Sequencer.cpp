@@ -141,13 +141,19 @@ void Sequencer::checkSegments(const vector<ofxCvBlob> &blobs){
 
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<ABlob *> *blobs){
+    // Reset segment touch states
+    vector<GridSegment>::iterator segment;
+    for (segment = segments.begin(); segment != segments.end(); segment++){
+        segment->bTouchesBlob = false;
+    }
+    
     for (int i=0; i<segments.size(); i++){
         GridSegment *segmentPtr = &segments[i];
         
         for(int i=0; i<blobs->size(); i++){
             ABlob &aBlob = *(blobs->at(i));
             ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-            if (segmentPtr->rect.inside(blobRect)){
+            if (segmentPtr->rect.inside(blobRect.getCenter()) && segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
                 segmentPtr->bTouchesBlob = true;
             }
         }
