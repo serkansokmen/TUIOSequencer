@@ -44,8 +44,6 @@ public:
     void update();
     void draw();
     
-    void startSequencer();
-    void stopSequencer();
     
     // Check segments against OpenCV blobs
     void checkSegments(const vector<ofxCvBlob> &blobs);
@@ -55,6 +53,4 @@ public:
     
     // Grid segments
     vector<GridSegment> segments;
-    
-    float carrierFrequency;
 };

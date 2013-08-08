@@ -47,16 +47,6 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
 
 //--------------------------------------------------------------
 void Sequencer::update(){
-    vector<GridSegment>::iterator segment;
-    
-    // Sound generator frequency
-    carrierFrequency = 0.0f;
-    
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        if (segment->bTouchesBlob){
-            carrierFrequency += segment->frequency;
-        }
-    }
     
     // update the timer this frame
     float timer = ofGetElapsedTimeMillis() - startTime;
@@ -107,16 +97,6 @@ void Sequencer::draw(){
 };
 
 //--------------------------------------------------------------
-void Sequencer::startSequencer(){
-
-}
-
-//--------------------------------------------------------------
-void Sequencer::stopSequencer(){
-    
-    // Init timer
-    initTimer();
-    
 }
 
 //--------------------------------------------------------------

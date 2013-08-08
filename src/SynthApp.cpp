@@ -59,14 +59,6 @@ void SynthApp::setup(){
     
     // Create initial grid on update
     bInitGrid = true;
-    
-    // Setup sound
-    stream.setup(this, 2, 0, 44100, 512, 4);
-    soundBuffer = new float[512];
-    
-    carrierWave.setup(44100);
-    carrierWave.setFrequency(0.0);
-    carrierWave.setVolume(0.3);
 }
 
 //--------------------------------------------------------------
@@ -123,9 +115,6 @@ void SynthApp::update(){
 #endif
     
     sequencer->update();
-    
-    // don't give this a negative frequency
-    carrierWave.setFrequency(max(1, (int)sequencer->carrierFrequency));
 }
 
 //--------------------------------------------------------------
@@ -233,20 +222,6 @@ void SynthApp::guiEvent(ofxUIEventArgs &e){
         flob.setFade(fade);
     }
 #endif
-}
-
-//--------------------------------------------------------------
-void SynthApp::audioOut(float * output, int bufferSize, int nChannels){
-    
-	for (int i = 0; i < bufferSize; i++){
-        
-        float sample = carrierWave.getSample();
-        
-        output[i*nChannels    ] = sample;
-        output[i*nChannels + 1] = sample;
-        
-        soundBuffer[i] = sample;
-	}
 }
 
 //--------------------------------------------------------------

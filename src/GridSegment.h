@@ -23,5 +23,4 @@ public:
     ofColor         colorOn;
     ofColor         colorOff;
     int             segmentId;
-    float           frequency;
 };

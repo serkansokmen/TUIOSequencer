@@ -14,7 +14,6 @@
 #include "ofxKinect.h"
 #include "ofxUI.h"
 #include "Sequencer.h"
-#include "Oscillator.h"
 
 
 // Comment to use video camera input
@@ -41,8 +40,6 @@ public:
     
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
-    
-    void audioOut(float *input, int bufferSize, int nChannels);
     
     Sequencer           *sequencer;
     ofRectangle         scanRect;
@@ -76,8 +73,6 @@ public:
     // Sound
     ofSoundStream       stream;
     float               *soundBuffer;
-    
-    Oscillator          carrierWave;
     
     // GUI
     ofxUICanvas         *gui;
