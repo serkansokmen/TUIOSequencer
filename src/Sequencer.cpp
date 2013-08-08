@@ -10,16 +10,6 @@
 
 
 //--------------------------------------------------------------
-Sequencer::Sequencer(){
-
-    // Setup OSC
-    oscSender.setup(OSC_HOST, OSC_SEND_PORT);
-    
-    
-}
-
-
-//--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, float speed, sequenceDirection dir){
     
     columns = columCount;
@@ -90,8 +80,6 @@ void Sequencer::update(){
         default:
             break;
     }
-    
-    sendGridStateViaOSC();
 };
 
 //--------------------------------------------------------------
@@ -175,6 +163,27 @@ void Sequencer::checkSegments(const vector<ABlob *> *blobs){
 }
 
 //--------------------------------------------------------------
+void Sequencer::checkSegments(const vector<OSCPoint> &points){
+    // Reset segment touch states
+    vector<GridSegment>::iterator segment;
+    for (segment = segments.begin(); segment != segments.end(); segment++){
+        segment->bTouchesBlob = false;
+    }
+    
+    if (points.size() > 0){
+        for (int i=0; i<segments.size(); i++){
+            GridSegment *segmentPtr = &segments[i];
+            
+            for(int i=0; i<points.size(); i++){
+                if (segmentPtr->rect.inside(ofVec2f(points[i].x, points[i].y)) && segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
+                    segmentPtr->bTouchesBlob = true;
+                }
+            }
+        }
+    }
+};
+
+//--------------------------------------------------------------
 void Sequencer::toggleSegment(int x, int y){
     vector<GridSegment>::iterator segment;
     for (int i=0; i<segments.size(); i++){
@@ -187,26 +196,27 @@ void Sequencer::toggleSegment(int x, int y){
 }
 
 //--------------------------------------------------------------
-void Sequencer::sendGridStateViaOSC(){
-    
-    for (int y=0; y<columns; y++) {
-        for (int x=0; x<rows; x++) {
-            
-            int index = y + x * rows;
-            GridSegment *segment = &segments[index];
-            
-            ofxOscMessage m;
-            string address = "/grid/toggle_" + ofToString(y+1) + "_" + ofToString(x+1);
-            cout << address << endl;
-            m.setAddress(address);
-            
-            if (segment->bTouchesBlob){
-                m.addIntArg(1);
-            } else {
-                m.addIntArg(0);
-            }
-            
-            oscSender.sendMessage(m);
-        }
-    }
-}
+
+//void Sequencer::sendGridStateViaOSC(){
+//    
+//    for (int y=0; y<columns; y++) {
+//        for (int x=0; x<rows; x++) {
+//            
+//            int index = y + x * rows;
+//            GridSegment *segment = &segments[index];
+//            
+//            ofxOscMessage m;
+//            string address = "/grid/toggle_" + ofToString(y+1) + "_" + ofToString(x+1);
+//            cout << address << endl;
+//            m.setAddress(address);
+//            
+//            if (segment->bTouchesBlob){
+//                m.addIntArg(1);
+//            } else {
+//                m.addIntArg(0);
+//            }
+//            
+//            oscSender.sendMessage(m);
+//        }
+//    }
+//}
