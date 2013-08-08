@@ -30,7 +30,6 @@
 		8f5205aef8861ef234f0651aba6be2ee /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81967292bfc87a0144bd32c66f3adb20 /* ofxOscSender.cpp */; };
 		933a2227713c720ceff80fd967d0a8ee /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2b40eda85beb63e46785bc299a638898 /* tinyxml.cpp */; };
 		9423c9b7cccddb668a73f8da1218fef2 /* TBlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 926347db42d593e38f3cfc898b0d77a9 /* TBlob.cpp */; };
-		952541afbe44a969a65bdb28d625a98a /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1870c1604c41192d5321521ea7a63c6f /* Oscillator.cpp */; };
 		9d44dc88ef9e7991b4a09951e2e4769f /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832bdc407620cdba568b713d2252c43c /* tinyxmlerror.cpp */; };
 		9dec2a3da042f3b7086f06c6baf586cb /* Sequencer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = e282fefb97e3684440cd75ce8b2523cb /* Sequencer.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
@@ -113,7 +112,6 @@
 		114b872696817cc33990fc83feb1259e /* imgproc.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imgproc.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc/imgproc.hpp; sourceTree = SOURCE_ROOT; };
 		15c99204ff4d8d72ad034b63f410265d /* ofxUINumberDialer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUINumberDialer.h; path = ../../../addons/ofxUI/src/ofxUINumberDialer.h; sourceTree = SOURCE_ROOT; };
 		15e69017b5db282ef100ee15e7bce594 /* ofxUICustomImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUICustomImageButton.h; path = ../../../addons/ofxUI/src/ofxUICustomImageButton.h; sourceTree = SOURCE_ROOT; };
-		1870c1604c41192d5321521ea7a63c6f /* Oscillator.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Oscillator.cpp; path = src/Oscillator.cpp; sourceTree = SOURCE_ROOT; };
 		1902452f5e510a2dbc1e5bd6d62db983 /* ofxUIMultiImageToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageToggle.h; path = ../../../addons/ofxUI/src/ofxUIMultiImageToggle.h; sourceTree = SOURCE_ROOT; };
 		1b6f1db734ac1e823f66ec8ad668427f /* baseBlob.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = baseBlob.h; path = ../../../addons/ofxFlob/src/baseBlob.h; sourceTree = SOURCE_ROOT; };
 		1c43cdb79bf40ea7424b96804209f474 /* ofxUISuperCanvas.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUISuperCanvas.h; path = ../../../addons/ofxUI/src/ofxUISuperCanvas.h; sourceTree = SOURCE_ROOT; };
@@ -313,7 +311,6 @@
 		e5f6e381641665852b997fc4d6202fdf /* allocator.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = allocator.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/allocator.h; sourceTree = SOURCE_ROOT; };
 		e65d547c2cd6a84fc9af15fa7ad1992e /* ofxUITextInput.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUITextInput.h; path = ../../../addons/ofxUI/src/ofxUITextInput.h; sourceTree = SOURCE_ROOT; };
 		e67bc70e17dda0081c8fd9dd234d7962 /* ofxUIImageButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIImageButton.h; path = ../../../addons/ofxUI/src/ofxUIImageButton.h; sourceTree = SOURCE_ROOT; };
-		e6a413249cd35110a24bc3517a48f878 /* Oscillator.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Oscillator.h; path = src/Oscillator.h; sourceTree = SOURCE_ROOT; };
 		e6def695b88ba5faaceaa93785a12fd9 /* UdpSocket.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = UdpSocket.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/posix/UdpSocket.cpp; sourceTree = SOURCE_ROOT; };
 		e7ddb716b5ae0dea82dffedab774c901 /* autotuned_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = autotuned_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/autotuned_index.h; sourceTree = SOURCE_ROOT; };
 		e8af1e9150ad818fa9d9195d35de8170 /* version.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = version.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/core/version.hpp; sourceTree = SOURCE_ROOT; };
@@ -753,14 +750,12 @@
 			isa = PBXGroup;
 			children = (
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */,
-				d671883d5b2df658685a47881642ed80 /* GridSegment.h */,
-				1870c1604c41192d5321521ea7a63c6f /* Oscillator.cpp */,
-				e6a413249cd35110a24bc3517a48f878 /* Oscillator.h */,
-				e282fefb97e3684440cd75ce8b2523cb /* Sequencer.cpp */,
-				4324679e4db7f91de15a2ead6ad96a6d /* Sequencer.h */,
 				76c65663b968299add284b67b011c1df /* SynthApp.cpp */,
 				7744281c09b183d3942ffc93af521a48 /* SynthApp.h */,
+				e282fefb97e3684440cd75ce8b2523cb /* Sequencer.cpp */,
+				4324679e4db7f91de15a2ead6ad96a6d /* Sequencer.h */,
+				3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */,
+				d671883d5b2df658685a47881642ed80 /* GridSegment.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1049,8 +1044,6 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			attributes = {
-			};
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "MotionSynth" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -1110,7 +1103,6 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				a5e71165d6e1593807b2707b21733df1 /* GridSegment.cpp in Sources */,
-				952541afbe44a969a65bdb28d625a98a /* Oscillator.cpp in Sources */,
 				9dec2a3da042f3b7086f06c6baf586cb /* Sequencer.cpp in Sources */,
 				887029de9c44985fb7b27deb48252e64 /* SynthApp.cpp in Sources */,
 				250a95ba26587be85db0a353e6e1dea2 /* ofxCvColorImage.cpp in Sources */,
@@ -1226,28 +1218,46 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18)",
 					../../../addons/ofxKinect/src,
 					../../../addons/ofxUI/libs,
 					../../../addons/ofxUI/src,
 				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64";
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -1329,28 +1339,46 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18)",
 					../../../addons/ofxKinect/src,
 					../../../addons/ofxUI/libs,
 					../../../addons/ofxUI/src,
 				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_10 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_11 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_12 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_13 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_14 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_15 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_16 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_17 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_18 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_2 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_3 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_4 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_5 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_6 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_7 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_8 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_9 = "../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64";
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
