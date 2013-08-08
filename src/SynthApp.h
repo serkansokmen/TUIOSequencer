@@ -18,6 +18,7 @@
 
 // Comment to use video camera input
 #define USE_KINECT
+#define DEBUG_MODE
 
 
 class SynthApp : public ofBaseApp {

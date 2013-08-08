@@ -22,13 +22,18 @@ void SynthApp::setup(){
     initGUI();
     
     // Initialize segments container
-    sequencer = new Sequencer();
+    sequencer = new Sequencer;
     
 #ifdef USE_KINECT
-    // Kinect setup
-    kinect.init(true, true, false);
-    kinect.open();
     
+#ifndef DEBUG_MODE
+    // Kinect setup
+    //    kinect.init(true, true, false);
+    kinect.init();
+    kinect.open();
+#endif
+    
+    colorImg.allocate(kinect.getWidth(), kinect.getHeight());
 	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshNear.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshFar.allocate(kinect.getWidth(), kinect.getHeight());
@@ -36,7 +41,6 @@ void SynthApp::setup(){
     // Init scan rect
     scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), kinect.getWidth(), kinect.getHeight());
 #else
-    
     camWidth = 320;
     camHeight = 240;
     
@@ -78,6 +82,10 @@ void SynthApp::update(){
     // there is a new frame and we are connected
 	if (kinect.isFrameNew()) {
         
+        colorImg.setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight());
+        colorImg.mirror(bMirrorY, bMirrorX);
+        colorImg.blurGaussian();
+        
 		// load grayscale depth image from the kinect source
 		grayImage.setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight());
         grayImage.mirror(bMirrorY, bMirrorX);
@@ -96,7 +104,7 @@ void SynthApp::update(){
         
         // find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 20, true);
+		contourFinder.findContours(grayImage, 10, (kinect.getWidth() * kinect.getHeight()) * .5, 20, false);
         
         sequencer->checkSegments(contourFinder.blobs);
 	}
@@ -125,15 +133,15 @@ void SynthApp::draw(){
     ofTranslate(scanRect.getPositionRef());
     
     if (bDrawVideo) {
-        ofSetColor(ofColor::white);
 #ifdef USE_KINECT
-        grayImage.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+        ofSetColor(ofColor::white);
+        //grayImage.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+        colorImg.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
 #else
+        ofSetColor(ofColor::white);
         flob.videotex->draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
 #endif
     }
-    
-    sequencer->draw();
     
 #ifdef USE_KINECT
     if (bDrawBlobs && contourFinder.nBlobs > 0) {
@@ -156,6 +164,9 @@ void SynthApp::draw(){
     ofSetColor(ofColor::greenYellow);
     ofRect(0, 0, scanRect.getWidth(), scanRect.getHeight());
     ofPopStyle();
+    
+    sequencer->draw();
+    
     ofPopMatrix();
     
     if (gui->isVisible()) {
@@ -171,6 +182,7 @@ void SynthApp::initGUI(){
     gui->addSpacer();
     gui->addSlider("columns", 1.0f, 15.0f, &columns);
     gui->addSlider("rows", 1.0f, 15.0f, &rows);
+    gui->addSlider("speed", 100.0f, 2000.0f, &speed);
     gui->addLabelToggle("init grid", &bInitGrid);
     gui->addSpacer();
 
@@ -202,6 +214,7 @@ void SynthApp::initGUI(){
 #else
     gui->loadSettings("GUI/guiSettingsFlob.xml");
 #endif
+    
     gui->setVisible(true);
     
     ofAddListener(gui->newGUIEvent, this, &SynthApp::guiEvent);
@@ -212,6 +225,9 @@ void SynthApp::guiEvent(ofxUIEventArgs &e){
 #ifdef USE_KINECT
     if (e.widget->getName() == "tilt angle"){
         kinect.setCameraTiltAngle(angle);
+    }
+    if (e.widget->getName() == "speed"){
+        sequencer->setSpeed(speed);
     }
 #else
     if (e.widget->getName() == "threshold"){
@@ -244,7 +260,7 @@ void SynthApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void SynthApp::mouseMoved(int x, int y ){
-    
+
 }
 
 //--------------------------------------------------------------
@@ -254,7 +270,13 @@ void SynthApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void SynthApp::mousePressed(int x, int y, int button){
-
+#ifdef DEBUG_MODE
+    
+    float rx = x - scanRect.getX();
+    float ry = y - scanRect.getY();
+    
+    sequencer->toggleSegment(rx, ry);
+#endif
 }
 
 //--------------------------------------------------------------

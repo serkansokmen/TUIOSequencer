@@ -52,6 +52,9 @@ public:
     // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);
     
+    // Toggles segment by coordinate
+    void toggleSegment(int x, int y);
+    
     // Grid segments
     vector<GridSegment> segments;
 };
