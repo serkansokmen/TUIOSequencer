@@ -15,21 +15,20 @@
 
 // Use Kinect to track blobs
 //#define USE_KINECT
+// Use ofxFlob Blob Tracker
+//#define USE_FLOB
+// Use OSC Controller
+#define USE_OSC
+
 
 #ifdef USE_KINECT
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
 #endif
 
-// Use ofxFlob Blob Tracker
-//#define USE_FLOB
-
 #ifdef USE_FLOB
 #include "ofxFlob.h"
 #endif
-
-// Use OSC Controller
-#define USE_OSC
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
