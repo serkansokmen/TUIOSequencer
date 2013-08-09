@@ -16,7 +16,7 @@ void SynthApp::setup(){
     ofBackground(ofColor::black);
     ofEnableAlphaBlending();
     ofSetLogLevel(OF_LOG_SILENT);
-    ofSetLineWidth(0.1);
+    ofSetLineWidth(1.0);
     
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
