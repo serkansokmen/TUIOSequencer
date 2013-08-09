@@ -88,3 +88,5 @@ bin/data/GUI/guiSettingsKinect.xml
 bin/data/GUI/guiSettingsFlob.xml
 
 bin/data/GUI/guiSettingsMouse.xml
+
+bin/data/GUI/guiSettingsOSC.xml
