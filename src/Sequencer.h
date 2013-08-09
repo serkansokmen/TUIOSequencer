@@ -27,7 +27,6 @@ enum sequenceDirection{
 class Sequencer {
     
     void initTimer();
-//    void sendGridStateViaOSC();
     
     ofPoint             lineStartPos;
     ofPoint             lineEndPos;
