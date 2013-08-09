@@ -42,58 +42,123 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
         }
     }
     
-    // Init timer
-    initTimer();
+    startScan(true);
 };
 
 //--------------------------------------------------------------
-void Sequencer::update(){
+void Sequencer::startScan(bool fromBeginning){
     
-    // update the timer this frame
-    float timer = ofGetElapsedTimeMillis() - startTime;
-    // get the percantage of the timer
-    float percentage = ofMap(timer, 0.0, endTime, 0.0, 1.0, true);
+    if (fromBeginning)
+        Tweener.removeAllTweens();
     
-    if(timer >= endTime) {
-        initTimer();
-    }
+    cout << trackSpeed << endl;
+    
+    float lsx, lsy, lex, ley;
+    float duration;
     
     switch (direction) {
         case SEQ_DIRECTION_HORIZONTAL:
         {
-            lineStartPos.x = rectW * rows * percentage;
-            lineStartPos.y = 0;
-            lineEndPos.x = lineStartPos.x;
-            lineEndPos.y = rectH * columns;
+            if (fromBeginning){
+                lineStartPos.set(0, 0);
+                lineEndPos.set(0, rectH * columns);
+            }
+            
+            lsx = rectW * rows;
+            lsy = 0;
+            lex = lsx;
+            ley = rectH * columns;
+            duration = rows * trackSpeed;
+            break;
+        }
+            
+        case SEQ_DIRECTION_VERTICAL:
+        {
+            if (fromBeginning){
+                lineStartPos.set(0, 0);
+                lineEndPos.set(rectW * rows, 0);
+            }
+            
+            lsx = 0;
+            lsy = rectH * columns;
+            lex = rectW * rows;
+            ley = lsy;
+            duration = columns * trackSpeed;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    duration *= 0.001;
+    
+    Tweener.addTween(lineStartPos.x, lsx, duration, &ofxTransitions::linear);
+    Tweener.addTween(lineStartPos.y, lsy, duration, &ofxTransitions::linear);
+    Tweener.addTween(lineEndPos.x, lex, duration, &ofxTransitions::linear);
+    Tweener.addTween(lineEndPos.y, ley, duration, &ofxTransitions::linear);
+}
+
+//--------------------------------------------------------------
+void Sequencer::update(){
+    
+    if ((direction == SEQ_DIRECTION_HORIZONTAL && lineStartPos.x >= int(rectW * columns)) ||
+        (direction == SEQ_DIRECTION_VERTICAL && lineStartPos.y >= int(rectH * rows))) {
+        startScan(true);
+    }
+};
+
+//--------------------------------------------------------------
+void Sequencer::draw(){
+    
+    ofPushStyle();
+    ofNoFill();
+    ofSetColor(ofColor::darkGreen);
+    ofRectRounded(0, 0, rectW * columns, rectH * rows, 12);
+    ofPopStyle();
+    
+    vector<GridSegment>::iterator segment;
+    for (segment = segments.begin(); segment != segments.end(); segment++){
+        segment->draw();
+    }
+    
+    ofPoint lStart = lineStartPos;
+    ofPoint lEnd = lineEndPos;
+    float endSize = 8.0f;
+    
+    switch (direction) {
+        case SEQ_DIRECTION_HORIZONTAL:
+        {
+            lStart -= ofPoint(0, endSize);
+            lEnd += ofPoint(0, endSize);
         }
             break;
             
         case SEQ_DIRECTION_VERTICAL:
         {
-            lineStartPos.x = 0;
-            lineStartPos.y = rectH * columns * percentage;
-            lineEndPos.x = rectW * rows;
-            lineEndPos.y = lineStartPos.y;
+            lStart -= ofPoint(endSize, 0);
+            lEnd += ofPoint(endSize, 0);
         }
             break;
             
         default:
             break;
     }
-};
-
-//--------------------------------------------------------------
-void Sequencer::draw(){
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->draw();
-    }
     
     ofPushMatrix();
     ofPushStyle();
-    ofSetColor(255, 0, 0);
-    // TODO: draw a prettier track line
-    ofLine(lineStartPos, lineEndPos);
+    // Draw line
+    ofSetLineWidth(4.0);
+    ofSetColor(ofColor::darkRed);
+    ofLine(lStart, lEnd);
+    
+    ofSetColor(ofColor::red);
+    // Draw circle pins
+    ofSetLineWidth(1.0);
+    ofCircle(lStart, endSize * .4);
+    ofCircle(lEnd, endSize * .4);
+    ofFill();
+    
     ofPopStyle();
     ofPopMatrix();
 };
@@ -101,23 +166,7 @@ void Sequencer::draw(){
 //--------------------------------------------------------------
 void Sequencer::setSpeed(float speed){
     trackSpeed = speed;
-}
-
-//--------------------------------------------------------------
-void Sequencer::initTimer(){
-    startTime = ofGetElapsedTimeMillis();   // get the start time
-    switch (direction) {
-        case SEQ_DIRECTION_HORIZONTAL:
-            endTime = rows * trackSpeed;          // in milliseconds
-            break;
-            
-        case SEQ_DIRECTION_VERTICAL:
-            endTime = columns * trackSpeed;       // in milliseconds
-            break;
-            
-        default:
-            break;
-    }
+    startScan(false);
 }
 
 //--------------------------------------------------------------

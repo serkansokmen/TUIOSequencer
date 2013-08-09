@@ -33,6 +33,6 @@ void GridSegment::draw(){
         ofNoFill();
         ofSetColor(colorOff);
     }
-    ofRectRounded(drawRect, 12);
+    ofRectRounded(drawRect, 8);
     ofPopStyle();
 };

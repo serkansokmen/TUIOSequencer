@@ -16,7 +16,7 @@ void SynthApp::setup(){
     ofBackground(ofColor::black);
     ofEnableAlphaBlending();
     ofSetLogLevel(OF_LOG_SILENT);
-    ofSetLineWidth(1.0);
+    ofSetLineWidth(2.0);
     
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
@@ -24,13 +24,13 @@ void SynthApp::setup(){
     speed = 1000;
     columns = 6;
     rows = 6;
-    // Create initial grid on update
-    bInitGrid = true;
-    
-    // Initialize segments container
-    sequencer = new Sequencer;
     
     Tweener.setMode(TWEENMODE_OVERRIDE);
+    
+    // Creates initial grid
+    bInitGrid = true;
+    // Initialize segments container
+    sequencer = new Sequencer();
     
 #ifdef USE_OSC
     camWidth = 798;
@@ -257,6 +257,8 @@ void SynthApp::update(){
 //--------------------------------------------------------------
 void SynthApp::draw(){
     
+//    ofBackgroundGradient(ofColor::black, ofColor::darkBlue, OF_GRADIENT_LINEAR);
+    
     // Draw scan rect
     ofPushMatrix();
     ofTranslate(scanRect.getPositionRef());
@@ -291,12 +293,6 @@ void SynthApp::draw(){
 		}
 	}
 #endif
-
-    ofPushStyle();
-    ofNoFill();
-    ofSetColor(ofColor::greenYellow);
-    ofRect(0, 0, scanRect.getWidth(), scanRect.getHeight());
-    ofPopStyle();
     
     sequencer->draw();
     
@@ -329,13 +325,11 @@ void SynthApp::initGUI(){
     gui->addSpacer();
     gui->addFPSSlider("fps");
     gui->addSpacer();
-    gui->addSlider("columns", 1.0f, 15.0f, &columns);
-    gui->addSlider("rows", 1.0f, 15.0f, &rows);
     gui->addSlider("speed", 100.0f, 2000.0f, &speed);
-    gui->addLabelToggle("init grid", &bInitGrid);
-    gui->addSpacer();
+    gui->addLabelToggle("start", &bInitGrid);
 
 #ifdef USE_KINECT
+    gui->addSpacer();
     gui->addLabel("Kinect");
     gui->addSlider("near threshold", 40.0f, 250.0f, &nearThreshold);
     gui->addSlider("far threshold", 40.0f, 250.0f, &farThreshold);
@@ -343,19 +337,20 @@ void SynthApp::initGUI(){
 #endif
     
 #ifdef USE_FLOB
+    gui->addSpacer();
     gui->addLabel("Flob");
     gui->addSlider("threshold", 1.0f, 80.0f, &threshold);
     gui->addSlider("fade", 1.0f, 100.0f, &fade);
 #endif
     
 #ifndef USE_OSC
+    gui->addSpacer();
     gui->addToggle("mirror x", &bMirrorX);
     gui->addToggle("mirror y", &bMirrorY);
     gui->addSpacer();
     gui->addLabel("Debug");
     gui->addToggle("draw blobs", &bDrawBlobs);
     gui->addToggle("draw video", &bDrawVideo);
-    gui->addSpacer();
 #endif
     
     gui->autoSizeToFitWidgets();
@@ -386,10 +381,11 @@ void SynthApp::guiEvent(ofxUIEventArgs &e){
     if (e.widget->getName() == "tilt angle"){
         kinect.setCameraTiltAngle(angle);
     }
+#endif
+    
     if (e.widget->getName() == "speed"){
         sequencer->setSpeed(speed);
     }
-#endif
     
 #ifdef USE_FLOB
     if (e.widget->getName() == "threshold"){

@@ -39,6 +39,7 @@
 #define OSC_POINT_COUNT     5
 #endif
 
+
 class SynthApp : public ofBaseApp {
     
 public:

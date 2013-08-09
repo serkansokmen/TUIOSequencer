@@ -10,6 +10,7 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxTweener.h"
 #include "ABlob.h"
 #include "GridSegment.h"
 #include "OSCPoint.h"
@@ -26,7 +27,9 @@ enum sequenceDirection{
 
 class Sequencer {
     
-    void initTimer();
+    void                startScan(bool fromBeginning);
+    
+    sequenceDirection   direction;
     
     ofPoint             lineStartPos;
     ofPoint             lineEndPos;
@@ -34,11 +37,6 @@ class Sequencer {
     float               rectW;
     float               rectH;
     float               trackSpeed;
-    float               startTime;      // store when we start time timer
-    float               endTime;        // when we want to stop the timer
-    
-    sequenceDirection   direction;
-    
     int                 columns;
     int                 rows;
     
