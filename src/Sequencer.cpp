@@ -48,25 +48,29 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
 //--------------------------------------------------------------
 void Sequencer::startScan(bool fromBeginning){
     
-    if (fromBeginning)
-        Tweener.removeAllTweens();
-    
     float lsx, lsy, lex, ley;
     float duration;
+    float percentPassed = 0.0f;
+    
+    if (fromBeginning)
+        Tweener.removeAllTweens();
     
     switch (direction) {
         case SEQ_DIRECTION_HORIZONTAL:
         {
+            
             if (fromBeginning){
                 lineStartPos.set(0, 0);
                 lineEndPos.set(0, rectH * rows);
+            } else {
+                percentPassed = ofNormalize(lineStartPos.x, 0, (rectW * columns));
             }
             
             lsx = rectW * columns;
             lsy = 0;
             lex = lsx;
             ley = rectH * rows;
-            duration = columns * trackSpeed;
+            duration = columns * trackSpeed * (1 - percentPassed);
             break;
         }
             
@@ -75,13 +79,15 @@ void Sequencer::startScan(bool fromBeginning){
             if (fromBeginning){
                 lineStartPos.set(0, 0);
                 lineEndPos.set(rectW * columns, 0);
+            } else {
+                percentPassed = ofNormalize(lineStartPos.y, 0, (rectH * rows));
             }
             
             lsx = 0;
             lsy = rectH * rows;
             lex = rectW * columns;
             ley = lsy;
-            duration = rows * trackSpeed;
+            duration = rows * trackSpeed * (1 - percentPassed);
             break;
         }
             
