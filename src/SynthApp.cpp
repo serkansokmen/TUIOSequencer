@@ -21,6 +21,11 @@ void SynthApp::setup(){
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
     bDebugMode = true;
+    speed = 1000;
+    columns = 6;
+    rows = 6;
+    // Create initial grid on update
+    bInitGrid = true;
     
     // Initialize segments container
     sequencer = new Sequencer;
@@ -34,7 +39,7 @@ void SynthApp::setup(){
     oscReceiver.setup(OSC_RECEIVE_PORT);
     oscSender.setup(OSC_HOST, OSC_SEND_PORT);
     
-    oscPoints.assign(5, OSCPoint());
+    oscPoints.assign(OSC_POINT_COUNT, OSCPoint());
     
     // Init scan rect
     scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), camWidth, camHeight);
@@ -76,9 +81,6 @@ void SynthApp::setup(){
         ->setThresh(threshold)
         ->setThresholdmode(Flob::ABSDIF);
 #endif
-    
-    // Create initial grid on update
-    bInitGrid = true;
 }
 
 //--------------------------------------------------------------
@@ -93,6 +95,8 @@ void SynthApp::update(){
     
 #ifdef USE_OSC
     
+    bool bCheckPoints = false;
+    
     // check for waiting messages
     while (oscReceiver.hasWaitingMessages()){
         
@@ -100,29 +104,35 @@ void SynthApp::update(){
 		ofxOscMessage m;
 		oscReceiver.getNextMessage(&m);
         
-        // check for position message
+        // check for grid message
+        vector<string> addrs = ofSplitString(m.getAddress(), "/");
         
-        for (int i=0; i<5; i++) {
+        if (addrs[1] == "grid" && addrs[2] == "sequencer"){
+            int gridPosX = ofToInt(addrs[4]) - 1;
+            int gridPosY = 6 - ofToInt(addrs[3]);
             
+            float val = m.getArgAsFloat(0);
+            if (val == 1.0f){
+                sequencer->segmentOn(gridPosX, gridPosY);
+            } else {
+                sequencer->segmentOff(gridPosX, gridPosY);
+            }
+            
+            ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridPosX) + ", " + ofToString(gridPosY) + " value:" + ofToString(val));
+        }
+        
+        // check for position messages
+        for (int i=0; i<OSC_POINT_COUNT; i++) {
             string indexStr = ofToString(i);
             OSCPoint &p = oscPoints[i];
-            p.position.set(-OSC_POINT_DRAW_RADIUS * 4, -OSC_POINT_DRAW_RADIUS * 4);
-            Tweener.addTween(p.alpha, 0, .5, &ofxTransitions::easeOutSine);
-            p.isOn = false;
-            
-            bool bCheckPoints = false;
             
             if (m.getAddress() == "/controller/blobs/" + indexStr){
-                
+
                 float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, scanRect.getWidth());
                 float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, scanRect.getHeight());
                 
                 p.isOn = true;
-
-//                p.position.set(posX, posY);
-                Tweener.addTween(p.alpha, 255.0f, .4, &ofxTransitions::easeOutSine);
-                Tweener.addTween(p.position.x, posX, .1, &ofxTransitions::easeOutSine);
-                Tweener.addTween(p.position.y, posY, .1, &ofxTransitions::easeOutSine);
+                p.position.set(posX, posY);
                 
                 ofLog(OF_LOG_NOTICE, "Watching Blob " + indexStr);
                 ofLog(OF_LOG_NOTICE, "X: " + ofToString(posX));
@@ -130,10 +140,10 @@ void SynthApp::update(){
                 
                 bCheckPoints = true;
             }
-            
             if (bCheckPoints) {
                 sequencer->checkSegments(oscPoints);
             }
+            Tweener.addTween(p.alpha, (p.isOn ? 1.0f : 0.0f), .1, &ofxTransitions::easeOutSine);
         }
         
         // check for horizontal message
@@ -291,17 +301,17 @@ void SynthApp::draw(){
     sequencer->draw();
     
 #ifdef USE_OSC
-    if (bDebugMode) {
-        vector<OSCPoint>::iterator point;
-        for (point = oscPoints.begin(); point != oscPoints.end(); *point++){
-            ofPushMatrix();
-            ofPushStyle();
-            ofSetColor(0, 255, 0, point->alpha);
-            ofCircle(point->position, 44);
-            ofPopStyle();
-            ofPopMatrix();
-        }
-    }
+//    if (bDebugMode) {
+//        vector<OSCPoint>::iterator point;
+//        for (point = oscPoints.begin(); point != oscPoints.end(); *point++){
+//            ofPushMatrix();
+//            ofPushStyle();
+//            ofSetColor(0, 255, 0, point->alpha);
+//            ofCircle(point->position, 44);
+//            ofPopStyle();
+//            ofPopMatrix();
+//        }
+//    }
 #endif
     
     ofPopMatrix();

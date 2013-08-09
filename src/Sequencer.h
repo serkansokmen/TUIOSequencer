@@ -29,17 +29,19 @@ class Sequencer {
     void initTimer();
 //    void sendGridStateViaOSC();
     
-    sequenceDirection   direction;
     ofPoint             lineStartPos;
     ofPoint             lineEndPos;
+    
     float               rectW;
     float               rectH;
-    int                 columns;
-    int                 rows;
-    
     float               trackSpeed;
     float               startTime;      // store when we start time timer
     float               endTime;        // when we want to stop the timer
+    
+    sequenceDirection   direction;
+    
+    int                 columns;
+    int                 rows;
     
 public:
     
@@ -61,6 +63,12 @@ public:
     
     // Toggles segment by coordinate
     void toggleSegment(int x, int y);
+    
+    // Toggles segment by coordinate
+    void segmentOn(int x, int y);
+    
+    // Toggles segment by coordinate
+    void segmentOff(int x, int y);
     
     // Grid segments
     vector<GridSegment> segments;

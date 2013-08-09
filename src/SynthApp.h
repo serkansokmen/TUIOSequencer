@@ -27,6 +27,8 @@
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
+
+#define OSC_POINT_COUNT     5
 #endif
 
 class SynthApp : public ofBaseApp {

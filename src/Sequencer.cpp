@@ -177,7 +177,7 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
             for(int i=0; i<points.size(); i++){
                 if (segmentPtr->rect.inside(ofVec2f(points[i].position)) &&
                     segmentPtr->rect.intersects(lineStartPos, lineEndPos) &&
-                    points[i].isOn){
+                    points[i].alpha > 0){
                     segmentPtr->bTouchesBlob = true;
                 }
             }
@@ -196,6 +196,19 @@ void Sequencer::toggleSegment(int x, int y){
         }
     }
 }
+
+//--------------------------------------------------------------
+void Sequencer::segmentOn(int x, int y){
+    int i = y * columns + x;
+    segments[i].bTouchesBlob = true;
+}
+
+//--------------------------------------------------------------
+void Sequencer::segmentOff(int x, int y){
+    int i = y * columns + x;
+    segments[i].bTouchesBlob = false;
+}
+
 
 //--------------------------------------------------------------
 
