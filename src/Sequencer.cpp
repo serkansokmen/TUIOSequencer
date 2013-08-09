@@ -15,8 +15,8 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
     columns = columCount;
     rows = rowCount;
     
-    rectW = rect.getWidth() / rows;
-    rectH = rect.getHeight() / columns;
+    rectW = rect.getWidth() / columns;
+    rectH = rect.getHeight() / rows;
     
     trackSpeed = speed;
     direction = dir;
@@ -25,10 +25,10 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
     segments.clear();
     
     // Create segments
-    for (int y = 0; y < columns; y++) {
-        for (int x = 0; x < rows; x++) {
+    for (int y = 0; y < rows; y++) {
+        for (int x = 0; x < columns; x++) {
             
-            int index = y + x * rows;
+            int index = y + x * columns;
             
             ofRectangle rect;
             rect.setPosition(x * rectW, y * rectH);
@@ -51,8 +51,6 @@ void Sequencer::startScan(bool fromBeginning){
     if (fromBeginning)
         Tweener.removeAllTweens();
     
-    cout << trackSpeed << endl;
-    
     float lsx, lsy, lex, ley;
     float duration;
     
@@ -61,14 +59,14 @@ void Sequencer::startScan(bool fromBeginning){
         {
             if (fromBeginning){
                 lineStartPos.set(0, 0);
-                lineEndPos.set(0, rectH * columns);
+                lineEndPos.set(0, rectH * rows);
             }
             
-            lsx = rectW * rows;
+            lsx = rectW * columns;
             lsy = 0;
             lex = lsx;
-            ley = rectH * columns;
-            duration = rows * trackSpeed;
+            ley = rectH * rows;
+            duration = columns * trackSpeed;
             break;
         }
             
@@ -76,14 +74,14 @@ void Sequencer::startScan(bool fromBeginning){
         {
             if (fromBeginning){
                 lineStartPos.set(0, 0);
-                lineEndPos.set(rectW * rows, 0);
+                lineEndPos.set(rectW * columns, 0);
             }
             
             lsx = 0;
-            lsy = rectH * columns;
-            lex = rectW * rows;
+            lsy = rectH * rows;
+            lex = rectW * columns;
             ley = lsy;
-            duration = columns * trackSpeed;
+            duration = rows * trackSpeed;
             break;
         }
             
@@ -271,7 +269,7 @@ void Sequencer::segmentOff(int x, int y){
 //            
 //            ofxOscMessage m;
 //            string address = "/grid/toggle_" + ofToString(y+1) + "_" + ofToString(x+1);
-//            cout << address << endl;
+//
 //            m.setAddress(address);
 //            
 //            if (segment->bTouchesBlob){

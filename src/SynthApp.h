@@ -39,6 +39,9 @@
 #define OSC_POINT_COUNT     5
 #endif
 
+#define COLUMNS 6
+#define ROWS    6
+
 
 class SynthApp : public ofBaseApp {
     
@@ -107,10 +110,8 @@ public:
     bool                bDrawBlobs;
     bool                bDrawVideo;
     bool                bDebugMode;
+    bool                bInitGrid;
     
     // GUI
     ofxUICanvas         *gui;
-    float               columns;
-    float               rows;
-    bool                bInitGrid;
 };

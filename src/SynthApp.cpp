@@ -22,8 +22,6 @@ void SynthApp::setup(){
     initGUI();
     bDebugMode = true;
     speed = 1000;
-    columns = 6;
-    rows = 6;
     
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
@@ -85,9 +83,6 @@ void SynthApp::setup(){
 
 //--------------------------------------------------------------
 void SynthApp::update(){
-    
-    columns = (int)columns;
-    rows = (int)rows;
     
     sequenceDirection direction = SEQ_DIRECTION_HORIZONTAL;
     
@@ -162,20 +157,6 @@ void SynthApp::update(){
             ofLog(OF_LOG_NOTICE, "Direction changed");
 		}
         
-        // check for horizontal message
-		if (m.getAddress() == "/controller/columns"){
-            columns = (int)m.getArgAsFloat(0);
-            bInitGrid = true;
-            ofLog(OF_LOG_NOTICE, "Initializing columns: " + ofToString(columns));
-		}
-        
-        // check for vertical message
-		else if (m.getAddress() == "/controller/rows"){
-            rows = (int)m.getArgAsFloat(0);
-            bInitGrid = true;
-            ofLog(OF_LOG_NOTICE, "Initializing rows: " + ofToString(rows));
-		}
-        
         // check for speed message
 		else if (m.getAddress() == "/controller/speed"){
             speed = m.getArgAsFloat(0);
@@ -247,7 +228,7 @@ void SynthApp::update(){
     
     // Re-init sequencer
     if (bInitGrid) {
-        sequencer->setup(scanRect, (int)columns, (int)rows, speed, direction);
+        sequencer->setup(scanRect, COLUMNS, ROWS, speed, direction);
         bInitGrid = false;
     }
     // Update sequencer
