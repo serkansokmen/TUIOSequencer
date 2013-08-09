@@ -9,25 +9,33 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxOpenCv.h"
-#include "ofxFlob.h"
-#include "ofxKinect.h"
 #include "ofxTweener.h"
 #include "ofxUI.h"
 #include "Sequencer.h"
 
+// Use Kinect to track blobs
 //#define USE_KINECT
+
+#ifdef USE_KINECT
+#include "ofxOpenCv.h"
+#include "ofxKinect.h"
+#endif
+
+// Use ofxFlob Blob Tracker
 //#define USE_FLOB
+
+#ifdef USE_FLOB
+#include "ofxFlob.h"
+#endif
+
+// Use OSC Controller
 #define USE_OSC
-
-#define OSC_HOST            "192.168.1.103"
-#define OSC_RECEIVE_PORT    8000
-#define OSC_SEND_PORT       9000
-
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
-
+#define OSC_HOST            "192.168.1.103"
+#define OSC_RECEIVE_PORT    8000
+#define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
 #endif
 
