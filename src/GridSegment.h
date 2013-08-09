@@ -12,7 +12,7 @@
 #include "ofxCvBlob.h"
 
 class GridSegment {
-    
+    ofRectangle     drawRect;
 public:
     
     void setup(const ofRectangle &r, int segId);

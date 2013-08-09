@@ -12,9 +12,12 @@
 void GridSegment::setup(const ofRectangle &r, int segId){
     rect.set(r);
     
+    float padding = 12.0f;
+    drawRect.setFromCenter(rect.getCenter(), rect.getWidth() - padding, rect.getHeight() - padding);
+    
     segmentId = segId;
     colorOn.set(ofColor::hotPink);
-    colorOff.set(ofColor::lavender);
+    colorOff.set(ofColor::gray);
     
     bTouchesBlob = false;
 }
@@ -22,6 +25,7 @@ void GridSegment::setup(const ofRectangle &r, int segId){
 //--------------------------------------------------------------
 void GridSegment::draw(){
     ofPushStyle();
+    ofSetLineWidth(2.0);
     if (bTouchesBlob) {
         ofFill();
         ofSetColor(colorOn);
@@ -29,6 +33,6 @@ void GridSegment::draw(){
         ofNoFill();
         ofSetColor(colorOff);
     }
-    ofRect(rect);
+    ofRectRounded(drawRect, 12);
     ofPopStyle();
 };
