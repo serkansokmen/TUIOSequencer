@@ -261,30 +261,3 @@ void Sequencer::segmentOff(int x, int y){
     int i = y * columns + x;
     segments[i].bTouchesBlob = false;
 }
-
-
-//--------------------------------------------------------------
-
-//void Sequencer::sendGridStateViaOSC(){
-//    
-//    for (int y=0; y<columns; y++) {
-//        for (int x=0; x<rows; x++) {
-//            
-//            int index = y + x * rows;
-//            GridSegment *segment = &segments[index];
-//            
-//            ofxOscMessage m;
-//            string address = "/grid/toggle_" + ofToString(y+1) + "_" + ofToString(x+1);
-//
-//            m.setAddress(address);
-//            
-//            if (segment->bTouchesBlob){
-//                m.addIntArg(1);
-//            } else {
-//                m.addIntArg(0);
-//            }
-//            
-//            oscSender.sendMessage(m);
-//        }
-//    }
-//}

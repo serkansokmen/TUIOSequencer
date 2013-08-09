@@ -101,8 +101,8 @@ void SynthApp::update(){
         
         // check for grid message
         vector<string> addrs = ofSplitString(m.getAddress(), "/");
-        
-        if (addrs[1] == "grid" && addrs[2] == "sequencer"){
+
+        if (addrs.size() == 5 && addrs[1] == "grid" && addrs[2] == "sequencer"){
             int gridPosX = ofToInt(addrs[4]) - 1;
             int gridPosY = 6 - ofToInt(addrs[3]);
             
