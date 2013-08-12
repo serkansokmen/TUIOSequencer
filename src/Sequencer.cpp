@@ -186,7 +186,8 @@ void Sequencer::checkSegments(const vector<ofxCvBlob> &blobs){
             GridSegment *segmentPtr = &segments[i];
             
             for(int i=0; i<blobs.size(); i++){
-                if (segmentPtr->rect.inside(blobs[i].boundingRect.getCenter()) && segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
+                if (segmentPtr->rect.inside(blobs[i].boundingRect.getCenter()) &&
+                    segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
                     segmentPtr->bTouchesBlob = true;
                 }
             }
@@ -208,7 +209,8 @@ void Sequencer::checkSegments(const vector<ABlob *> *blobs){
         for(int i=0; i<blobs->size(); i++){
             ABlob &aBlob = *(blobs->at(i));
             ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-            if (segmentPtr->rect.inside(blobRect.getCenter()) && segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
+            if (segmentPtr->rect.inside(blobRect.getCenter()) &&
+                segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
                 segmentPtr->bTouchesBlob = true;
             }
         }
@@ -229,8 +231,7 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
             
             for(int i=0; i<points.size(); i++){
                 if (segmentPtr->rect.inside(ofVec2f(points[i].position)) &&
-                    segmentPtr->rect.intersects(lineStartPos, lineEndPos) &&
-                    points[i].alpha > 0){
+                    segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
                     segmentPtr->bTouchesBlob = true;
                 }
             }

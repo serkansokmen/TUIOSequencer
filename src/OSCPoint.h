@@ -16,9 +16,7 @@ class OSCPoint {
 public:
     OSCPoint(){
         isOn = false;
-        alpha = 0.0f;
     };
     ofPoint position;
     bool    isOn;
-    float   alpha;
 };
