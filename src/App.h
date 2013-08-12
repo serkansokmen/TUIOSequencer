@@ -18,7 +18,7 @@
 // Use ofxFlob Blob Tracker
 //#define USE_FLOB
 // Use OSC Controller
-#define USE_OSC
+//#define USE_OSC
 
 
 #ifdef USE_KINECT
@@ -32,7 +32,7 @@
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
-#define OSC_HOST            "192.168.1.103"
+#define OSC_HOST            "192.168.254.36"
 #define OSC_RECEIVE_PORT    8000
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
@@ -42,7 +42,7 @@
 #define ROWS    6
 
 
-class SynthApp : public ofBaseApp {
+class App : public ofBaseApp {
     
 public:
     void setup();
@@ -75,7 +75,7 @@ public:
     vector <OSCPoint>   oscPoints;
 #endif
     
-#ifdef USE_KINECT    
+#ifdef USE_KINECT
     // OpenCV
     ofxCvColorImage     colorImg;       // color image
 	ofxCvGrayscaleImage grayImage;      // grayscale depth image

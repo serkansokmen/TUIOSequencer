@@ -6,16 +6,16 @@
 //
 //
 
-#include "SynthApp.h"
+#include "App.h"
 
 
 //--------------------------------------------------------------
-void SynthApp::setup(){
+void App::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
     ofEnableAlphaBlending();
-    ofSetLogLevel(OF_LOG_SILENT);
+    ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetLineWidth(2.0);
     
     // Setup GUI first for loading initial values from previously saved XML
@@ -40,13 +40,12 @@ void SynthApp::setup(){
     oscPoints.assign(OSC_POINT_COUNT, OSCPoint());
     
     // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), camWidth, camHeight);
+    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), camWidth, camHeight);
 #endif
     
 #ifdef USE_KINECT
     
     // Kinect setup
-    //    kinect.init(true, true, false);
     kinect.init();
     kinect.open();
     
@@ -54,6 +53,7 @@ void SynthApp::setup(){
 	grayImage.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshNear.allocate(kinect.getWidth(), kinect.getHeight());
 	grayThreshFar.allocate(kinect.getWidth(), kinect.getHeight());
+    
     
     // Init scan rect
     scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), kinect.getWidth(), kinect.getHeight());
@@ -82,7 +82,7 @@ void SynthApp::setup(){
 }
 
 //--------------------------------------------------------------
-void SynthApp::update(){
+void App::update(){
     
     sequenceDirection direction = SEQ_DIRECTION_HORIZONTAL;
     
@@ -101,8 +101,10 @@ void SynthApp::update(){
         
         // check for grid message
         vector<string> addrs = ofSplitString(m.getAddress(), "/");
+        
+        cout << m.getAddress() << endl;
 
-        if (addrs.size() == 5 && addrs[1] == "grid" && addrs[2] == "sequencer"){
+        if (addrs.size() == 5 && addrs[1] == "controller" && addrs[2] == "grid"){
             int gridPosX = ofToInt(addrs[4]) - 1;
             int gridPosY = 6 - ofToInt(addrs[3]);
             
@@ -121,7 +123,7 @@ void SynthApp::update(){
             string indexStr = ofToString(i);
             OSCPoint &p = oscPoints[i];
             
-            if (m.getAddress() == "/controller/blobs/" + indexStr){
+            if (m.getAddress() == "/simulate/blobs/" + indexStr){
 
                 float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, scanRect.getWidth());
                 float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, scanRect.getHeight());
@@ -138,7 +140,6 @@ void SynthApp::update(){
             if (bCheckPoints) {
                 sequencer->checkSegments(oscPoints);
             }
-            Tweener.addTween(p.alpha, (p.isOn ? 1.0f : 0.0f), .1, &ofxTransitions::easeOutSine);
         }
         
         // check for horizontal message
@@ -236,7 +237,7 @@ void SynthApp::update(){
 }
 
 //--------------------------------------------------------------
-void SynthApp::draw(){
+void App::draw(){
     
 //    ofBackgroundGradient(ofColor::black, ofColor::darkBlue, OF_GRADIENT_LINEAR);
     
@@ -299,7 +300,7 @@ void SynthApp::draw(){
 }
 
 //--------------------------------------------------------------
-void SynthApp::initGUI(){
+void App::initGUI(){
     gui = new ofxUICanvas();
     gui->setFont("GUI/EnvyCodeR.ttf");
     gui->addLabel("MotionSynth");
@@ -353,11 +354,11 @@ void SynthApp::initGUI(){
     gui->setVisible(true);
 #endif
     
-    ofAddListener(gui->newGUIEvent, this, &SynthApp::guiEvent);
+    ofAddListener(gui->newGUIEvent, this, &App::guiEvent);
 }
 
 //--------------------------------------------------------------
-void SynthApp::guiEvent(ofxUIEventArgs &e){
+void App::guiEvent(ofxUIEventArgs &e){
 #ifdef USE_KINECT
     if (e.widget->getName() == "tilt angle"){
         kinect.setCameraTiltAngle(angle);
@@ -380,7 +381,7 @@ void SynthApp::guiEvent(ofxUIEventArgs &e){
 }
 
 //--------------------------------------------------------------
-void SynthApp::keyPressed(int key){
+void App::keyPressed(int key){
     
     switch (key) {
         case 's':
@@ -393,22 +394,22 @@ void SynthApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void SynthApp::keyReleased(int key){
+void App::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::mouseMoved(int x, int y ){
+void App::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::mouseDragged(int x, int y, int button){
+void App::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::mousePressed(int x, int y, int button){
+void App::mousePressed(int x, int y, int button){
     if (bDebugMode){
         float rx = x - scanRect.getX();
         float ry = y - scanRect.getY();
@@ -418,27 +419,27 @@ void SynthApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void SynthApp::mouseReleased(int x, int y, int button){
+void App::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::windowResized(int w, int h){
+void App::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::gotMessage(ofMessage msg){
+void App::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::dragEvent(ofDragInfo dragInfo){ 
+void App::dragEvent(ofDragInfo dragInfo){ 
 
 }
 
 //--------------------------------------------------------------
-void SynthApp::exit(){
+void App::exit(){
     
 #ifdef USE_KINECT
 	kinect.close();
