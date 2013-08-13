@@ -11,7 +11,6 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxTweener.h"
-#include "ofxKinectBlob.h"
 #include "ABlob.h"
 #include "GridSegment.h"
 #include "OSCPoint.h"
@@ -49,9 +48,6 @@ public:
     void draw();
     
     void setSpeed(float speed);
-    
-    // Check segments against OpenCV blobs
-    void checkSegments(const vector<ofxKinectBlob> &blobs);
     
     // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);

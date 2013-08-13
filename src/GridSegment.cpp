@@ -12,7 +12,7 @@
 void GridSegment::setup(const ofRectangle &r, int segId){
     rect.set(r);
     
-    float padding = 12.0f;
+    float padding = 0.0f;
     drawRect.setFromCenter(rect.getCenter(), rect.getWidth() - padding, rect.getHeight() - padding);
     
     segmentId = segId;

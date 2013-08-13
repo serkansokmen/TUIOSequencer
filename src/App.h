@@ -16,9 +16,9 @@
 // Use Kinect to track blobs
 //#define USE_KINECT
 // Use ofxFlob Blob Tracker
-#define USE_FLOB
+//#define USE_FLOB
 // Use OSC Controller
-//#define USE_OSC
+#define USE_OSC
 
 
 #ifdef USE_KINECT
@@ -34,7 +34,7 @@
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
-#define OSC_HOST            "192.168.254.36"
+#define OSC_HOST            "192.168.1.100"
 #define OSC_RECEIVE_PORT    8000
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5

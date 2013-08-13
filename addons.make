@@ -3,7 +3,5 @@ ofxOsc
 ofxXmlSettings
 ofxFlob
 ofxKinect
-ofxKinectBlobFinder
-ofxKinectBlobTracker
 ofxTweener
 ofxUI

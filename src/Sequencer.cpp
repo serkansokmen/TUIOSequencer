@@ -115,11 +115,11 @@ void Sequencer::update(){
 //--------------------------------------------------------------
 void Sequencer::draw(){
     
-    ofPushStyle();
-    ofNoFill();
-    ofSetColor(ofColor::darkGreen);
-    ofRectRounded(0, 0, rectW * columns, rectH * rows, 12);
-    ofPopStyle();
+//    ofPushStyle();
+//    ofNoFill();
+//    ofSetColor(ofColor::darkGreen);
+//    ofRectRounded(0, 0, rectW * columns, rectH * rows, 12);
+//    ofPopStyle();
     
     vector<GridSegment>::iterator segment;
     for (segment = segments.begin(); segment != segments.end(); segment++){
@@ -172,28 +172,6 @@ void Sequencer::setSpeed(float speed){
     trackSpeed = speed;
     startScan(false);
 }
-
-//--------------------------------------------------------------
-void Sequencer::checkSegments(const vector<ofxKinectBlob> &blobs){
-    // Reset segment touch states
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->bTouchesBlob = false;
-    }
-    
-    if (blobs.size() > 0){
-        for (int i=0; i<segments.size(); i++){
-            GridSegment *segmentPtr = &segments[i];
-            
-            for(int i=0; i<blobs.size(); i++){
-                if (segmentPtr->rect.inside(blobs[i].getGlobalPosition()) &&
-                    segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
-                    segmentPtr->bTouchesBlob = true;
-                }
-            }
-        }
-    }
-};
 
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<ABlob *> *blobs){

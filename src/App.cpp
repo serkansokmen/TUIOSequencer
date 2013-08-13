@@ -78,14 +78,14 @@ void App::setup(){
     // NOTE: measurement units in meters!!!
 	minBlobVol = 0.02f;
 	maxBlobVol = 2.0f;
-    //no cropping
-    cropBoxMin = ofVec3f(-10, -10, -10);
-    cropBoxMax = ofVec3f(10, 10, 10);
+    // no cropping
+//    cropBoxMin = ofVec3f(0, 0, 0);
+//    cropBoxMax = ofVec3f(20, 1.6, 20);
     //
-    thresh3D = ofVec3f(0.2,0.2,0.3);
+    thresh3D = ofVec3f(0.2f, 0.2f, 0.3f);
     // xy pixel search range
     thresh2D = 1;
-    maxBlobs = 10;
+    maxBlobs = 36;
     
     float sqrResolution = blobFinder.getResolution();
     sqrResolution *= sqrResolution;
@@ -94,7 +94,7 @@ void App::setup(){
     bLearnBackground = true;
     
     // start from the front
-	bDrawPointCloud = false;
+	bDrawPointCloud = true;
 	bDrawIDs = true;
     
     // Init scan rect
@@ -302,14 +302,18 @@ void App::draw(){
     
 #ifdef USE_KINECT
     if(bDrawPointCloud) {
-		drawPointCloud();
+//        camera.begin();
+        drawPointCloud();
+//        camera.end();
 	} else {
 		// draw from the live kinect
-		kinect.drawDepth(10, 10, 320, 240);
-		kinect.draw(340, 10, 320, 240);
+//		kinect.drawDepth(10, 10, 320, 240);
+//		kinect.draw(340, 10, 320, 240);
         
-		grayImage.draw(10, 260, 320, 240);
-		grayDiff.draw(340, 260, 320, 240);
+//		grayImage.draw(10, 260, 320, 240);
+//		grayDiff.draw(340, 260, 320, 240);
+        grayImage.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
+        grayDiff.draw(0, 0, scanRect.getWidth(), scanRect.getHeight());
 	}
 #endif
     
@@ -338,14 +342,18 @@ void App::draw(){
 #ifdef USE_KINECT
 void App::drawPointCloud() {
     ofPushMatrix();
-    ofScale(100.0,100.0,100.0);
+    ofScale(100.0, 100.0, 100.0);
     glEnable(GL_DEPTH_TEST);
     glPointSize(3);
+    
+//    ofDrawGridPlane(2);
+    
     // draw blobs
     for (unsigned int i=0; i < blobFinder.blobs.size(); i++) {
-        ofSetColor(25*i,25*i,255-25*i);
+        ofSetColor(25*i, 25*i, 255-25*i);
         // draw blobs
         blobFinder.blobs[i].draw();
+        
         // plot blobs IDs
         if (bDrawIDs) {
             ofPushMatrix();
@@ -362,11 +370,11 @@ void App::drawPointCloud() {
         unsigned int trjSize = trajectory.size();
         if (trjSize > 1) {
             ofPushMatrix();
-            ofSetColor(255,255,0);
-            ofSetLineWidth(3);
+            ofSetColor(255, 255, 0);
+            ofSetLineWidth(1);
             glBegin(GL_LINE);
             for (unsigned int j = 0; j < trjSize; j++) {
-                glVertex3f( trajectory[j].x, trajectory[j].y, trajectory[j].z );
+                glVertex3f(trajectory[j].x, trajectory[j].y, trajectory[j].z);
             }
             glEnd();
             ofPopMatrix();
@@ -378,19 +386,26 @@ void App::drawPointCloud() {
 }
 
 //--------------------------------------------------
-void App::blobOn( ofVec3f centroid, int id, int order ) {
-    // cout << "blobOn() - id:" << id << " order:" << order << endl;
+void App::blobOn(ofVec3f centroid, int id, int order){
+    cout << "blobOn() - id:" << id << " order:" << order << endl;
 }
 
-void App::blobMoved( ofVec3f centroid, int id, int order) {
-    //  cout << "blobMoved() - id:" << id << " order:" << order << endl;
-    // full access to blob object ( get a reference)
-    //  ofxKinectTrackedBlob blob = blobTracker.getById( id );
-    // cout << "volume: " << blob.volume << endl;
+void App::blobMoved(ofVec3f centroid, int id, int order){
+    cout << "blobMoved() - id:" << id << " order:" << order << endl;
+    // full access to blob object (get a reference)
+    ofxKinectTrackedBlob *blob = &blobTracker.blobs[blobTracker.getIndexById(id)];
+    cout << "volume: " << blob->volume << "," << blob->massCenter << endl;
+    
+    float x = ofMap(centroid.x, -.5, .5, 0, scanRect.getWidth());
+    float y = ofMap(centroid.z, -.5, .5, 0, scanRect.getHeight());
+    
+    ofSetColor(ofColor::red);
+    ofCircle(x, y, 40);
+    sequencer->toggleSegment(x, y);
 }
 
-void App::blobOff( ofVec3f centroid, int id, int order ) {
-    // cout << "blobOff() - id:" << id << " order:" << order << endl;
+void App::blobOff(ofVec3f centroid, int id, int order){
+    cout << "blobOff() - id:" << id << " order:" << order << endl;
 }
 #endif
 
@@ -412,6 +427,14 @@ void App::initGUI(){
     gui->addToggle("Draw Point Cloud", &bDrawPointCloud);
     gui->addToggle("Draw Blob IDs", &bDrawIDs);
     gui->addSlider("tilt angle", -30.0f, 30.0f, &angle);
+    gui->addSpacer();
+    gui->addSlider("crop box min X", -20.0f, 20.0f, &cropBoxMin.x);
+    gui->addSlider("crop box min Y", 0.0f, 2.0f, &cropBoxMin.y);
+    gui->addSlider("crop box min Z", -20.0f, 20.0f, &cropBoxMin.z);
+    gui->addSpacer();
+    gui->addSlider("crop box max X", -20.0f, 20.0f, &cropBoxMax.x);
+    gui->addSlider("crop box max Y", 0.0f, 2.0f, &cropBoxMax.y);
+    gui->addSlider("crop box max Z", -20.0f, 20.0f, &cropBoxMax.z);
 #endif
     
 #ifdef USE_FLOB
