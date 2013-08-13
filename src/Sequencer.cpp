@@ -36,7 +36,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
             rect.setHeight(rectH);
             
             GridSegment seg;
-            seg.setup(rect, index);
+            seg.setup(rect, index, 12.0f);
             
             segments.push_back(seg);
         }
@@ -178,7 +178,7 @@ void Sequencer::checkSegments(const vector<ABlob *> *blobs){
     // Reset segment touch states
     vector<GridSegment>::iterator segment;
     for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->bTouchesBlob = false;
+        segment->setState(off);
     }
     
     for (int i=0; i<segments.size(); i++){
@@ -187,9 +187,9 @@ void Sequencer::checkSegments(const vector<ABlob *> *blobs){
         for(int i=0; i<blobs->size(); i++){
             ABlob &aBlob = *(blobs->at(i));
             ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-            if (segmentPtr->rect.inside(blobRect.getCenter()) &&
-                segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
-                segmentPtr->bTouchesBlob = true;
+            if (segmentPtr->boundingBox.inside(blobRect.getCenter()) &&
+                segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
+                segmentPtr->setState(on);
             }
         }
     }
@@ -200,7 +200,7 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
     // Reset segment touch states
     vector<GridSegment>::iterator segment;
     for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->bTouchesBlob = false;
+        segment->setState(off);
     }
     
     if (points.size() > 0){
@@ -208,9 +208,9 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
             GridSegment *segmentPtr = &segments[i];
             
             for(int i=0; i<points.size(); i++){
-                if (segmentPtr->rect.inside(ofVec2f(points[i].position)) &&
-                    segmentPtr->rect.intersects(lineStartPos, lineEndPos)){
-                    segmentPtr->bTouchesBlob = true;
+                if (segmentPtr->boundingBox.inside(ofVec2f(points[i].position)) &&
+                    segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
+                    segmentPtr->setState(on);
                 }
             }
         }
@@ -223,20 +223,20 @@ void Sequencer::toggleSegment(int x, int y){
     for (int i=0; i<segments.size(); i++){
         GridSegment *segmentPtr = &segments[i];
         
-        if (segmentPtr->rect.inside(x, y)) {
-            segmentPtr->bTouchesBlob = !segmentPtr->bTouchesBlob;
+        if (segmentPtr->boundingBox.inside(x, y)) {
+//            segmentPtr->bTouchesBlob = !segmentPtr->bTouchesBlob;
         }
     }
 }
-
-//--------------------------------------------------------------
-void Sequencer::segmentOn(int x, int y){
-    int i = y * columns + x;
-    segments[i].bTouchesBlob = true;
-}
-
-//--------------------------------------------------------------
-void Sequencer::segmentOff(int x, int y){
-    int i = y * columns + x;
-    segments[i].bTouchesBlob = false;
-}
+//
+////--------------------------------------------------------------
+//void Sequencer::segmentOn(int x, int y){
+//    int i = y * columns + x;
+//    segments[i].bTouchesBlob = true;
+//}
+//
+////--------------------------------------------------------------
+//void Sequencer::segmentOff(int x, int y){
+//    int i = y * columns + x;
+//    segments[i].bTouchesBlob = false;
+//}

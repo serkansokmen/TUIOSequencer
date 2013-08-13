@@ -152,9 +152,9 @@ void App::update(){
             
             float val = m.getArgAsFloat(0);
             if (val == 1.0f){
-                sequencer->segmentOn(gridPosX, gridPosY);
+//                sequencer->segmentOn(gridPosX, gridPosY);
             } else {
-                sequencer->segmentOff(gridPosX, gridPosY);
+//                sequencer->segmentOff(gridPosX, gridPosY);
             }
             
             ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridPosX) + ", " + ofToString(gridPosY) + " value:" + ofToString(val));

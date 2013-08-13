@@ -58,12 +58,6 @@ public:
     // Toggles segment by coordinate
     void toggleSegment(int x, int y);
     
-    // Toggles segment by coordinate
-    void segmentOn(int x, int y);
-    
-    // Toggles segment by coordinate
-    void segmentOff(int x, int y);
-    
     // Grid segments
     vector<GridSegment> segments;
 };

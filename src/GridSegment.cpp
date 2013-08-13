@@ -1,38 +1,64 @@
 //
 //  GridSegment.cpp
-//  PresenceDetectorGrid
+//  MotionSynth
 //
-//  Created by Serkan Sökmen on 31.07.2013.
+//  Created by Serkan Sokmen on 31.07.2013.
 //
 //
 
 #include "GridSegment.h"
 
+
 //--------------------------------------------------------------
-void GridSegment::setup(const ofRectangle &r, int segId){
-    rect.set(r);
-    
-    float padding = 0.0f;
-    drawRect.setFromCenter(rect.getCenter(), rect.getWidth() - padding, rect.getHeight() - padding);
-    
+void GridSegment::setup(const ofRectangle &r, int segId, float p=8.0f){
+
+    boundingBox.set(r);
     segmentId = segId;
-    colorOn.set(ofColor::hotPink);
-    colorOff.set(ofColor::gray);
+    state = off;
     
-    bTouchesBlob = false;
+    outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - p*.2, boundingBox.getHeight() - p*.2);
+    drawRect.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - p, boundingBox.getHeight() - p);
 }
 
 //--------------------------------------------------------------
 void GridSegment::draw(){
     ofPushStyle();
-    ofSetLineWidth(2.0);
-    if (bTouchesBlob) {
-        ofFill();
-        ofSetColor(colorOn);
-    } else {
-        ofNoFill();
-        ofSetColor(colorOff);
+    ofSetLineWidth(1.0);
+    cout << state << endl;
+    switch (state) {
+        case off:
+            ofSetColor(ofColor::gray, 255);
+            ofNoFill();
+            ofRect(outerBox);
+            ofSetColor(ofColor::gray, 100);
+            ofFill();
+            ofRect(drawRect);
+            break;
+        case active:
+            ofSetColor(ofColor::white, 255);
+            ofNoFill();
+            ofRect(outerBox);
+            ofSetColor(ofColor::blueViolet, 150);
+            ofFill();
+            ofRect(drawRect);
+            break;
+        case on:
+            ofSetColor(ofColor::white, 255);
+            ofNoFill();
+            ofRect(outerBox);
+            ofSetColor(ofColor::blueViolet, 255);
+            ofFill();
+            ofRect(drawRect);
+            break;
+            
+        default:
+            break;
     }
-    ofRectRounded(drawRect, 8);
+    
     ofPopStyle();
 };
+
+//--------------------------------------------------------------
+void GridSegment::setState(SegmentState s){
+    state = s;
+}
