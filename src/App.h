@@ -14,7 +14,7 @@
 #include "Sequencer.h"
 
 // Use Kinect to track blobs
-//#define USE_KINECT
+#define USE_KINECT
 // Use ofxFlob Blob Tracker
 //#define USE_FLOB
 // Use OSC Controller
@@ -24,6 +24,8 @@
 #ifdef USE_KINECT
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
+#include "ofxKinectBlobFinder.h"
+#include "ofxKinectBlobTracker.h"
 #endif
 
 #ifdef USE_FLOB
@@ -42,7 +44,11 @@
 #define ROWS    6
 
 
+#ifdef USE_KINECT
+class App : public ofBaseApp, public ofxKinectBlobListener {
+#else
 class App : public ofBaseApp {
+#endif
     
 public:
     void setup();
@@ -59,6 +65,12 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+#ifdef USE_KINECT
+    void drawPointCloud();
+    void blobOn(ofVec3f centroid, int id, int order);
+    void blobMoved(ofVec3f centroid, int id, int order);
+    void blobOff(ofVec3f centroid, int id, int order);
+#endif
     
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
@@ -76,20 +88,38 @@ public:
 #endif
     
 #ifdef USE_KINECT
-    // OpenCV
-    ofxCvColorImage     colorImg;       // color image
-	ofxCvGrayscaleImage grayImage;      // grayscale depth image
-	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
-	ofxCvGrayscaleImage grayThreshFar;  // the far thresholded image
-    
-    ofxCvContourFinder  contourFinder;  // contour finder
-    
-    float               nearThreshold;
-	float               farThreshold;
-    float               angle;
     
     // Kinect
-    ofxKinect           kinect;
+    ofxKinect kinect;
+    ofxKinectBlobFinder  blobFinder;
+    ofxKinectBlobTracker blobTracker;
+    
+    // OpenCV
+    ofxCvColorImage     colorImg;
+    ofxCvGrayscaleImage grayImage; // grayscale depth image
+	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
+	ofxCvGrayscaleImage grayThreshFar; // the far thresholded image
+    ofxCvGrayscaleImage bgImage;
+    ofxCvGrayscaleImage grayDiff;
+    
+    ofImage             grayDiffOfImage;    // For ofxKinectBlobTracker
+    
+    ofVec3f             cropBoxMin;
+    ofVec3f             cropBoxMax;
+    ofVec3f             thresh3D;
+    
+    float               minBlobVol;
+	float               maxBlobVol;
+    float               angle;
+    int                 numPixels;
+    int                 minBlobPoints;
+    int                 thresh2D;
+    unsigned int        maxBlobs;
+    
+    bool                bDrawPointCloud;
+	bool                bDrawIDs;
+	bool                bLearnBackground;
+    
 #endif
     
 #ifdef USE_FLOB
