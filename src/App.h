@@ -14,9 +14,9 @@
 #include "Sequencer.h"
 
 // Use Kinect to track blobs
-#define USE_KINECT
+//#define USE_KINECT
 // Use ofxFlob Blob Tracker
-//#define USE_FLOB
+#define USE_FLOB
 // Use OSC Controller
 //#define USE_OSC
 

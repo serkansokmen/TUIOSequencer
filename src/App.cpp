@@ -98,7 +98,7 @@ void App::setup(){
 	bDrawIDs = true;
     
     // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), kinect.getWidth(), kinect.getHeight());
+    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), kinect.getWidth(), kinect.getHeight());
 #endif
 
 #ifdef USE_FLOB
@@ -106,7 +106,7 @@ void App::setup(){
     camHeight = 240;
     
     // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5), camWidth * 2.5, camHeight * 2.5);
+    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), camWidth * 2.5, camHeight * 2.5);
     
     vidGrabber.setVerbose(true);
     vidGrabber.setDeviceID(0);
@@ -335,6 +335,7 @@ void App::draw(){
 }
 
 //--------------------------------------------------------------
+#ifdef USE_KINECT
 void App::drawPointCloud() {
     ofPushMatrix();
     ofScale(100.0,100.0,100.0);
@@ -391,6 +392,7 @@ void App::blobMoved( ofVec3f centroid, int id, int order) {
 void App::blobOff( ofVec3f centroid, int id, int order ) {
     // cout << "blobOff() - id:" << id << " order:" << order << endl;
 }
+#endif
 
 //--------------------------------------------------------------
 void App::initGUI(){
