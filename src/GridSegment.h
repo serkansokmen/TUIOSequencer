@@ -33,6 +33,7 @@ public:
     void draw();
     
     void setState(SegmentState s);
+    const SegmentState &getState();
     
     ofRectangle     boundingBox;
     
