@@ -218,17 +218,6 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
     }
 };
 
-//--------------------------------------------------------------
-void Sequencer::toggleSegment(int x, int y){
-    vector<GridSegment>::iterator segment;
-    for (int i=0; i<segments.size(); i++){
-        GridSegment *segmentPtr = &segments[i];
-        
-        if (segmentPtr->boundingBox.inside(x, y)) {
-//            segmentPtr->bTouchesBlob = !segmentPtr->bTouchesBlob;
-        }
-    }
-}
 //
 ////--------------------------------------------------------------
 //void Sequencer::segmentOn(int x, int y){

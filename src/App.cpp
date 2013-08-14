@@ -533,7 +533,7 @@ void App::mousePressed(int x, int y, int button){
         float rx = x - scanRect.getX();
         float ry = y - scanRect.getY();
         
-        sequencer->toggleSegment(rx, ry);
+//        sequencer->toggleSegment(rx, ry);
     }
 }
 

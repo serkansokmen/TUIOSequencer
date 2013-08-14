@@ -55,9 +55,6 @@ public:
     // Check segments against ofPoint objects
     void checkSegments(const vector<OSCPoint> &points);
     
-    // Toggles segment by coordinate
-    void toggleSegment(int x, int y);
-    
     // Grid segments
     vector<GridSegment> segments;
 };
