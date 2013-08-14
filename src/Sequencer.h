@@ -12,7 +12,7 @@
 #include "ofxOsc.h"
 #include "ofxTweener.h"
 #include "ABlob.h"
-#include "GridSegment.h"
+#include "Track.h"
 #include "OSCPoint.h"
 
 
@@ -34,13 +34,15 @@ class Sequencer {
     ofPoint             lineStartPos;
     ofPoint             lineEndPos;
     
-    float               rectW;
-    float               rectH;
+    float               stepButtonWidth;
+    float               stepButtonHeight;
     float               trackSpeed;
     int                 columns;
     int                 rows;
     
 public:
+    
+    ~Sequencer();
     
     void setup(const ofRectangle rect, int columnCount, int rowCount,
                float speed=1000, sequenceDirection dir=SEQ_DIRECTION_HORIZONTAL);
@@ -55,6 +57,6 @@ public:
     // Check segments against ofPoint objects
     void checkSegments(const vector<OSCPoint> &points);
     
-    // Grid segments
-    vector<GridSegment> segments;
+    // Tracks
+    vector<Track> tracks;
 };

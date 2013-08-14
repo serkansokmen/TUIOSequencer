@@ -10,36 +10,32 @@
 
 
 //--------------------------------------------------------------
+Sequencer::~Sequencer(){
+    tracks.clear();
+}
+
+
+//--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, float speed, sequenceDirection dir){
     
     columns = columCount;
     rows = rowCount;
     
-    rectW = rect.getWidth() / columns;
-    rectH = rect.getHeight() / rows;
+    stepButtonWidth = rect.getWidth() / columns;
+    stepButtonHeight = rect.getHeight() / rows;
     
     trackSpeed = speed;
     direction = dir;
     
-	// Clear segments vector
-    segments.clear();
+	// Clear and re-assign tracks
+    tracks.clear();
+    tracks.assign(rows, Track());
     
-    // Create segments
+    // Create tracks
     for (int y = 0; y < rows; y++) {
-        for (int x = 0; x < columns; x++) {
-            
-            int index = y + x * columns;
-            
-            ofRectangle rect;
-            rect.setPosition(x * rectW, y * rectH);
-            rect.setWidth(rectW);
-            rect.setHeight(rectH);
-            
-            GridSegment seg;
-            seg.setup(rect, index, 12.0f);
-            
-            segments.push_back(seg);
-        }
+        tracks[y].setup("sounds/rotate.mp3",
+                    ofRectangle(rect.getX(), stepButtonHeight * y, rect.getWidth(), stepButtonHeight),
+                    columns);
     }
     
     startScan(true);
@@ -61,15 +57,15 @@ void Sequencer::startScan(bool fromBeginning){
             
             if (fromBeginning){
                 lineStartPos.set(0, 0);
-                lineEndPos.set(0, rectH * rows);
+                lineEndPos.set(0, stepButtonHeight * rows);
             } else {
-                percentPassed = ofNormalize(lineStartPos.x, 0, (rectW * columns));
+                percentPassed = ofNormalize(lineStartPos.x, 0, (stepButtonWidth * columns));
             }
             
-            lsx = rectW * columns;
+            lsx = stepButtonWidth * columns;
             lsy = 0;
             lex = lsx;
-            ley = rectH * rows;
+            ley = stepButtonHeight * rows;
             duration = columns * trackSpeed * (1 - percentPassed);
             break;
         }
@@ -78,14 +74,14 @@ void Sequencer::startScan(bool fromBeginning){
         {
             if (fromBeginning){
                 lineStartPos.set(0, 0);
-                lineEndPos.set(rectW * columns, 0);
+                lineEndPos.set(stepButtonWidth * columns, 0);
             } else {
-                percentPassed = ofNormalize(lineStartPos.y, 0, (rectH * rows));
+                percentPassed = ofNormalize(lineStartPos.y, 0, (stepButtonHeight * rows));
             }
             
             lsx = 0;
-            lsy = rectH * rows;
-            lex = rectW * columns;
+            lsy = stepButtonHeight * rows;
+            lex = stepButtonWidth * columns;
             ley = lsy;
             duration = rows * trackSpeed * (1 - percentPassed);
             break;
@@ -106,24 +102,27 @@ void Sequencer::startScan(bool fromBeginning){
 //--------------------------------------------------------------
 void Sequencer::update(){
     
-    if ((direction == SEQ_DIRECTION_HORIZONTAL && lineStartPos.x >= int(rectW * columns)) ||
-        (direction == SEQ_DIRECTION_VERTICAL && lineStartPos.y >= int(rectH * rows))) {
+    if ((direction == SEQ_DIRECTION_HORIZONTAL && lineStartPos.x >= int(stepButtonWidth * columns)) ||
+        (direction == SEQ_DIRECTION_VERTICAL && lineStartPos.y >= int(stepButtonHeight * rows))) {
         startScan(true);
+    }
+    
+    for (int i=0; i<tracks.size(); i++){
+        tracks[i].update(16);
     }
 };
 
 //--------------------------------------------------------------
 void Sequencer::draw(){
     
-//    ofPushStyle();
-//    ofNoFill();
-//    ofSetColor(ofColor::darkGreen);
-//    ofRectRounded(0, 0, rectW * columns, rectH * rows, 12);
-//    ofPopStyle();
+    ofPushStyle();
+    ofNoFill();
+    ofSetColor(ofColor::darkGreen);
+    ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
+    ofPopStyle();
     
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->draw();
+    for (int i=0; i<tracks.size(); i++){
+        tracks[i].draw();
     }
     
     ofPoint lStart = lineStartPos;
@@ -176,46 +175,46 @@ void Sequencer::setSpeed(float speed){
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<ABlob *> *blobs){
     // Reset segment touch states
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->setState(off);
-    }
-    
-    for (int i=0; i<segments.size(); i++){
-        GridSegment *segmentPtr = &segments[i];
-        
-        for(int i=0; i<blobs->size(); i++){
-            ABlob &aBlob = *(blobs->at(i));
-            ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-            if (segmentPtr->boundingBox.inside(blobRect.getCenter()) &&
-                segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
-                segmentPtr->setState(on);
-            }
-        }
-    }
+//    vector<GridSegment>::iterator segment;
+//    for (segment = segments.begin(); segment != segments.end(); segment++){
+//        segment->setState(off);
+//    }
+//    
+//    for (int i=0; i<segments.size(); i++){
+//        GridSegment *segmentPtr = &segments[i];
+//        
+//        for(int i=0; i<blobs->size(); i++){
+//            ABlob &aBlob = *(blobs->at(i));
+//            ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
+//            if (segmentPtr->boundingBox.inside(blobRect.getCenter()) &&
+//                segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
+//                segmentPtr->setState(on);
+//            }
+//        }
+//    }
 }
 
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<OSCPoint> &points){
     // Reset segment touch states
-    vector<GridSegment>::iterator segment;
-    for (segment = segments.begin(); segment != segments.end(); segment++){
-        segment->setState(off);
-    }
-    
-    if (points.size() > 0){
-        for (int i=0; i<segments.size(); i++){
-            GridSegment *segmentPtr = &segments[i];
-            
-            for(int i=0; i<points.size(); i++){
-                segmentPtr->setState(active);
-                if (segmentPtr->boundingBox.inside(ofVec2f(points[i].position)) &&
-                    segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
-                    segmentPtr->setState(on);
-                }
-            }
-        }
-    }
+//    vector<GridSegment>::iterator segment;
+//    for (segment = segments.begin(); segment != segments.end(); segment++){
+//        segment->setState(off);
+//    }
+//    
+//    if (points.size() > 0){
+//        for (int i=0; i<segments.size(); i++){
+//            GridSegment *segmentPtr = &segments[i];
+//            
+//            for(int i=0; i<points.size(); i++){
+//                segmentPtr->setState(active);
+//                if (segmentPtr->boundingBox.inside(ofVec2f(points[i].position)) &&
+//                    segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
+//                    segmentPtr->setState(on);
+//                }
+//            }
+//        }
+//    }
 };
 
 //

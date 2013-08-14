@@ -1,27 +1,29 @@
 //
-//  GridSegment.cpp
+//  StepButton.cpp
 //  MotionSynth
 //
 //  Created by Serkan Sokmen on 31.07.2013.
 //
 //
 
-#include "GridSegment.h"
+#include "StepButton.h"
 
 
 //--------------------------------------------------------------
-void GridSegment::setup(const ofRectangle &r, int segId, float p=8.0f){
-
-    boundingBox.set(r);
-    segmentId = segId;
+void StepButton::setup(const ofRectangle &bb){
+    
+    float padding = 8.0f;
+    
     state = off;
     
-    outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - p*.2, boundingBox.getHeight() - p*.2);
-    drawRect.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - p, boundingBox.getHeight() - p);
+    boundingBox.set(bb);
+    outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding*.2, boundingBox.getHeight() - padding*.2);
+    innerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding, boundingBox.getHeight() - padding);
 }
 
 //--------------------------------------------------------------
-void GridSegment::draw(){
+void StepButton::draw(){
+    ofPushMatrix();
     ofPushStyle();
     ofSetLineWidth(1.0);
     
@@ -32,7 +34,7 @@ void GridSegment::draw(){
             ofRect(outerBox);
             ofSetColor(ofColor::gray, 100);
             ofFill();
-            ofRect(drawRect);
+            ofRect(innerBox);
             break;
         case active:
             ofSetColor(ofColor::gray);
@@ -40,7 +42,7 @@ void GridSegment::draw(){
             ofRect(outerBox);
             ofSetColor(ofColor::blueViolet, 150);
             ofFill();
-            ofRect(drawRect);
+            ofRect(innerBox);
             break;
         case on:
             ofSetColor(ofColor::white);
@@ -48,22 +50,22 @@ void GridSegment::draw(){
             ofRect(outerBox);
             ofSetColor(ofColor::blueViolet);
             ofFill();
-            ofRect(drawRect);
+            ofRect(innerBox);
             break;
             
         default:
             break;
     }
-    
     ofPopStyle();
+    ofPopMatrix();
 };
 
 //--------------------------------------------------------------
-void GridSegment::setState(SegmentState s){
+void StepButton::setState(StepButtonState s){
     state = s;
 }
 
 //--------------------------------------------------------------
-const SegmentState &GridSegment::getState(){
+const StepButtonState &StepButton::getState(){
     return state;
 }
