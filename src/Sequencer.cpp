@@ -208,6 +208,7 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
             GridSegment *segmentPtr = &segments[i];
             
             for(int i=0; i<points.size(); i++){
+                segmentPtr->setState(active);
                 if (segmentPtr->boundingBox.inside(ofVec2f(points[i].position)) &&
                     segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
                     segmentPtr->setState(on);
