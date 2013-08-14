@@ -27,7 +27,7 @@ void GridSegment::draw(){
     cout << state << endl;
     switch (state) {
         case off:
-            ofSetColor(ofColor::gray, 255);
+            ofSetColor(ofColor::gray);
             ofNoFill();
             ofRect(outerBox);
             ofSetColor(ofColor::gray, 100);
@@ -35,7 +35,7 @@ void GridSegment::draw(){
             ofRect(drawRect);
             break;
         case active:
-            ofSetColor(ofColor::white, 255);
+            ofSetColor(ofColor::gray);
             ofNoFill();
             ofRect(outerBox);
             ofSetColor(ofColor::blueViolet, 150);
@@ -43,10 +43,10 @@ void GridSegment::draw(){
             ofRect(drawRect);
             break;
         case on:
-            ofSetColor(ofColor::white, 255);
+            ofSetColor(ofColor::white);
             ofNoFill();
             ofRect(outerBox);
-            ofSetColor(ofColor::blueViolet, 255);
+            ofSetColor(ofColor::blueViolet);
             ofFill();
             ofRect(drawRect);
             break;
@@ -61,4 +61,9 @@ void GridSegment::draw(){
 //--------------------------------------------------------------
 void GridSegment::setState(SegmentState s){
     state = s;
+}
+
+//--------------------------------------------------------------
+const SegmentState &GridSegment::getState(){
+    return state;
 }
