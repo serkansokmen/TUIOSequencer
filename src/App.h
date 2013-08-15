@@ -40,8 +40,8 @@
 #define OSC_POINT_COUNT     5
 #endif
 
-#define COLUMNS 6
-#define ROWS    6
+#define COLUMNS 8
+#define ROWS    8
 
 
 #ifdef USE_KINECT
