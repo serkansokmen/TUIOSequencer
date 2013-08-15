@@ -26,7 +26,7 @@ void App::setup(){
     bInitGrid = true;
     // Initialize segments container
     sequencer = new Sequencer();
-    sequencerBPM = 120.0f;
+    sequencerBPM = 100.0f;
     
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
