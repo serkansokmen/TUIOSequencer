@@ -73,6 +73,8 @@ public:
     void blobOff(ofVec3f centroid, int id, int order);
 #endif
     
+    void audioRequested(float * output, int bufferSize, int nChannels);
+    
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
     void resetScanRect();

@@ -20,7 +20,7 @@ void App::setup(){
     
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
-    bDebugMode = true;
+    bDebugMode = false;
     
     // Creates initial grid
     bInitGrid = true;
@@ -257,7 +257,7 @@ void App::update(){
     
     // Re-init sequencer
     if (bInitGrid) {
-        sequencer->setup(scanRect, COLUMNS, ROWS);
+        sequencer->setup(this, scanRect, COLUMNS, ROWS);
         bInitGrid = false;
     }
     // Update sequencer
@@ -511,7 +511,7 @@ void App::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void App::mouseDragged(int x, int y, int button){
-
+    sequencer->mouseDragged(x, y);
 }
 
 //--------------------------------------------------------------
@@ -570,3 +570,7 @@ void App::exit(){
     delete gui;
 }
 
+//--------------------------------------------------------------
+void App::audioRequested(float * output, int bufferSize, int nChannels){
+    sequencer->synth.fillBufferOfFloats(output, bufferSize, nChannels);
+}
