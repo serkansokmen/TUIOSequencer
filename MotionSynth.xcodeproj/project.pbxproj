@@ -11,6 +11,7 @@
 		0546d1a38e13bd319cc9755b5ca7e1a0 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9bf3aa0d4faa89d0f8a0e545403162be /* OscReceivedElements.cpp */; };
 		169d3c72fde6c5590a1616f500a456b4 /* ofxCvFloatImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7b6a03390302d5a2c9f0e4ab630ae8d6 /* ofxCvFloatImage.cpp */; };
 		1d5f3298c2fa073628012944b1efde88 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = c76de5c29bdbd2caa1dd0021a7376220 /* ofxCvContourFinder.cpp */; };
+		2019ADB817BD08F400B1DD4F /* Sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2019ADB617BD08F400B1DD4F /* Sample.cpp */; };
 		20EC6B6017BBBCC6008222AB /* StepButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20EC6B5E17BBBCC6008222AB /* StepButton.cpp */; };
 		20EC6B6317BBBF37008222AB /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20EC6B6117BBBF37008222AB /* Track.cpp */; };
 		250a95ba26587be85db0a353e6e1dea2 /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ce9c7160245b19131dae61282ee6cb53 /* ofxCvColorImage.cpp */; };
@@ -121,6 +122,8 @@
 		1c43cdb79bf40ea7424b96804209f474 /* ofxUISuperCanvas.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUISuperCanvas.h; path = ../../../addons/ofxUI/src/ofxUISuperCanvas.h; sourceTree = SOURCE_ROOT; };
 		1e29c7e8c47e3e2db1c5876646df436b /* ofxUIRectangle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRectangle.h; path = ../../../addons/ofxUI/src/ofxUIRectangle.h; sourceTree = SOURCE_ROOT; };
 		1e95efd35ed9c5d97f2f015ed292592d /* timer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = timer.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/timer.h; sourceTree = SOURCE_ROOT; };
+		2019ADB617BD08F400B1DD4F /* Sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sample.cpp; sourceTree = "<group>"; };
+		2019ADB717BD08F400B1DD4F /* Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sample.h; sourceTree = "<group>"; };
 		20EC6B5E17BBBCC6008222AB /* StepButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StepButton.cpp; sourceTree = "<group>"; };
 		20EC6B5F17BBBCC6008222AB /* StepButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StepButton.h; sourceTree = "<group>"; };
 		20EC6B6117BBBF37008222AB /* Track.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Track.cpp; sourceTree = "<group>"; };
@@ -773,6 +776,8 @@
 				33a937a4598fe853c51eb32630e70f68 /* App.cpp */,
 				a72a9ccf86c5b616747f421445242c0d /* App.h */,
 				d06360ed44cc30013513902e7dcb12af /* OSCPoint.h */,
+				2019ADB617BD08F400B1DD4F /* Sample.cpp */,
+				2019ADB717BD08F400B1DD4F /* Sample.h */,
 				e282fefb97e3684440cd75ce8b2523cb /* Sequencer.cpp */,
 				4324679e4db7f91de15a2ead6ad96a6d /* Sequencer.h */,
 				20EC6B5E17BBBCC6008222AB /* StepButton.cpp */,
@@ -1159,6 +1164,7 @@
 				510cafe035e576a4e1502d52c11243bb /* UdpSocket.cpp in Sources */,
 				a29d8c96ae042eceaa1bd4f3cbbf0c9d /* NetworkingUtilsWin.cpp in Sources */,
 				28090deb5109115003e8f1c540f04092 /* UdpSocketWin.cpp in Sources */,
+				2019ADB817BD08F400B1DD4F /* Sample.cpp in Sources */,
 				62545d179c94265ca1389d4ac8d694a5 /* OscOutboundPacketStream.cpp in Sources */,
 				c4782ecc372420ace0615b749e1d0d6b /* OscPrintReceivedElements.cpp in Sources */,
 				0546d1a38e13bd319cc9755b5ca7e1a0 /* OscReceivedElements.cpp in Sources */,

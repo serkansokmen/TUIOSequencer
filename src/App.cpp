@@ -147,17 +147,15 @@ void App::update(){
         cout << m.getAddress() << endl;
 
         if (addrs.size() == 5 && addrs[1] == "controller" && addrs[2] == "grid"){
-            int gridPosX = ofToInt(addrs[4]) - 1;
-            int gridPosY = 6 - ofToInt(addrs[3]);
+            int gridIndX = ofToInt(addrs[4]) - 1;
+            int gridIndY = 6 - ofToInt(addrs[3]);
             
             float val = m.getArgAsFloat(0);
-            if (val == 1.0f){
-//                sequencer->setSegmentOn(gridPosX, gridPosY);
-            } else {
-//                sequencer->setSegmentOff(gridPosX, gridPosY);
-            }
+//            if (val == 1.0f){
+            sequencer->toggleIndex(gridIndX, gridIndY);
+//            }
             
-            ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridPosX) + ", " + ofToString(gridPosY) + " value:" + ofToString(val));
+            ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridIndX) + ", " + ofToString(gridIndY) + " value:" + ofToString(val));
         }
         
         // check for position messages
@@ -186,9 +184,9 @@ void App::update(){
         
         // check for bpm message
 		if (m.getAddress() == "/controller/bpm"){
-            int bpm = (int)m.getArgAsFloat(0);
-            sequencer->setBPM(bpm);
-            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(bpm));
+            sequencerBPM = m.getArgAsFloat(0);
+            sequencer->setBPM((int)sequencerBPM);
+            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(sequencerBPM));
 		}
         
         // check debug message

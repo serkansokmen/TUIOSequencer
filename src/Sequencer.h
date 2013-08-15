@@ -23,6 +23,7 @@ class Sequencer {
     
     ofDirectory			soundBank;
     ofRectangle         scannerRect;
+    ofRectangle         boundingBox;
     
     float               stepButtonWidth;
     float               stepButtonHeight;
@@ -49,6 +50,7 @@ public:
     void draw();
     
     void toggle(int x, int y);
+    void toggleIndex(int i, int j);
     
     void setBPM(int _bpm);
     

@@ -11,35 +11,52 @@
 
 //--------------------------------------------------------------
 Track::~Track(){
+    
     buttons.clear();
+    
+    soundPlayer = 0;
+    delete soundPlayer;
 }
 
 
 //--------------------------------------------------------------
-void Track::setup(const ofRectangle &bb, int cols, string stepSoundName){
+void Track::setup(int id, const ofRectangle &bb, int cols, string stepSoundName){
+    
+    trackId = id;
+    bPlayOnce = true;
+    columns = cols;
     
 	float buttonWidth = bb.getWidth() / cols;
-    float buttonHeight = bb.getHeight();
+    trackHeight = bb.getHeight();
 	
     buttons.clear();
     buttons.assign(cols, StepButton());
-	for(int i = 0; i<cols; i++){
-        buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, buttonHeight), i);
+	for(int i = 0; i<columns; i++){
+        buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
     
-    soundPlayer.loadSound(stepSoundName);
+    soundPath = stepSoundName;
+    
+    ofLog(OF_LOG_NOTICE, stepSoundName + " loaded into track " + ofToString(trackId));
 }
 
 //--------------------------------------------------------------
 void Track::update(int step){
     
+    soundPlayer = new ofSoundPlayer();
+    soundPlayer->loadSound(soundPath);
+    soundPlayer->setMultiPlay(true);
+    
     for(int i=0; i<buttons.size(); i++){
         
         if (step == buttons[i].step){
             // Current step column
-            if (buttons[i].getState() == active){
+            if (buttons[i].getState() == active && bPlayOnce){
                 buttons[i].setState(on);
-                soundPlayer.play();
+                
+                soundPlayer->play();
+                
+                bPlayOnce = false;
             }
         } else {
             if (buttons[i].getState() == on){
@@ -54,6 +71,12 @@ void Track::draw(){
 	for(int i=0; i<buttons.size(); i++){
 		buttons[i].draw();
 	}
+    
+    ofPushMatrix();
+    ofSetColor(ofColor::white, 100);
+    ofTranslate(0, trackHeight * trackId);
+    ofDrawBitmapString(ofToString(soundPath), 20, 20);
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------

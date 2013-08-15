@@ -14,14 +14,21 @@
 
 class Track {
     
+    ofSoundPlayer           *soundPlayer;
+    string                  soundPath;
+    float                   trackHeight;
+    int                     columns;
+    int                     trackId;
+    
+    vector <StepButton>     buttons;
+    
 public:
     ~Track();
     
-    void setup(const ofRectangle &boundingBox, int columns, string stepSoundName);
+    void setup(int trackId, const ofRectangle &boundingBox, int columns, string stepSoundName);
     void update(int step);
     void draw();
     void toggle(int x, int y);
 	
-    vector <StepButton>     buttons;
-    ofSoundPlayer			soundPlayer;
+    bool bPlayOnce;
 };

@@ -34,7 +34,7 @@
 
 #ifdef USE_OSC
 #include "OSCPoint.h"
-#define OSC_HOST            "192.168.1.100"
+#define OSC_HOST            "192.168.254.39"
 #define OSC_RECEIVE_PORT    8000
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5

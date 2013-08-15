@@ -41,7 +41,7 @@ void StepButton::draw(){
             ofSetColor(ofColor::gray);
             ofNoFill();
             ofRect(outerBox);
-            ofSetColor(ofColor::blueViolet, 150);
+            ofSetColor(ofColor::blueViolet, 100);
             ofFill();
             ofRect(innerBox);
             break;
@@ -58,12 +58,6 @@ void StepButton::draw(){
             break;
     }
     ofPopStyle();
-    ofPopMatrix();
-    
-    ofPushMatrix();
-    ofTranslate(boundingBox.getTopLeft());
-    ofSetColor(ofColor::white);
-    ofDrawBitmapString(ofToString(step), 20, 20);
     ofPopMatrix();
 };
 

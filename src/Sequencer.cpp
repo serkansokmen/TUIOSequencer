@@ -21,10 +21,9 @@ Sequencer::Sequencer(){
     
     if (soundBank.size()){
         soundPaths.assign(soundBank.size(), string());
-    }
-    
-    for (int i=0; i<soundBank.size(); i++) {
-        soundPaths[i] = soundBank.getPath(i);
+        for (int i=0; i<soundBank.size(); i++) {
+            soundPaths[i] = soundBank.getPath(i);
+        }
     }
 }
 
@@ -33,9 +32,18 @@ Sequencer::~Sequencer(){
     tracks.clear();
 }
 
-
 //--------------------------------------------------------------
 void Sequencer::toggle(int x, int y){
+    for (int i=0; i<tracks.size(); i++){
+        tracks[i].toggle(x, y);
+    }
+}
+
+//--------------------------------------------------------------
+void Sequencer::toggleIndex(int i, int j){
+    float x = boundingBox.getX() + i * stepButtonWidth;
+    float y = boundingBox.getY() + j * stepButtonHeight;
+    
     for (int i=0; i<tracks.size(); i++){
         tracks[i].toggle(x, y);
     }
@@ -55,6 +63,8 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     columns = columCount;
     rows = rowCount;
     
+    boundingBox.set(rect);
+    
     stepButtonWidth = rect.getWidth() / columns;
     stepButtonHeight = rect.getHeight() / rows;
     
@@ -64,7 +74,8 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
     // Create tracks
     for (int i = 0; i < rows; i++) {
-        tracks[i].setup(ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
+        tracks[i].setup(i,
+                        ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
                         columns,
                         soundPaths[i]);
     }
@@ -88,6 +99,9 @@ void Sequencer::update(){
 		diffTime = aTimer;
 		step++;
 		if(step == columns) step = 0;
+        for (int i=0; i<tracks.size(); i++){
+            tracks[i].bPlayOnce = true;
+        }
 	}
     
     // Update tracks
