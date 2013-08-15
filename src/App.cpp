@@ -28,6 +28,7 @@ void App::setup(){
     sequencer = new Sequencer();
     sequencerBPM = 120.0f;
     
+    // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
 #ifdef USE_OSC
@@ -129,7 +130,7 @@ void App::setup(){
 void App::update(){
     
     Tweener.update();
-//    ofSoundUpdate();
+    ofSoundUpdate();
     
     sequencerBPM = (int)sequencerBPM;
     
@@ -440,7 +441,7 @@ void App::initGUI(){
 #endif
     
     gui->autoSizeToFitWidgets();
-    gui->setPosition(10, 10);
+    gui->setPosition(20, 20);
 
 #ifdef USE_KINECT
     gui->loadSettings("GUI/guiSettingsKinect.xml");
@@ -505,7 +506,7 @@ void App::keyReleased(int key){
 
 //--------------------------------------------------------------
 void App::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -515,6 +516,7 @@ void App::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::mousePressed(int x, int y, int button){
+    
     if (bDebugMode){
         float rx = x - scanRect.getX();
         float ry = y - scanRect.getY();
@@ -567,3 +569,4 @@ void App::exit(){
     delete sequencer;
     delete gui;
 }
+

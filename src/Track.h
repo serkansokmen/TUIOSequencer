@@ -14,8 +14,6 @@
 
 class Track {
     
-    ofSoundPlayer           *soundPlayer;
-    string                  soundPath;
     float                   trackHeight;
     int                     columns;
     int                     trackId;
@@ -25,10 +23,8 @@ class Track {
 public:
     ~Track();
     
-    void setup(int trackId, const ofRectangle &boundingBox, int columns, string stepSoundName);
+    void setup(int trackId, const ofRectangle &boundingBox, int columns);
     void update(int step);
     void draw();
     void toggle(int x, int y);
-	
-    bool bPlayOnce;
 };

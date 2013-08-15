@@ -21,6 +21,10 @@
 #define USE_OSC
 
 
+#define COLUMNS 8
+#define ROWS    8
+
+
 #ifdef USE_KINECT
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
@@ -40,15 +44,12 @@
 #define OSC_POINT_COUNT     5
 #endif
 
-#define COLUMNS 8
-#define ROWS    8
-
-
 #ifdef USE_KINECT
 class App : public ofBaseApp, public ofxKinectBlobListener {
 #else
 class App : public ofBaseApp {
 #endif
+    
     
 public:
     void setup();

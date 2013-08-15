@@ -14,16 +14,13 @@ Track::~Track(){
     
     buttons.clear();
     
-    soundPlayer = 0;
-    delete soundPlayer;
 }
 
 
 //--------------------------------------------------------------
-void Track::setup(int id, const ofRectangle &bb, int cols, string stepSoundName){
+void Track::setup(int id, const ofRectangle &bb, int cols){
     
     trackId = id;
-    bPlayOnce = true;
     columns = cols;
     
 	float buttonWidth = bb.getWidth() / cols;
@@ -34,29 +31,20 @@ void Track::setup(int id, const ofRectangle &bb, int cols, string stepSoundName)
 	for(int i = 0; i<columns; i++){
         buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
-    
-    soundPath = stepSoundName;
-    soundPlayer = new ofSoundPlayer();
-    soundPlayer->loadSound(soundPath);
-    
-    ofLog(OF_LOG_NOTICE, stepSoundName + " loaded into track " + ofToString(trackId));
 }
 
 //--------------------------------------------------------------
 void Track::update(int step){
     
-    soundPlayer->setMultiPlay(true);
-    
     for(int i=0; i<buttons.size(); i++){
         
         if (step == buttons[i].step){
             // Current step column
-            if (buttons[i].getState() == active && bPlayOnce){
+            if (buttons[i].getState() == active){
                 buttons[i].setState(on);
                 
-                soundPlayer->play();
-                
-                bPlayOnce = false;
+                // TODO: set sound something
+//                soundPlayer->play();
             }
         } else {
             if (buttons[i].getState() == on){
@@ -75,7 +63,6 @@ void Track::draw(){
     ofPushMatrix();
     ofSetColor(ofColor::white, 100);
     ofTranslate(0, trackHeight * trackId);
-    ofDrawBitmapString(ofToString(soundPath), 20, 20);
     ofPopMatrix();
 }
 

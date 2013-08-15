@@ -9,22 +9,17 @@
 #include "Sequencer.h"
 
 
+#define NUMBER_OF_KEYS 10
+
+
 //--------------------------------------------------------------
 Sequencer::Sequencer(){
+    
     bpm = 120;
 	step = 0;
     rTimer = 0;
 	diffTime = 0;
     
-    soundBank.listDir("sounds");
-    soundBank.sort();
-    
-    if (soundBank.size()){
-        soundPaths.assign(soundBank.size(), string());
-        for (int i=0; i<soundBank.size(); i++) {
-            soundPaths[i] = soundBank.getPath(i);
-        }
-    }
 }
 
 //--------------------------------------------------------------
@@ -76,8 +71,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     for (int i = 0; i < rows; i++) {
         tracks[i].setup(i,
                         ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
-                        columns,
-                        soundPaths[i]);
+                        columns);
     }
     
     scannerRect.set(0, 0, stepButtonWidth, rect.getHeight());
@@ -99,9 +93,6 @@ void Sequencer::update(){
 		diffTime = aTimer;
 		step++;
 		if(step == columns) step = 0;
-        for (int i=0; i<tracks.size(); i++){
-            tracks[i].bPlayOnce = true;
-        }
 	}
     
     // Update tracks

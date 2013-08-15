@@ -10,7 +10,6 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
-#include "ofxTweener.h"
 #include "ABlob.h"
 #include "Track.h"
 #include "OSCPoint.h"
@@ -21,7 +20,6 @@ using namespace std;
 
 class Sequencer {
     
-    ofDirectory			soundBank;
     ofRectangle         scannerRect;
     ofRectangle         boundingBox;
     
@@ -34,7 +32,6 @@ class Sequencer {
     int                 bpm;
     int                 step;
     
-    vector<string>      soundPaths;
     vector<Track>       tracks;
     
 public:
@@ -59,4 +56,6 @@ public:
     
     // Check segments against ofPoint objects
     void checkSegments(const vector<OSCPoint> &points);
+    
+    void audioRequested(float * output, int bufferSize, int nChannels);
 };
