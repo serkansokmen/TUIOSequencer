@@ -545,6 +545,7 @@ void App::dragEvent(ofDragInfo dragInfo){
 //--------------------------------------------------------------
 void App::resetScanRect(){
     scanRect.set(ofPoint(ofGetWidth() - camWidth - 20, 20), camWidth, camHeight);
+}
 
 //--------------------------------------------------------------
 void App::exit(){
