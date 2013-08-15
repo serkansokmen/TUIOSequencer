@@ -39,11 +39,13 @@ void App::setup(){
     
     oscPoints.assign(OSC_POINT_COUNT, OSCPoint());
     
-    // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), camWidth, camHeight);
+    // Reset scan rect
+    resetScanRect();
 #endif
     
 #ifdef USE_KINECT
+    camWidth = kinect.width;
+    camHeight = kinect.height;
     
     // enable depth->rgb image calibration
     kinect.setRegistration(true);
@@ -97,16 +99,16 @@ void App::setup(){
 	bDrawPointCloud = true;
 	bDrawIDs = true;
     
-    // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), kinect.getWidth(), kinect.getHeight());
+    // Reset scan rect
+    resetScanRect();
 #endif
 
 #ifdef USE_FLOB
     camWidth = 320;
     camHeight = 240;
     
-    // Init scan rect
-    scanRect.setFromCenter(ofPoint(ofGetWidth() * .5, ofGetHeight() * .5), camWidth * 2.5, camHeight * 2.5);
+    // Reset scan rect
+    resetScanRect();
     
     vidGrabber.setVerbose(true);
     vidGrabber.setDeviceID(0);
@@ -397,10 +399,10 @@ void App::initGUI(){
     gui->setFont("GUI/EnvyCodeR.ttf");
     gui->addLabel("MotionSynth");
     gui->addSpacer();
-    gui->addFPSSlider("fps");
+    gui->addFPSSlider("FPS");
     gui->addSpacer();
-    gui->addSlider("BPM", 50.0f, 192.0f, &sequencerBPM);
-    gui->addLabelToggle("start", &bInitGrid);
+    gui->addSlider("BPM", 24.0f, 192.0f, &sequencerBPM);
+    gui->addLabelToggle("RESET", &bInitGrid);
 
 #ifdef USE_KINECT
     gui->addSpacer();
@@ -538,6 +540,10 @@ void App::gotMessage(ofMessage msg){
 void App::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+//--------------------------------------------------------------
+void App::resetScanRect(){
+    scanRect.set(ofPoint(ofGetWidth() - camWidth - 20, 20), camWidth, camHeight);
 
 //--------------------------------------------------------------
 void App::exit(){

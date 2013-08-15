@@ -74,6 +74,7 @@ public:
     
     void guiEvent(ofxUIEventArgs &e);
     void initGUI();
+    void resetScanRect();
     
     Sequencer           *sequencer;
     ofRectangle         scanRect;

@@ -9,6 +9,6 @@ int main(){
     window.setGlutDisplayString("rgba double depth samples>=4");
     window.setGlutDisplayString("rgba double depth alpha samples>=4");
     
-	ofSetupOpenGL(&window, 1024, 768, OF_WINDOW);
+	ofSetupOpenGL(&window, 1280, 768, OF_WINDOW);
 	ofRunApp(new App());
 }
