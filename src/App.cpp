@@ -129,6 +129,7 @@ void App::setup(){
 void App::update(){
     
     Tweener.update();
+//    ofSoundUpdate();
     
     sequencerBPM = (int)sequencerBPM;
     

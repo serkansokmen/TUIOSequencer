@@ -36,6 +36,8 @@ void Track::setup(int id, const ofRectangle &bb, int cols, string stepSoundName)
 	}
     
     soundPath = stepSoundName;
+    soundPlayer = new ofSoundPlayer();
+    soundPlayer->loadSound(soundPath);
     
     ofLog(OF_LOG_NOTICE, stepSoundName + " loaded into track " + ofToString(trackId));
 }
@@ -43,8 +45,6 @@ void Track::setup(int id, const ofRectangle &bb, int cols, string stepSoundName)
 //--------------------------------------------------------------
 void Track::update(int step){
     
-    soundPlayer = new ofSoundPlayer();
-    soundPlayer->loadSound(soundPath);
     soundPlayer->setMultiPlay(true);
     
     for(int i=0; i<buttons.size(); i++){
