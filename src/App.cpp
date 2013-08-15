@@ -517,7 +517,7 @@ void App::mousePressed(int x, int y, int button){
     if (bDebugMode){
         float rx = x - scanRect.getX();
         float ry = y - scanRect.getY();
-        
+        sequencer->mouseDown(rx, ry);
 //        sequencer->toggleSegment(rx, ry);
     }
 }

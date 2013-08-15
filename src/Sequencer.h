@@ -49,6 +49,8 @@ public:
     void update();
     void draw();
     
+    void mouseDown(int x, int y);
+    
     void setBPM(int _bpm);
     
     // Check segments against ofxFlob blobs

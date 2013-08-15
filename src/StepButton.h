@@ -31,11 +31,13 @@ class StepButton {
     StepButtonState state;
     
 public:
-    void setup(const ofRectangle &boundingBox);
+    void setup(const ofRectangle &boundingBox, int step);
     void draw();
+    void mouseDown(int x, int y);
     
     void setState(StepButtonState s);
     const StepButtonState &getState();
     
     ofRectangle     boundingBox;
+    int             step;
 };

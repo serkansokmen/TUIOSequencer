@@ -18,8 +18,9 @@ public:
     ~Track();
     
     void setup(const ofRectangle &boundingBox, int columns, string stepSoundName);
-    void update();
+    void update(int step);
     void draw();
+    void mouseDown(int x, int y);
 	
     vector <StepButton>     buttons;
     ofSoundPlayer			soundPlayer;

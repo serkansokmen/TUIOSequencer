@@ -27,32 +27,41 @@ void Track::setup(const ofRectangle &bb, int cols, string stepSoundName){
 	
     buttons.clear();
     buttons.assign(cols, StepButton());
-	for(int i =0; i<cols; i++){
-        buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, buttonHeight));
+	for(int i = 0; i<cols; i++){
+        cout << i << endl;
+        buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, buttonHeight), i);
 	}
 }
 
 //--------------------------------------------------------------
-void Track::update(){
-	for(int i=0; i<buttons.size(); i++){
+void Track::update(int step){
+    
+    for(int i=0; i<buttons.size(); i++){
         
-        if (buttons[i].getState() == on){
-            soundPlayer.play();
+        if (step == buttons[i].step){
+            // Current step column
+            if (buttons[i].getState() == active){
+                buttons[i].setState(on);
+                soundPlayer.play();
+            }
+        } else {
+            if (buttons[i].getState() == on){
+                buttons[i].setState(active);
+            }
         }
-//		if(stepB[i].bActive == true && _step == i && bPlayOnce){
-//			if(bPlayOnce){
-//				stepSound.setSpeed(1.0f);
-//				stepSound.play();
-//				bPlayOnce = false;
-//			}
-//			
-//		}
-	}
+    }
 }
 
 //--------------------------------------------------------------
 void Track::draw(){
 	for(int i=0; i<buttons.size(); i++){
 		buttons[i].draw();
+	}
+}
+
+//--------------------------------------------------------------
+void Track::mouseDown(int x, int y){
+	for(int i=0; i<buttons.size(); i++){
+		buttons[i].mouseDown(x, y);
 	}
 }

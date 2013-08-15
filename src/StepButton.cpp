@@ -10,11 +10,12 @@
 
 
 //--------------------------------------------------------------
-void StepButton::setup(const ofRectangle &bb){
+void StepButton::setup(const ofRectangle &bb, int s){
     
     float padding = 8.0f;
     
     state = off;
+    step = s;
     
     boundingBox.set(bb);
     outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding*.2, boundingBox.getHeight() - padding*.2);
@@ -58,6 +59,12 @@ void StepButton::draw(){
     }
     ofPopStyle();
     ofPopMatrix();
+    
+    ofPushMatrix();
+    ofTranslate(boundingBox.getTopLeft());
+    ofSetColor(ofColor::white);
+    ofDrawBitmapString(ofToString(step), 20, 20);
+    ofPopMatrix();
 };
 
 //--------------------------------------------------------------
@@ -68,4 +75,19 @@ void StepButton::setState(StepButtonState s){
 //--------------------------------------------------------------
 const StepButtonState &StepButton::getState(){
     return state;
+}
+
+//--------------------------------------------------------------
+void StepButton::mouseDown(int x, int y){
+    if (boundingBox.inside(x, y)){
+        switch (getState()) {
+            case off:
+                setState(active);
+                break;
+            case on:
+            case active:
+                setState(off);
+                break;
+        }
+    }
 }

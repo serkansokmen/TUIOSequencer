@@ -22,6 +22,14 @@ Sequencer::~Sequencer(){
     tracks.clear();
 }
 
+
+//--------------------------------------------------------------
+void Sequencer::mouseDown(int x, int y){
+    for (int i=0; i<tracks.size(); i++){
+        tracks[i].mouseDown(x, y);
+    }
+}
+
 //--------------------------------------------------------------
 void Sequencer::setBPM(int _bpm){
     bpm = _bpm;
@@ -58,8 +66,6 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
 //--------------------------------------------------------------
 void Sequencer::update(){
     
-    cout << bpm << endl;
-    
     aTimer = ofGetElapsedTimeMillis();
 	rTimer = aTimer - diffTime;
 	
@@ -80,7 +86,7 @@ void Sequencer::update(){
 	}
     
     for (int i=0; i<tracks.size(); i++){
-        tracks[i].update();
+        tracks[i].update(step);
     }
     
     // Move indicator line
@@ -121,7 +127,7 @@ void Sequencer::draw(){
     ofPopStyle();
     ofPopMatrix();
     
-    ofSetColor(ofColor::green, 100);
+    ofSetColor(ofColor::green, 10);
     ofRect(scannerRect);
 };
 
