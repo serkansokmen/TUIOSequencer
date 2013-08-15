@@ -15,6 +15,17 @@ Sequencer::Sequencer(){
 	step = 0;
     rTimer = 0;
 	diffTime = 0;
+    
+    soundBank.listDir("sounds");
+    soundBank.sort();
+    
+    if (soundBank.size()){
+        soundPaths.assign(soundBank.size(), string());
+    }
+    
+    for (int i=0; i<soundBank.size(); i++) {
+        soundPaths[i] = soundBank.getPath(i);
+    }
 }
 
 //--------------------------------------------------------------
@@ -24,9 +35,9 @@ Sequencer::~Sequencer(){
 
 
 //--------------------------------------------------------------
-void Sequencer::mouseDown(int x, int y){
+void Sequencer::toggle(int x, int y){
     for (int i=0; i<tracks.size(); i++){
-        tracks[i].mouseDown(x, y);
+        tracks[i].toggle(x, y);
     }
 }
 
@@ -47,17 +58,15 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     stepButtonWidth = rect.getWidth() / columns;
     stepButtonHeight = rect.getHeight() / rows;
     
-    nTracks = soundBank.listDir("sounds");
-    
     // Clear and re-assign tracks
     tracks.clear();
     tracks.assign(rows, Track());
     
     // Create tracks
-    for (int y = 0; y < rows; y++) {
-        tracks[y].setup(ofRectangle(rect.getX(), stepButtonHeight * y, rect.getWidth(), stepButtonHeight),
+    for (int i = 0; i < rows; i++) {
+        tracks[i].setup(ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
                         columns,
-                        soundBank.getPath(y));
+                        soundPaths[i]);
     }
     
     scannerRect.set(0, 0, stepButtonWidth, rect.getHeight());
@@ -66,25 +75,22 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
 //--------------------------------------------------------------
 void Sequencer::update(){
     
+    // Update metronome
     aTimer = ofGetElapsedTimeMillis();
 	rTimer = aTimer - diffTime;
 	
 	float bpMillis;
-	bpMillis = (bpm / 60.0f)*1000;
+	bpMillis = (bpm / 60.0f) * 1000;
 	float beatPulse;
-	beatPulse = (60.0f / bpm/4) * 1000;
+	beatPulse = (60.0f / bpm / 4) * 1000;
     
     if (rTimer > beatPulse){
-		
-        for(int i =0; i< nTracks; i++){
-//			track[i].bPlayOnce = true;
-		}
-		
 		diffTime = aTimer;
 		step++;
 		if(step == columns) step = 0;
 	}
     
+    // Update tracks
     for (int i=0; i<tracks.size(); i++){
         tracks[i].update(step);
     }
@@ -115,7 +121,7 @@ void Sequencer::draw(){
     ofPushMatrix();
     ofPushStyle();
     
-    ofSetColor(ofColor::red);
+    ofSetColor(ofColor::green, 200);
     // Draw circle pins
     ofSetLineWidth(1.0);
     ofSetRectMode(OF_RECTMODE_CENTER);

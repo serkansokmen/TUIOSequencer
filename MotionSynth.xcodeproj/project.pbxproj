@@ -56,7 +56,6 @@
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		a29d8c96ae042eceaa1bd4f3cbbf0c9d /* NetworkingUtilsWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2a5b1fad3f30c8065c396acbb72e5d95 /* NetworkingUtilsWin.cpp */; };
-		a5e71165d6e1593807b2707b21733df1 /* GridSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */; };
 		a940aea8338fb9ca375cd607b2292072 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = df3cfb6367f0771d65acded6ba846167 /* core.c */; };
 		ade367465d2a8ebad4c7a8d92a3ef718 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = add194746185e2da11468377f4e88c2f /* IpEndpointName.cpp */; };
 		b5cd16c879eb20f560371441d24255d7 /* ImageBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 69fed92b41851dd2c7778b47fb5b0561 /* ImageBlobs.cpp */; };
@@ -147,7 +146,6 @@
 		38605b4b6c277285d92cd4ec5fdbc49e /* registration.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 30; name = registration.c; path = ../../../addons/ofxKinect/libs/libfreenect/registration.c; sourceTree = SOURCE_ROOT; };
 		3b361208cd4107e479f04e7bce6d93aa /* NetworkingUtils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtils.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
 		3c232045833313b99efe0b14840b6108 /* ofxCvMain.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvMain.h; path = ../../../addons/ofxOpenCv/src/ofxCvMain.h; sourceTree = SOURCE_ROOT; };
-		3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = GridSegment.cpp; path = src/GridSegment.cpp; sourceTree = SOURCE_ROOT; };
 		3fdde4404c3f2036e6109f7b9e122881 /* ofxFlob.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxFlob.cpp; path = ../../../addons/ofxFlob/src/ofxFlob.cpp; sourceTree = SOURCE_ROOT; };
 		4117b8c24d49837d3df9c23bd2405bdc /* ofxUIToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIToggle.h; path = ../../../addons/ofxUI/src/ofxUIToggle.h; sourceTree = SOURCE_ROOT; };
 		431d6bbf1ef545b203e4cae1dda8512f /* ofxUIMultiImageSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIMultiImageSlider.h; path = ../../../addons/ofxUI/src/ofxUIMultiImageSlider.h; sourceTree = SOURCE_ROOT; };
@@ -307,7 +305,6 @@
 		d5a3aff36064b2cacad317169b9c3159 /* composite_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = composite_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/composite_index.h; sourceTree = SOURCE_ROOT; };
 		d5bb6f0357b6422e1b1656b47b78dcdf /* ofxCvColorImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvColorImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvColorImage.h; sourceTree = SOURCE_ROOT; };
 		d66e735be796bc0675320dc8741a5a55 /* ofxUIImageSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIImageSlider.h; path = ../../../addons/ofxUI/src/ofxUIImageSlider.h; sourceTree = SOURCE_ROOT; };
-		d671883d5b2df658685a47881642ed80 /* GridSegment.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = GridSegment.h; path = src/GridSegment.h; sourceTree = SOURCE_ROOT; };
 		d76a59e7b3601e76351c9bdb38a0ea4f /* cvaux.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = cvaux.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/cvaux.h; sourceTree = SOURCE_ROOT; };
 		d847ebe484f4f500f9cf25492c7beddc /* ofxCvImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvImage.h; sourceTree = SOURCE_ROOT; };
 		d852339534d186876f18a318b9301aca /* ofxTweener.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxTweener.cpp; path = ../../../addons/ofxTweener/src/ofxTweener.cpp; sourceTree = SOURCE_ROOT; };
@@ -775,8 +772,6 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				33a937a4598fe853c51eb32630e70f68 /* App.cpp */,
 				a72a9ccf86c5b616747f421445242c0d /* App.h */,
-				3e31eecd409abb184c96659a70ba7130 /* GridSegment.cpp */,
-				d671883d5b2df658685a47881642ed80 /* GridSegment.h */,
 				d06360ed44cc30013513902e7dcb12af /* OSCPoint.h */,
 				e282fefb97e3684440cd75ce8b2523cb /* Sequencer.cpp */,
 				4324679e4db7f91de15a2ead6ad96a6d /* Sequencer.h */,
@@ -1148,7 +1143,6 @@
 				9dec2a3da042f3b7086f06c6baf586cb /* Sequencer.cpp in Sources */,
 				20EC6B6317BBBF37008222AB /* Track.cpp in Sources */,
 				20EC6B6017BBBCC6008222AB /* StepButton.cpp in Sources */,
-				a5e71165d6e1593807b2707b21733df1 /* GridSegment.cpp in Sources */,
 				250a95ba26587be85db0a353e6e1dea2 /* ofxCvColorImage.cpp in Sources */,
 				1d5f3298c2fa073628012944b1efde88 /* ofxCvContourFinder.cpp in Sources */,
 				169d3c72fde6c5590a1616f500a456b4 /* ofxCvFloatImage.cpp in Sources */,
@@ -1264,24 +1258,24 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86",
 					../../../addons/ofxKinect/src,
 					../../../addons/ofxTweener/libs,
 					../../../addons/ofxTweener/src,
@@ -1369,24 +1363,24 @@
 					../../../addons/ofxKinect/libs/libusb/osx/libs,
 					../../../addons/ofxKinect/libs/libusb/win,
 					../../../addons/ofxKinect/libs/libusb/win/inf,
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ audio/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ camera/x86",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/amd64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/ia64",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/license/libusb-win32",
-					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\ nui\\ motor/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ audio/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ camera/x86",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/amd64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/ia64",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/license/libusb-win32",
+					"../../../addons/ofxKinect/libs/libusb/win/inf/xbox\\\\\\ nui\\\\\\ motor/x86",
 					../../../addons/ofxKinect/src,
 					../../../addons/ofxTweener/libs,
 					../../../addons/ofxTweener/src,

@@ -20,7 +20,7 @@ public:
     void setup(const ofRectangle &boundingBox, int columns, string stepSoundName);
     void update(int step);
     void draw();
-    void mouseDown(int x, int y);
+    void toggle(int x, int y);
 	
     vector <StepButton>     buttons;
     ofSoundPlayer			soundPlayer;

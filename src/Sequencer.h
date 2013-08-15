@@ -22,7 +22,6 @@ using namespace std;
 class Sequencer {
     
     ofDirectory			soundBank;
-    
     ofRectangle         scannerRect;
     
     float               stepButtonWidth;
@@ -33,8 +32,8 @@ class Sequencer {
     float               aTimer, rTimer, diffTime;
     int                 bpm;
     int                 step;
-    int					nTracks;
     
+    vector<string>      soundPaths;
     vector<Track>       tracks;
     
 public:
@@ -49,7 +48,7 @@ public:
     void update();
     void draw();
     
-    void mouseDown(int x, int y);
+    void toggle(int x, int y);
     
     void setBPM(int _bpm);
     

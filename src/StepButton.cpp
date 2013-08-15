@@ -78,7 +78,7 @@ const StepButtonState &StepButton::getState(){
 }
 
 //--------------------------------------------------------------
-void StepButton::mouseDown(int x, int y){
+void StepButton::toggle(int x, int y){
     if (boundingBox.inside(x, y)){
         switch (getState()) {
             case off:

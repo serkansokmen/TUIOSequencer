@@ -33,7 +33,7 @@ class StepButton {
 public:
     void setup(const ofRectangle &boundingBox, int step);
     void draw();
-    void mouseDown(int x, int y);
+    void toggle(int x, int y);
     
     void setState(StepButtonState s);
     const StepButtonState &getState();

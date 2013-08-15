@@ -18,19 +18,16 @@ Track::~Track(){
 //--------------------------------------------------------------
 void Track::setup(const ofRectangle &bb, int cols, string stepSoundName){
     
-	soundPlayer.loadSound(stepSoundName, true);
-    soundPlayer.setSpeed(1.0f);
-    soundPlayer.setMultiPlay(true);
-    
-    float buttonWidth = bb.getWidth() / cols;
+	float buttonWidth = bb.getWidth() / cols;
     float buttonHeight = bb.getHeight();
 	
     buttons.clear();
     buttons.assign(cols, StepButton());
 	for(int i = 0; i<cols; i++){
-        cout << i << endl;
         buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, buttonHeight), i);
 	}
+    
+    soundPlayer.loadSound(stepSoundName);
 }
 
 //--------------------------------------------------------------
@@ -60,8 +57,8 @@ void Track::draw(){
 }
 
 //--------------------------------------------------------------
-void Track::mouseDown(int x, int y){
+void Track::toggle(int x, int y){
 	for(int i=0; i<buttons.size(); i++){
-		buttons[i].mouseDown(x, y);
+		buttons[i].toggle(x, y);
 	}
 }
