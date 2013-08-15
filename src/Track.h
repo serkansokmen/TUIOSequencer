@@ -17,8 +17,8 @@ class Track {
 public:
     ~Track();
     
-    void setup(string stepSoundName, const ofRectangle &boundingBox, int columns);
-    void update(int _step);
+    void setup(const ofRectangle &boundingBox, int columns, string stepSoundName);
+    void update();
     void draw();
 	
     vector <StepButton>     buttons;

@@ -10,13 +10,28 @@
 
 
 //--------------------------------------------------------------
+Sequencer::Sequencer(){
+    bpm = 120;
+	step = 0;
+    rTimer = 0;
+	diffTime = 0;
+}
+
+//--------------------------------------------------------------
 Sequencer::~Sequencer(){
     tracks.clear();
 }
 
+//--------------------------------------------------------------
+void Sequencer::setBPM(int _bpm){
+    bpm = _bpm;
+}
+
 
 //--------------------------------------------------------------
-void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, float speed, sequenceDirection dir){
+void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
+    
+    step = 0;
     
     columns = columCount;
     rows = rowCount;
@@ -24,92 +39,52 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount, floa
     stepButtonWidth = rect.getWidth() / columns;
     stepButtonHeight = rect.getHeight() / rows;
     
-    trackSpeed = speed;
-    direction = dir;
+    nTracks = soundBank.listDir("sounds");
     
-	// Clear and re-assign tracks
+    // Clear and re-assign tracks
     tracks.clear();
     tracks.assign(rows, Track());
     
     // Create tracks
     for (int y = 0; y < rows; y++) {
-        tracks[y].setup("sounds/rotate.mp3",
-                    ofRectangle(rect.getX(), stepButtonHeight * y, rect.getWidth(), stepButtonHeight),
-                    columns);
+        tracks[y].setup(ofRectangle(rect.getX(), stepButtonHeight * y, rect.getWidth(), stepButtonHeight),
+                        columns,
+                        soundBank.getPath(y));
     }
     
-    startScan(true);
+    scannerRect.set(0, 0, stepButtonWidth, rect.getHeight());
 };
-
-//--------------------------------------------------------------
-void Sequencer::startScan(bool fromBeginning){
-    
-    float lsx, lsy, lex, ley;
-    float duration;
-    float percentPassed = 0.0f;
-    
-    if (fromBeginning)
-        Tweener.removeAllTweens();
-    
-    switch (direction) {
-        case SEQ_DIRECTION_HORIZONTAL:
-        {
-            
-            if (fromBeginning){
-                lineStartPos.set(0, 0);
-                lineEndPos.set(0, stepButtonHeight * rows);
-            } else {
-                percentPassed = ofNormalize(lineStartPos.x, 0, (stepButtonWidth * columns));
-            }
-            
-            lsx = stepButtonWidth * columns;
-            lsy = 0;
-            lex = lsx;
-            ley = stepButtonHeight * rows;
-            duration = columns * trackSpeed * (1 - percentPassed);
-            break;
-        }
-            
-        case SEQ_DIRECTION_VERTICAL:
-        {
-            if (fromBeginning){
-                lineStartPos.set(0, 0);
-                lineEndPos.set(stepButtonWidth * columns, 0);
-            } else {
-                percentPassed = ofNormalize(lineStartPos.y, 0, (stepButtonHeight * rows));
-            }
-            
-            lsx = 0;
-            lsy = stepButtonHeight * rows;
-            lex = stepButtonWidth * columns;
-            ley = lsy;
-            duration = rows * trackSpeed * (1 - percentPassed);
-            break;
-        }
-            
-        default:
-            break;
-    }
-    
-    duration *= 0.001;
-    
-    Tweener.addTween(lineStartPos.x, lsx, duration, &ofxTransitions::linear);
-    Tweener.addTween(lineStartPos.y, lsy, duration, &ofxTransitions::linear);
-    Tweener.addTween(lineEndPos.x, lex, duration, &ofxTransitions::linear);
-    Tweener.addTween(lineEndPos.y, ley, duration, &ofxTransitions::linear);
-}
 
 //--------------------------------------------------------------
 void Sequencer::update(){
     
-    if ((direction == SEQ_DIRECTION_HORIZONTAL && lineStartPos.x >= int(stepButtonWidth * columns)) ||
-        (direction == SEQ_DIRECTION_VERTICAL && lineStartPos.y >= int(stepButtonHeight * rows))) {
-        startScan(true);
-    }
+    cout << bpm << endl;
+    
+    aTimer = ofGetElapsedTimeMillis();
+	rTimer = aTimer - diffTime;
+	
+	float bpMillis;
+	bpMillis = (bpm / 60.0f)*1000;
+	float beatPulse;
+	beatPulse = (60.0f / bpm/4) * 1000;
+    
+    if (rTimer > beatPulse){
+		
+        for(int i =0; i< nTracks; i++){
+//			track[i].bPlayOnce = true;
+		}
+		
+		diffTime = aTimer;
+		step++;
+		if(step == columns) step = 0;
+	}
     
     for (int i=0; i<tracks.size(); i++){
-        tracks[i].update(16);
+        tracks[i].update();
     }
+    
+    // Move indicator line
+    scannerRect.setX(step * stepButtonWidth);
 };
 
 //--------------------------------------------------------------
@@ -125,52 +100,30 @@ void Sequencer::draw(){
         tracks[i].draw();
     }
     
-    ofPoint lStart = lineStartPos;
-    ofPoint lEnd = lineEndPos;
     float endSize = 8.0f;
+    ofPoint lStart(stepButtonWidth * (step + .5), -endSize*.2);
+    ofPoint lEnd(stepButtonWidth * (step + .5), stepButtonHeight * rows + endSize*.2);
     
-    switch (direction) {
-        case SEQ_DIRECTION_HORIZONTAL:
-        {
-            lStart -= ofPoint(0, endSize);
-            lEnd += ofPoint(0, endSize);
-        }
-            break;
-            
-        case SEQ_DIRECTION_VERTICAL:
-        {
-            lStart -= ofPoint(endSize, 0);
-            lEnd += ofPoint(endSize, 0);
-        }
-            break;
-            
-        default:
-            break;
-    }
-    
+    lStart -= ofPoint(0, endSize);
+    lEnd += ofPoint(0, endSize);
     ofPushMatrix();
     ofPushStyle();
-    // Draw line
-    ofSetLineWidth(4.0);
-    ofSetColor(ofColor::darkRed);
-    ofLine(lStart, lEnd);
     
     ofSetColor(ofColor::red);
     // Draw circle pins
     ofSetLineWidth(1.0);
-    ofCircle(lStart, endSize * .4);
-    ofCircle(lEnd, endSize * .4);
+    ofSetRectMode(OF_RECTMODE_CENTER);
+    ofRect(lStart, stepButtonWidth, endSize);
+    ofRect(lEnd, stepButtonWidth, endSize);
+    ofSetRectMode(OF_RECTMODE_CORNER);
     ofFill();
     
     ofPopStyle();
     ofPopMatrix();
+    
+    ofSetColor(ofColor::green, 100);
+    ofRect(scannerRect);
 };
-
-//--------------------------------------------------------------
-void Sequencer::setSpeed(float speed){
-    trackSpeed = speed;
-    startScan(false);
-}
 
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<ABlob *> *blobs){

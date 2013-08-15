@@ -16,7 +16,7 @@ Track::~Track(){
 
 
 //--------------------------------------------------------------
-void Track::setup(string stepSoundName, const ofRectangle &bb, int cols){
+void Track::setup(const ofRectangle &bb, int cols, string stepSoundName){
     
 	soundPlayer.loadSound(stepSoundName, true);
     soundPlayer.setSpeed(1.0f);
@@ -33,7 +33,7 @@ void Track::setup(string stepSoundName, const ofRectangle &bb, int cols){
 }
 
 //--------------------------------------------------------------
-void Track::update(int _step){
+void Track::update(){
 	for(int i=0; i<buttons.size(); i++){
         
         if (buttons[i].getState() == on){

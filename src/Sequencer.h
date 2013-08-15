@@ -19,44 +19,41 @@
 using namespace std;
 
 
-enum sequenceDirection{
-	SEQ_DIRECTION_HORIZONTAL,
-	SEQ_DIRECTION_VERTICAL
-};
-
-
 class Sequencer {
     
-    void                startScan(bool fromBeginning);
+    ofDirectory			soundBank;
     
-    sequenceDirection   direction;
-    
-    ofPoint             lineStartPos;
-    ofPoint             lineEndPos;
+    ofRectangle         scannerRect;
     
     float               stepButtonWidth;
     float               stepButtonHeight;
-    float               trackSpeed;
     int                 columns;
     int                 rows;
     
+    float               aTimer, rTimer, diffTime;
+    int                 bpm;
+    int                 step;
+    int					nTracks;
+    
+    vector<Track>       tracks;
+    
 public:
     
+    Sequencer();
     ~Sequencer();
     
-    void setup(const ofRectangle rect, int columnCount, int rowCount,
-               float speed=1000, sequenceDirection dir=SEQ_DIRECTION_HORIZONTAL);
+    void setup(const ofRectangle rect,
+               int columnCount=6,
+               int rowCount=6);
+    
     void update();
     void draw();
     
-    void setSpeed(float speed);
+    void setBPM(int _bpm);
     
     // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);
     
     // Check segments against ofPoint objects
     void checkSegments(const vector<OSCPoint> &points);
-    
-    // Tracks
-    vector<Track> tracks;
 };

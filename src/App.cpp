@@ -21,14 +21,14 @@ void App::setup(){
     // Setup GUI first for loading initial values from previously saved XML
     initGUI();
     bDebugMode = true;
-    speed = 1000;
-    
-    Tweener.setMode(TWEENMODE_OVERRIDE);
     
     // Creates initial grid
     bInitGrid = true;
     // Initialize segments container
     sequencer = new Sequencer();
+    sequencerBPM = 120.0f;
+    
+    Tweener.setMode(TWEENMODE_OVERRIDE);
     
 #ifdef USE_OSC
     camWidth = 798;
@@ -126,9 +126,9 @@ void App::setup(){
 //--------------------------------------------------------------
 void App::update(){
     
-    sequenceDirection direction = SEQ_DIRECTION_HORIZONTAL;
-    
     Tweener.update();
+    
+    sequencerBPM = (int)sequencerBPM;
     
 #ifdef USE_OSC
     
@@ -184,37 +184,21 @@ void App::update(){
             }
         }
         
-        // check for horizontal message
-		if (m.getAddress() == "/controller/direction"){
-            switch ((int)m.getArgAsFloat(0)) {
-                case 0:
-                    direction = SEQ_DIRECTION_HORIZONTAL;
-                    break;
-                case 1:
-                    direction = SEQ_DIRECTION_VERTICAL;
-                    break;
-                default:
-                    break;
-            }
-            bInitGrid = true;
-            ofLog(OF_LOG_NOTICE, "Direction changed");
-		}
-        
-        // check for speed message
-		else if (m.getAddress() == "/controller/speed"){
-            speed = m.getArgAsFloat(0);
-            sequencer->setSpeed(speed);
-            ofLog(OF_LOG_NOTICE, "Speed: " + ofToString(speed));
+        // check for bpm message
+		if (m.getAddress() == "/controller/bpm"){
+            int bpm = (int)m.getArgAsFloat(0);
+            sequencer->setBPM(bpm);
+            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(bpm));
 		}
         
         // check debug message
-		else if (m.getAddress() == "/controller/debug"){
+		if (m.getAddress() == "/controller/debug"){
 			bDebugMode = !(m.getArgAsFloat(0) == 0.0f);
             ofLog(OF_LOG_NOTICE, "Debug mode:" + ofToString(bDebugMode));
 		}
         
         // check for init message
-		else if (m.getAddress() == "/controller/init"){
+		if (m.getAddress() == "/controller/init"){
 			bInitGrid = !(m.getArgAsFloat(0) == 0.0f);
             ofLog(OF_LOG_NOTICE, "initializing grid...");
 		}
@@ -271,7 +255,7 @@ void App::update(){
     
     // Re-init sequencer
     if (bInitGrid) {
-        sequencer->setup(scanRect, COLUMNS, ROWS, speed, direction);
+        sequencer->setup(scanRect, COLUMNS, ROWS);
         bInitGrid = false;
     }
     // Update sequencer
@@ -417,7 +401,7 @@ void App::initGUI(){
     gui->addSpacer();
     gui->addFPSSlider("fps");
     gui->addSpacer();
-    gui->addSlider("speed", 100.0f, 2000.0f, &speed);
+    gui->addSlider("BPM", 50.0f, 192.0f, &sequencerBPM);
     gui->addLabelToggle("start", &bInitGrid);
 
 #ifdef USE_KINECT
@@ -484,8 +468,9 @@ void App::guiEvent(ofxUIEventArgs &e){
     }
 #endif
     
-    if (e.widget->getName() == "speed"){
-        sequencer->setSpeed(speed);
+    if (e.widget->getName() == "BPM"){
+        ofxUISlider *slider = (ofxUISlider *)e.widget;
+        sequencer->setBPM((int)slider->getScaledValue());
     }
     
 #ifdef USE_FLOB

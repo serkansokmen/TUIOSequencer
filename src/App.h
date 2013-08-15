@@ -9,8 +9,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTweener.h"
 #include "ofxUI.h"
+#include "ofxTweener.h"
 #include "Sequencer.h"
 
 // Use Kinect to track blobs
@@ -77,7 +77,7 @@ public:
     
     Sequencer           *sequencer;
     ofRectangle         scanRect;
-    float               speed;
+    float               sequencerBPM;
     
 #ifdef USE_OSC
     // OSC
