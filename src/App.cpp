@@ -18,15 +18,43 @@ void App::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetLineWidth(2.0);
     
-    // Setup GUI first for loading initial values from previously saved XML
-    initGUI();
-    bDebugMode = false;
-    
-    // Creates initial grid
-    bInitGrid = true;
-    // Initialize segments container
+    //------------------------------------------
+    // Initialize Sequencer
+    //------------------------------------------
     sequencer = new Sequencer();
-    sequencerBPM = 100.0f;
+    
+    // initialize ofSoundStreamSetup
+    ofSoundStreamSetup(2, 0, this, 44100, 256, 4);
+    
+    // Setup synthesizer
+    setupSynth();
+    
+    //------------------------------------------
+    // Setup GUIs
+    //------------------------------------------
+    // Re-order these to change where they are shown
+    setupGUIMain();
+#ifdef USE_KINECT
+    setupGUIKinect();
+#endif
+#ifdef USE_FLOB
+    setupGUIFlob();
+#endif
+    setupGUITonic();
+    
+    // Load GUI Settings
+    loadGUISettings();
+    
+    // Hide all guis
+    for (int i=0; i<guihash.size(); i++) {
+        guihash[ofToString(i+1)]->setVisible(false);
+    }
+    guihash["1"]->setVisible(true);
+    
+    
+    
+    bDebugMode = true;
+    bInitGrid = true;
     
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
@@ -132,8 +160,6 @@ void App::update(){
     Tweener.update();
     ofSoundUpdate();
     
-    sequencerBPM = (int)sequencerBPM;
-    
 #ifdef USE_OSC
     
     bool bCheckPoints = false;
@@ -148,8 +174,6 @@ void App::update(){
         // check for grid message
         vector<string> addrs = ofSplitString(m.getAddress(), "/");
         
-        cout << m.getAddress() << endl;
-
         if (addrs.size() == 5 && addrs[1] == "controller" && addrs[2] == "grid"){
             int gridIndX = ofToInt(addrs[4]) - 1;
             int gridIndY = 6 - ofToInt(addrs[3]);
@@ -188,9 +212,8 @@ void App::update(){
         
         // check for bpm message
 		if (m.getAddress() == "/controller/bpm"){
-            sequencerBPM = m.getArgAsFloat(0);
-            sequencer->setBPM((int)sequencerBPM);
-            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(sequencerBPM));
+            tonicTempo = m.getArgAsFloat(0);
+            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(tonicTempo));
 		}
         
         // check debug message
@@ -255,11 +278,12 @@ void App::update(){
     }
 #endif
     
-    // Re-init sequencer
+    // Restart Sequencer
     if (bInitGrid) {
-        sequencer->setup(this, scanRect, COLUMNS, ROWS);
+        sequencer->setup(scanRect, COLUMNS, ROWS);
         bInitGrid = false;
     }
+    
     // Update sequencer
     sequencer->update();
 }
@@ -318,10 +342,6 @@ void App::draw(){
     sequencer->draw();
     
     ofPopMatrix();
-    gui->setVisible(bDebugMode);
-    if (gui->isVisible()) {
-        gui->draw();
-    }
 }
 
 //--------------------------------------------------------------
@@ -373,14 +393,14 @@ void App::drawPointCloud() {
 
 //--------------------------------------------------
 void App::blobOn(ofVec3f centroid, int id, int order){
-    cout << "blobOn() - id:" << id << " order:" << order << endl;
+    ofLog(OF_LOG_VERBOSE, "blob on - id:" + ofToString(id) << " order:" << ofToString(order));
 }
 
 void App::blobMoved(ofVec3f centroid, int id, int order){
-    cout << "blobMoved() - id:" << id << " order:" << order << endl;
+    ofLog(OF_LOG_VERBOSE, "blob moved - id: " + ofToString(id) + " order: " + ofToString(order));
+    
     // full access to blob object (get a reference)
     ofxKinectTrackedBlob *blob = &blobTracker.blobs[blobTracker.getIndexById(id)];
-    cout << "volume: " << blob->volume << "," << blob->massCenter << endl;
     
     float x = ofMap(centroid.x, -.5, .5, 0, scanRect.getWidth());
     float y = ofMap(centroid.z, -.5, .5, 0, scanRect.getHeight());
@@ -391,89 +411,258 @@ void App::blobMoved(ofVec3f centroid, int id, int order){
 }
 
 void App::blobOff(ofVec3f centroid, int id, int order){
-    cout << "blobOff() - id:" << id << " order:" << order << endl;
+    ofLog(OF_LOG_VERBOSE, "blob off - id:" + ofToString(id) << " order:" << ofToString(order));
+}
+#endif
+
+
+//--------------------------------------------------------------
+void App::setupGUIMain(){
+    
+    // ---
+    ofxUICanvas *guiMain = new ofxUICanvas();
+    guiMain->setName("MAIN");
+    guiMain->setFont("GUI/EnvyCodeR.ttf");
+    guiMain->setColorFill(ofxUIColor(200));
+    guiMain->setColorFillHighlight(ofxUIColor(255));
+    guiMain->setColorBack(ofxUIColor(20, 20, 20, 150));
+    {
+        guiMain->addLabel("MAIN");
+        guiMain->addSpacer();
+        guiMain->addFPSSlider("FPS");
+        guiMain->addSpacer();
+        guiMain->addLabelToggle("RESET", &bInitGrid);
+        guiMain->addSpacer();
+        guiMain->addToggle("mirror x", &bMirrorX);
+        guiMain->addToggle("mirror y", &bMirrorY);
+        guiMain->addSpacer();
+        guiMain->addLabel("Debug");
+        guiMain->addToggle("draw blobs", &bDrawBlobs);
+        guiMain->addToggle("draw video", &bDrawVideo);
+    }
+    guiMain->autoSizeToFitWidgets();
+    
+    // add gui to a c++ stl vector
+    guis.push_back(guiMain);
+    // add gui to a c++ stl map
+    guihash["1"] = guiMain;
+    
+    ofAddListener(guiMain->newGUIEvent, this, &App::guiEvent);
+}
+
+//--------------------------------------------------------------
+void App::setupGUITonic(){
+
+    ofxUIScrollableCanvas *guiTonic = new ofxUIScrollableCanvas();
+    guiTonic->setName("TONIC SEQUENCER");
+    guiTonic->setFont("GUI/EnvyCodeR.ttf");
+    guiTonic->addLabel("TONIC");
+    guiTonic->addSpacer();
+    
+    // create some sliders to control those parameters
+    vector<ControlParameter> synthParameters = synth.getParameters();
+    
+    // Add Tempo Slider
+    ControlParameter &param = synthParameters.at(0);
+    tonicTempo = param.getValue();
+    guiTonic->addSlider("TEMPO", param.getMin(), param.getMax(), &tonicTempo);
+    
+    // Add Transpose Slider
+    param = synthParameters.at(1);
+    tonicTranspose = param.getValue();
+    guiTonic->addSlider("TRANSPOSE", param.getMin(), param.getMax(), &tonicTranspose);
+    
+    guiTonic->addSpacer();
+    
+    // Pitch - Cutoff - Glide for every step
+    int pitchStartIndex = 2;
+    int cutoffStartIndex = 3;
+    int glideStartIndex = 4;
+    float rotarySize = 44;
+    
+    tonicPitches.assign(COLUMNS, float());
+    tonicCutoffs.assign(COLUMNS, float());
+    tonicGlides.assign(COLUMNS, float());
+    
+    // Pitch
+    guiTonic->addLabel("PITCH");
+    for (int i=0; i<tonicPitches.size(); i++) {
+        param = synthParameters.at(pitchStartIndex + i * 3);
+        guiTonic->addRotarySlider(param.getName(), param.getMin(), param.getMax(), &tonicPitches.at(i), rotarySize, rotarySize);
+    }
+    guiTonic->addSpacer();
+    
+    // Cutoff
+    guiTonic->addLabel("CUTOFF");
+    for (int i=0; i<tonicCutoffs.size(); i++) {
+        param = synthParameters.at(cutoffStartIndex + i * 3);
+        guiTonic->addMinimalSlider(param.getName(), param.getMin(), param.getMax(), &tonicCutoffs.at(i));
+    }
+    guiTonic->addSpacer();
+    
+    // Glide
+    guiTonic->addLabel("GLIDE");
+    for (int i=0; i<tonicGlides.size(); i++) {
+        param = synthParameters.at(glideStartIndex + i * 3);
+        guiTonic->addRotarySlider(param.getName(), param.getMin(), param.getMax(), &tonicGlides.at(i), rotarySize, rotarySize);
+    }
+    
+    guiTonic->autoSizeToFitWidgets();
+    
+    // add gui to a c++ stl vector
+    guis.push_back(guiTonic);
+    // add gui to a c++ stl map
+    guihash["2"] = guiTonic;
+    
+    ofAddListener(guiTonic->newGUIEvent, this, &App::guiEvent);
+}
+
+#ifdef USE_KINECT
+//--------------------------------------------------------------
+void App::setupGUIKinect(){
+    ofxUICanvas *guiKinect = new ofxUICanvas();
+    guiKinect->setName("Kinect");
+    guiKinect->setFont("GUI/EnvyCodeR.ttf");
+    guiKinect->setColorFill(ofxUIColor(200));
+    guiKinect->setColorFillHighlight(ofxUIColor(255));
+    guiKinect->setColorBack(ofxUIColor(20, 20, 20, 150));
+    {
+        guiKinect->addLabel("Kinect");
+        guiKinect->addSpacer();
+        guiKinect->addButton("Learn Background", &bLearnBackground);
+        guiKinect->addToggle("Draw Point Cloud", &bDrawPointCloud);
+        guiKinect->addToggle("Draw Blob IDs", &bDrawIDs);
+        guiKinect->addSlider("tilt angle", -30.0f, 30.0f, &angle);
+        guiKinect->addSpacer();
+        guiKinect->addSlider("crop box min X", -20.0f, 20.0f, &cropBoxMin.x);
+        guiKinect->addSlider("crop box min Y", 0.0f, 2.0f, &cropBoxMin.y);
+        guiKinect->addSlider("crop box min Z", -20.0f, 20.0f, &cropBoxMin.z);
+        guiKinect->addSpacer();
+        guiKinect->addSlider("crop box max X", -20.0f, 20.0f, &cropBoxMax.x);
+        guiKinect->addSlider("crop box max Y", 0.0f, 2.0f, &cropBoxMax.y);
+        guiKinect->addSlider("crop box max Z", -20.0f, 20.0f, &cropBoxMax.z);
+    }
+    guiKinect->autoSizeToFitWidgets();
+    
+    // add gui to a c++ stl vector
+    guis.push_back(guiKinect);
+    // add gui to a c++ stl map
+    guihash["3"] = guiKinect;
+    
+    ofAddListener(guiKinect->newGUIEvent, this, &App::guiEvent);
+}
+#endif
+
+
+#ifdef USE_FLOB
+//--------------------------------------------------------------
+void App::setupGUIFlob(){
+    ofxUICanvas *guiFlob = new ofxUICanvas();
+    guiFlob->setName("Flob");
+    guiFlob->setFont("GUI/EnvyCodeR.ttf");
+    guiFlob->setColorFill(ofxUIColor(200));
+    guiFlob->setColorFillHighlight(ofxUIColor(255));
+    guiFlob->setColorBack(ofxUIColor(20, 20, 20, 150));
+    {
+        guiKinect->addLabel("Flob");
+        guiKinect->addSpacer();
+        guiFlob->addSlider("threshold", 1.0f, 80.0f, &threshold);
+        guiFlob->addSlider("fade", 1.0f, 100.0f, &fade);
+    }
+    guiFlob->autoSizeToFitWidgets();
+    
+    // add gui to a c++ stl vector
+    guis.push_back(guiFlob);
+    // add gui to a c++ stl map
+    guihash["4"] = guiFlob;
+    
+    ofAddListener(guiFlob->newGUIEvent, this, &App::guiEvent);
 }
 #endif
 
 //--------------------------------------------------------------
-void App::initGUI(){
-    gui = new ofxUICanvas();
-    gui->setFont("GUI/EnvyCodeR.ttf");
-    gui->addLabel("MotionSynth");
-    gui->addSpacer();
-    gui->addFPSSlider("FPS");
-    gui->addSpacer();
-    gui->addSlider("BPM", 24.0f, 192.0f, &sequencerBPM);
-    gui->addLabelToggle("RESET", &bInitGrid);
-
-#ifdef USE_KINECT
-    gui->addSpacer();
-    gui->addLabel("Kinect");
-    gui->addButton("Learn Background", &bLearnBackground);
-    gui->addToggle("Draw Point Cloud", &bDrawPointCloud);
-    gui->addToggle("Draw Blob IDs", &bDrawIDs);
-    gui->addSlider("tilt angle", -30.0f, 30.0f, &angle);
-    gui->addSpacer();
-    gui->addSlider("crop box min X", -20.0f, 20.0f, &cropBoxMin.x);
-    gui->addSlider("crop box min Y", 0.0f, 2.0f, &cropBoxMin.y);
-    gui->addSlider("crop box min Z", -20.0f, 20.0f, &cropBoxMin.z);
-    gui->addSpacer();
-    gui->addSlider("crop box max X", -20.0f, 20.0f, &cropBoxMax.x);
-    gui->addSlider("crop box max Y", 0.0f, 2.0f, &cropBoxMax.y);
-    gui->addSlider("crop box max Z", -20.0f, 20.0f, &cropBoxMax.z);
-#endif
-    
-#ifdef USE_FLOB
-    gui->addSpacer();
-    gui->addLabel("Flob");
-    gui->addSlider("threshold", 1.0f, 80.0f, &threshold);
-    gui->addSlider("fade", 1.0f, 100.0f, &fade);
-#endif
-    
-#ifndef USE_OSC
-    gui->addSpacer();
-    gui->addToggle("mirror x", &bMirrorX);
-    gui->addToggle("mirror y", &bMirrorY);
-    gui->addSpacer();
-    gui->addLabel("Debug");
-    gui->addToggle("draw blobs", &bDrawBlobs);
-    gui->addToggle("draw video", &bDrawVideo);
-#endif
-    
-    gui->autoSizeToFitWidgets();
-    gui->setPosition(20, 20);
-
-#ifdef USE_KINECT
-    gui->loadSettings("GUI/guiSettingsKinect.xml");
-#endif
-    
-#ifdef USE_FLOB
-    gui->loadSettings("GUI/guiSettingsFlob.xml");
-#endif
-
-#ifdef USE_OSC
-    gui->loadSettings("GUI/guiSettingsOSC.xml");
-#endif
-    
-#ifndef USE_OSC
-    gui->setVisible(true);
-#endif
-    
-    ofAddListener(gui->newGUIEvent, this, &App::guiEvent);
+void App::loadGUISettings()
+{
+    vector<ofxUICanvas *>::iterator it;
+    for(it = guis.begin(); it != guis.end(); it++)
+    {
+        (*it)->loadSettings("GUI/"+(*it)->getName()+"Settings.xml");
+    }
 }
+//--------------------------------------------------------------
+void App::saveGUISettings()
+{
+    vector<ofxUICanvas *>::iterator it;
+    for(it = guis.begin(); it != guis.end(); it++)
+    {
+        (*it)->saveSettings("GUI/"+(*it)->getName()+"Settings.xml");
+    }
+}
+
 
 //--------------------------------------------------------------
 void App::guiEvent(ofxUIEventArgs &e){
+    
+    vector<ControlParameter> synthParameters = synth.getParameters();
+
+    ControlParameter *param;
+    if (synthParameters.size()){
+        
+        // Tempo
+        if (e.widget->getName() == "TEMPO"){
+            param = &synthParameters.at(0);
+            TonicFloat val = ofNormalize(tonicTempo, param->getMin(), param->getMax());
+            param->setNormalizedValue(val);
+            
+            synth.forceNewOutput();
+            sequencer->reset();
+        }
+        
+        // Transpose
+        if (e.widget->getName() == "TRANSPOSE"){
+            param = &synthParameters.at(1);
+            TonicFloat val = ofNormalize(tonicTranspose, param->getMin(), param->getMax());
+            param->setNormalizedValue(val);
+        }
+        
+        // Pitch - Cutoff - Glide for every step
+        int pitchStartIndex = 2;
+        int cutoffStartIndex = 3;
+        int glideStartIndex = 4;
+        
+        // Pitch
+        for (int i=0; i<tonicPitches.size(); i++) {
+            param = &synthParameters.at(pitchStartIndex + i * 3);
+            if (e.widget->getName() == param->getName()){
+                TonicFloat pitchVal = ofNormalize(tonicPitches.at(i), param->getMin(), param->getMax());
+                param->setNormalizedValue(pitchVal);
+            }
+        }
+        
+        // Cutoff
+        for (int i=0; i<tonicCutoffs.size(); i++) {
+            param = &synthParameters.at(cutoffStartIndex + i * 3);
+            if (e.widget->getName() == param->getName()){
+                TonicFloat cutoffVal = ofNormalize(tonicCutoffs.at(i), param->getMin(), param->getMax());
+                param->setNormalizedValue(cutoffVal);
+            }
+        }
+        
+        // Glide
+        for (int i=0; i<tonicGlides.size(); i++) {
+            param = &synthParameters.at(glideStartIndex + i * 3);
+            if (e.widget->getName() == param->getName()){
+                TonicFloat glideVal = ofNormalize(tonicGlides.at(i), param->getMin(), param->getMax());
+                param->setNormalizedValue(glideVal);
+            }
+        }
+    }
+    
 #ifdef USE_KINECT
     if (e.widget->getName() == "tilt angle"){
         kinect.setCameraTiltAngle(angle);
     }
 #endif
-    
-    if (e.widget->getName() == "BPM"){
-        ofxUISlider *slider = (ofxUISlider *)e.widget;
-        sequencer->setBPM((int)slider->getScaledValue());
-    }
     
 #ifdef USE_FLOB
     if (e.widget->getName() == "threshold"){
@@ -489,11 +678,72 @@ void App::guiEvent(ofxUIEventArgs &e){
 //--------------------------------------------------------------
 void App::keyPressed(int key){
     
-    switch (key) {
-        case 's':
-            gui->toggleVisible();
+    switch (key)
+    {
+        case '1':
+        {
+            // Hide all guis
+            for (int i=0; i<guihash.size(); i++) {
+                guihash[ofToString(i+1)]->setVisible(false);
+            }
+            guihash["1"]->toggleVisible();
+        }
             break;
+        case '2':
+        {
+            // Hide all guis
+            for (int i=0; i<guihash.size(); i++) {
+                guihash[ofToString(i+1)]->setVisible(false);
+            }
+            guihash["2"]->toggleVisible();
+        }
+            break;
+#ifdef USE_KINECT
+        case '3':
+        {
+            // Hide all guis
+            for (int i=0; i<guihash.size(); i++) {
+                guihash[ofToString(i+1)]->setVisible(false);
+            }
+            guihash["3"]->toggleVisible();
+        }
+            break;
+#endif
+            
+#ifdef USE_FLOB
+        case '4':
+        {
+            // Hide all guis
+            for (int i=0; i<guihash.size(); i++) {
+                guihash[ofToString(i+1)]->setVisible(false);
+            }
+            guihash["4"]->toggleVisible();
+        }
+            break;
+#endif
         
+        case 'p':
+        {
+            vector<ofxUICanvas *>::iterator it;
+            for(it = guis.begin(); it != guis.end(); it++)
+            {
+                (*it)->setDrawWidgetPadding(true);
+            }
+        }
+            break;
+            
+        case 'P':
+        {
+            vector<ofxUICanvas *>::iterator it;
+            for(it = guis.begin(); it != guis.end(); it++)
+            {
+                (*it)->setDrawWidgetPadding(false);
+            }
+        }
+            break;
+            
+            
+            
         default:
             break;
     }
@@ -511,7 +761,7 @@ void App::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void App::mouseDragged(int x, int y, int button){
-    sequencer->mouseDragged(x, y);
+
 }
 
 //--------------------------------------------------------------
@@ -554,23 +804,93 @@ void App::exit(){
     
 #ifdef USE_KINECT
 	kinect.close();
-    
-    gui->saveSettings("GUI/guiSettingsKinect.xml");
 #endif
+
+    saveGUISettings();
     
-#ifdef USE_FLOB
-    gui->saveSettings("GUI/guiSettingsFlob.xml");
-#endif
-    
-#ifdef USE_OSC
-    gui->saveSettings("GUI/guiSettingsOSC.xml");
-#endif
+    for(int i = 0; i < guis.size(); i++)
+    {
+        ofxUICanvas *gui = guis[i];
+        delete gui;
+    }
+    guis.clear();
     
     delete sequencer;
-    delete gui;
+}
+
+
+//--------------------------------------------------------------
+////////////////////////////////////////////////////////////////
+// Audio Stuff
+////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------
+void App::setupSynth(){
+    
+    // synth paramters are like instance variables -- they're values you can set later, by
+    // calling synth.setParameter()
+    ControlGenerator bpm = synth.addParameter("tempo", tonicTempo).min(16).max(96);
+    ControlGenerator transpose = synth.addParameter("transpose", tonicTranspose).min(-6).max(6);
+    
+    // ControlMetro generates a "trigger" message at a given bpm. We multiply it by NOTE_MULTIPLIER because we
+    // want four NOTE_MULTIPLIER * 4th notes for every beat
+    ControlGenerator metro = ControlMetro().bpm(bpm * NOTE_MULTIPLIER);
+    
+    // ControlStepper increments a value every time it's triggered, and then starts at the beginning again
+    // Here, we're using it to move forward in the sequence
+    ControlGenerator step = ControlStepper().end(COLUMNS).trigger(metro);
+    
+    ofEvent<float> *stepEvent = synth.createOFEvent(step);
+    ofAddListener(*stepEvent, sequencer, &Sequencer::stepEvent);
+    
+    // ControlSwitcher holds a list of ControlGenerators, and routes whichever one the inputIndex is pointing
+    // to to its output.
+    ControlSwitcher pitches = ControlSwitcher().inputIndex(step);
+    ControlSwitcher cutoffs = ControlSwitcher().inputIndex(step);
+    ControlSwitcher glides = ControlSwitcher().inputIndex(step);
+    
+    // stick a bunch of random values into the pitch and cutoff lists
+    for(int i = 0; i < COLUMNS; i++){
+        ControlGenerator pitchForThisStep = synth.addParameter("Step " + ofToString(i) + " Pitch", ofRandom(10, 80)).min(10).max(80);
+        pitches.addInput(pitchForThisStep);
+        
+        ControlGenerator cutoff = synth.addParameter("Step " + ofToString(i) + " Cutoff", 240).min(0).max(1500);
+        cutoffs.addInput(cutoff);
+        
+        ControlGenerator glide = synth.addParameter("Step " + ofToString(i) + " Glide", 0.02).min(0).max(0.1);
+        glides.addInput(glide);
+    }
+    
+    // Define a scale according to steps in a 12-note octave.
+    // This is a pentatonic scale.
+    // Like using just the black keys on a piano
+    vector<float> scale;
+    scale.push_back(0);
+    scale.push_back(2);
+    scale.push_back(3);
+    scale.push_back(5);
+    scale.push_back(7);
+    scale.push_back(10);
+    
+    // ControlSnapToScale snaps a float value to the nearest scale value, no matter what octave its in
+    ControlGenerator midiNote = transpose + ControlSnapToScale().setScale(scale).input(pitches);
+    
+    ControlGenerator frequencyInHertz = ControlMidiToFreq().input(midiNote);
+    
+    // now that we've done all that, we have a frequency signal that's changing 4x per beat
+    Generator tone = RectWave().freq( frequencyInHertz.smoothed().length(glides) );
+    
+    // create an amplitude signal with an ADSR envelope, and scale it down a little so it's not scary loud
+    Generator amplitude = ADSR(0.01, 0.1, 0,0).trigger(metro) * 0.3;
+    
+    // create a filter, and feed the cutoff sequence in to it
+    LPF24 filter =  LPF24().cutoff(cutoffs).Q(0.1);
+    filter.input(tone * amplitude);
+    
+    // rout the output of the filter to the synth's main output
+    synth.setOutputGen(filter);
 }
 
 //--------------------------------------------------------------
 void App::audioRequested(float * output, int bufferSize, int nChannels){
-    sequencer->synth.fillBufferOfFloats(output, bufferSize, nChannels);
+    synth.fillBufferOfFloats(output, bufferSize, nChannels);
 }

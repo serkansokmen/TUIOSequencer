@@ -10,30 +10,18 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
-#include "ofxTonic.h"
 #include "ABlob.h"
 #include "Track.h"
 #include "OSCPoint.h"
 
 
 using namespace std;
-using namespace Tonic;
-
-
-struct ParameterSlider{
-    ControlParameter param;
-    bool isActive;
-    ParameterSlider(ControlParameter paramArg)
-    :param(paramArg),
-    isActive(false){}
-};
 
 
 class Sequencer {
     
     ofRectangle         scrubber;
     ofRectangle         boundingBox;
-    ofRectangle         sliderArea;
     
     float               stepButtonWidth;
     float               stepButtonHeight;
@@ -44,29 +32,25 @@ class Sequencer {
     int                 bpm;
     int                 step;
     
-    vector<Track>           tracks;
-    vector<ParameterSlider> sliders;
+    vector<Track>       tracks;
     
 public:
     
-    Sequencer();
     ~Sequencer();
     
-    void setup(ofBaseApp *app,
-               const ofRectangle rect,
-               int columnCount=6,
-               int rowCount=6);
+    void setup(const ofRectangle rect,
+               int columnCount=8,
+               int rowCount=8);
     
     void update();
     void draw();
-    void mouseDragged(int x, int y);
+    
+    void stepEvent(float& val);
+    
+    void reset();
     
     void toggle(int x, int y);
     void toggleIndex(int i, int j);
-    
-    void setBPM(int _bpm);
-    
-    ofxTonicSynth synth;
     
     // Check segments against ofxFlob blobs
     void checkSegments(const vector<ABlob*> *blobs);

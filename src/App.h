@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxTonic.h"
 #include "ofxUI.h"
 #include "ofxTweener.h"
 #include "Sequencer.h"
@@ -21,8 +22,9 @@
 #define USE_OSC
 
 
-#define COLUMNS 8
-#define ROWS    8
+#define COLUMNS             8
+#define ROWS                8
+#define NOTE_MULTIPLIER     8
 
 
 #ifdef USE_KINECT
@@ -43,6 +45,11 @@
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
 #endif
+
+
+using namespace Tonic;
+
+
 
 #ifdef USE_KINECT
 class App : public ofBaseApp, public ofxKinectBlobListener {
@@ -66,6 +73,7 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    
 #ifdef USE_KINECT
     void drawPointCloud();
     void blobOn(ofVec3f centroid, int id, int order);
@@ -75,13 +83,29 @@ public:
     
     void audioRequested(float * output, int bufferSize, int nChannels);
     
+    void setupGUIMain();
+    void setupGUIKinect();
+    void setupGUIFlob();
+    void setupGUITonic();
+    
+    void saveGUISettings();
+    void loadGUISettings();
+    
     void guiEvent(ofxUIEventArgs &e);
-    void initGUI();
     void resetScanRect();
     
     Sequencer           *sequencer;
     ofRectangle         scanRect;
-    float               sequencerBPM;
+    
+    // Tonic
+    void                setupSynth();
+    ofxTonicSynth       synth;
+    
+    float               tonicTempo;
+    float               tonicTranspose;
+    vector<float>       tonicPitches;
+    vector<float>       tonicCutoffs;
+    vector<float>       tonicGlides;
     
 #ifdef USE_OSC
     // OSC
@@ -123,7 +147,6 @@ public:
     bool                bDrawPointCloud;
 	bool                bDrawIDs;
 	bool                bLearnBackground;
-    
 #endif
     
 #ifdef USE_FLOB
@@ -146,5 +169,6 @@ public:
     bool                bInitGrid;
     
     // GUI
-    ofxUICanvas         *gui;
+    vector<ofxUICanvas*>        guis;
+	map<string, ofxUICanvas*>   guihash;
 };
