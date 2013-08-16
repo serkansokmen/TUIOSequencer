@@ -286,6 +286,9 @@ void App::update(){
     
     // Update sequencer
     sequencer->update();
+    
+    // Get active track cells
+    
 }
 
 //--------------------------------------------------------------

@@ -12,7 +12,7 @@
 //--------------------------------------------------------------
 Track::~Track(){
     
-    buttons.clear();
+    cells.clear();
     
 }
 
@@ -26,38 +26,41 @@ void Track::setup(int id, const ofRectangle &bb, int cols){
 	float buttonWidth = bb.getWidth() / cols;
     trackHeight = bb.getHeight();
 	
-    buttons.clear();
-    buttons.assign(cols, StepButton());
+    cells.assign(cols, TrackCell());
 	for(int i = 0; i<columns; i++){
-        buttons[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
+        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
 }
 
 //--------------------------------------------------------------
 void Track::update(int step){
     
-    for(int i=0; i<buttons.size(); i++){
+    for (int i=0; i<cells.size(); i++){
         
-        if (step == buttons[i].step){
+        if (step == cells[i].step){
             // Current step column
-            if (buttons[i].getState() == active){
-                buttons[i].setState(on);
-                
-                // TODO: set sound something
-//                soundPlayer->play();
+            if (cells[i].getState() == active){
+                cells[i].setState(on);
+                values[i] = true;
             }
         } else {
-            if (buttons[i].getState() == on){
-                buttons[i].setState(active);
+            if (cells[i].getState() == on){
+                cells[i].setState(active);
+                values[i] = false;
             }
         }
+    }
+    
+    values.assign(columns, bool(false));
+    for (int i=0; i<cells.size(); i++) {
+        values[i] = cells[i].getState() == on;
     }
 }
 
 //--------------------------------------------------------------
 void Track::draw(){
-	for(int i=0; i<buttons.size(); i++){
-		buttons[i].draw();
+	for(int i=0; i<cells.size(); i++){
+		cells[i].draw();
 	}
     
     ofPushMatrix();
@@ -68,7 +71,7 @@ void Track::draw(){
 
 //--------------------------------------------------------------
 void Track::toggle(int x, int y){
-	for(int i=0; i<buttons.size(); i++){
-		buttons[i].toggle(x, y);
+	for(int i=0; i<cells.size(); i++){
+		cells[i].toggle(x, y);
 	}
 }

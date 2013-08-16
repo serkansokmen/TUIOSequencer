@@ -1,16 +1,16 @@
 //
-//  StepButton.cpp
+//  TrackCell.cpp
 //  MotionSynth
 //
 //  Created by Serkan Sokmen on 31.07.2013.
 //
 //
 
-#include "StepButton.h"
+#include "TrackCell.h"
 
 
 //--------------------------------------------------------------
-void StepButton::setup(const ofRectangle &bb, int s){
+void TrackCell::setup(const ofRectangle &bb, int s){
     
     float padding = 8.0f;
     
@@ -23,7 +23,7 @@ void StepButton::setup(const ofRectangle &bb, int s){
 }
 
 //--------------------------------------------------------------
-void StepButton::draw(){
+void TrackCell::draw(){
     ofPushMatrix();
     ofPushStyle();
     ofSetLineWidth(1.0);
@@ -62,17 +62,17 @@ void StepButton::draw(){
 };
 
 //--------------------------------------------------------------
-void StepButton::setState(StepButtonState s){
+void TrackCell::setState(TrackCellState s){
     state = s;
 }
 
 //--------------------------------------------------------------
-const StepButtonState &StepButton::getState(){
+const TrackCellState &TrackCell::getState(){
     return state;
 }
 
 //--------------------------------------------------------------
-void StepButton::toggle(int x, int y){
+void TrackCell::toggle(int x, int y){
     if (boundingBox.inside(x, y)){
         switch (getState()) {
             case off:

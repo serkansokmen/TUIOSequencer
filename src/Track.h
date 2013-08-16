@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "StepButton.h"
+#include "TrackCell.h"
 
 
 class Track {
@@ -18,7 +18,7 @@ class Track {
     int                     columns;
     int                     trackId;
     
-    vector <StepButton>     buttons;
+    vector<TrackCell>       cells;
     
 public:
     ~Track();
@@ -27,4 +27,6 @@ public:
     void update(int step);
     void draw();
     void toggle(int x, int y);
+    
+    vector<bool>    values;
 };

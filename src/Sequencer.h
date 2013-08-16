@@ -32,10 +32,9 @@ class Sequencer {
     int                 bpm;
     int                 step;
     
-    vector<Track>       tracks;
-    
 public:
     
+    Sequencer();
     ~Sequencer();
     
     void setup(const ofRectangle rect,
@@ -59,4 +58,6 @@ public:
     void checkSegments(const vector<OSCPoint> &points);
     
     void audioRequested(float * output, int bufferSize, int nChannels);
+    
+    vector<Track> tracks;
 };

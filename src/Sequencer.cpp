@@ -10,22 +10,14 @@
 
 
 //--------------------------------------------------------------
+Sequencer::Sequencer(){
+    
+}
+
+//--------------------------------------------------------------
 Sequencer::~Sequencer(){
     tracks.clear();
 }
-
-
-//--------------------------------------------------------------
-void Sequencer::reset(){
-    rTimer = 0;
-	diffTime = 0;
-}
-
-//--------------------------------------------------------------
-void Sequencer::stepEvent(float &val){
-    step = val;
-}
-
 
 //--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
@@ -94,7 +86,6 @@ void Sequencer::draw(){
     ofPoint lEnd(0, stepButtonHeight * rows + endSize*.2);
     
     lStart -= ofPoint(0, endSize);
-//    lEnd += ofPoint(0, endSize);
     
     ofRect(lStart, stepButtonWidth, endSize);
     ofRect(lEnd, stepButtonWidth, endSize);
@@ -107,6 +98,17 @@ void Sequencer::draw(){
     ofPopStyle();
     ofPopMatrix();
 };
+
+//--------------------------------------------------------------
+void Sequencer::reset(){
+    rTimer = 0;
+	diffTime = 0;
+}
+
+//--------------------------------------------------------------
+void Sequencer::stepEvent(float &val){
+    step = val;
+}
 
 //--------------------------------------------------------------
 void Sequencer::toggle(int x, int y){
