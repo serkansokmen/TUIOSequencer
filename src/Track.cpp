@@ -13,6 +13,7 @@
 Track::~Track(){
     
     cells.clear();
+    cellValues.clear();
     
 }
 
@@ -41,19 +42,17 @@ void Track::update(int step){
             // Current step column
             if (cells[i].getState() == active){
                 cells[i].setState(on);
-                values[i] = true;
             }
         } else {
             if (cells[i].getState() == on){
                 cells[i].setState(active);
-                values[i] = false;
             }
         }
     }
     
-    values.assign(columns, bool(false));
+    cellValues.assign(columns, bool(false));
     for (int i=0; i<cells.size(); i++) {
-        values[i] = cells[i].getState() == on;
+        cellValues[i] = cells[i].getState() == on;
     }
 }
 
