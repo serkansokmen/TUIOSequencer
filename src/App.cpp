@@ -212,8 +212,9 @@ void App::update(){
         
         // check for bpm message
 		if (m.getAddress() == "/controller/bpm"){
-            tonicTempo = m.getArgAsFloat(0);
-            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(tonicTempo));
+            float tempo = m.getArgAsFloat(0);
+            synth.setParameter("tempo", tempo);
+            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(tempo));
 		}
         
         // check debug message
@@ -286,9 +287,6 @@ void App::update(){
     
     // Update sequencer
     sequencer->update();
-    
-    // Get active track cells
-    
 }
 
 //--------------------------------------------------------------
@@ -354,8 +352,6 @@ void App::drawPointCloud() {
     ofScale(100.0, 100.0, 100.0);
     glEnable(GL_DEPTH_TEST);
     glPointSize(3);
-    
-//    ofDrawGridPlane(2);
     
     // draw blobs
     for (unsigned int i=0; i < blobFinder.blobs.size(); i++) {
@@ -457,7 +453,7 @@ void App::setupGUIMain(){
 void App::setupGUITonic(){
 
     ofxUIScrollableCanvas *guiTonic = new ofxUIScrollableCanvas();
-    guiTonic->setName("TONIC SEQUENCER");
+    guiTonic->setName("TONIC");
     guiTonic->setFont("GUI/EnvyCodeR.ttf");
     guiTonic->addLabel("TONIC");
     guiTonic->addSpacer();
@@ -467,13 +463,11 @@ void App::setupGUITonic(){
     
     // Add Tempo Slider
     ControlParameter &param = synthParameters.at(0);
-    tonicTempo = param.getValue();
-    guiTonic->addSlider("TEMPO", param.getMin(), param.getMax(), &tonicTempo);
+    guiTonic->addSlider("TEMPO", param.getMin(), param.getMax(), param.getValue());
     
     // Add Transpose Slider
     param = synthParameters.at(1);
-    tonicTranspose = param.getValue();
-    guiTonic->addSlider("TRANSPOSE", param.getMin(), param.getMax(), &tonicTranspose);
+    guiTonic->addSlider("TRANSPOSE", param.getMin(), param.getMax(), param.getValue());
     
     guiTonic->addSpacer();
     
@@ -481,33 +475,28 @@ void App::setupGUITonic(){
     int pitchStartIndex = 2;
     int cutoffStartIndex = 3;
     int glideStartIndex = 4;
-    float rotarySize = 44;
-    
-    tonicPitches.assign(COLUMNS, float());
-    tonicCutoffs.assign(COLUMNS, float());
-    tonicGlides.assign(COLUMNS, float());
     
     // Pitch
     guiTonic->addLabel("PITCH");
-    for (int i=0; i<tonicPitches.size(); i++) {
+    for (int i=0; i<COLUMNS; i++) {
         param = synthParameters.at(pitchStartIndex + i * 3);
-        guiTonic->addRotarySlider(param.getName(), param.getMin(), param.getMax(), &tonicPitches.at(i), rotarySize, rotarySize);
+        guiTonic->addMinimalSlider(param.getName(), param.getMin(), param.getMax(), param.getValue());
     }
     guiTonic->addSpacer();
     
     // Cutoff
     guiTonic->addLabel("CUTOFF");
-    for (int i=0; i<tonicCutoffs.size(); i++) {
+    for (int i=0; i<COLUMNS; i++) {
         param = synthParameters.at(cutoffStartIndex + i * 3);
-        guiTonic->addMinimalSlider(param.getName(), param.getMin(), param.getMax(), &tonicCutoffs.at(i));
+        guiTonic->addMinimalSlider(param.getName(), param.getMin(), param.getMax(), param.getValue());
     }
     guiTonic->addSpacer();
     
     // Glide
     guiTonic->addLabel("GLIDE");
-    for (int i=0; i<tonicGlides.size(); i++) {
+    for (int i=0; i<COLUMNS; i++) {
         param = synthParameters.at(glideStartIndex + i * 3);
-        guiTonic->addRotarySlider(param.getName(), param.getMin(), param.getMax(), &tonicGlides.at(i), rotarySize, rotarySize);
+        guiTonic->addMinimalSlider(param.getName(), param.getMin(), param.getMax(), param.getValue());
     }
     
     guiTonic->autoSizeToFitWidgets();
@@ -609,23 +598,25 @@ void App::guiEvent(ofxUIEventArgs &e){
     vector<ControlParameter> synthParameters = synth.getParameters();
 
     ControlParameter *param;
+    ofxUIMinimalSlider *slider;
+    
     if (synthParameters.size()){
         
         // Tempo
         if (e.widget->getName() == "TEMPO"){
+            slider = (ofxUIMinimalSlider *) e.widget;
             param = &synthParameters.at(0);
-            TonicFloat val = ofNormalize(tonicTempo, param->getMin(), param->getMax());
-            param->setNormalizedValue(val);
+            param->setNormalizedValue(slider->getValue());
             
-            synth.forceNewOutput();
+//            synth.forceNewOutput();
             sequencer->reset();
         }
         
         // Transpose
         if (e.widget->getName() == "TRANSPOSE"){
+            slider = (ofxUIMinimalSlider *) e.widget;
             param = &synthParameters.at(1);
-            TonicFloat val = ofNormalize(tonicTranspose, param->getMin(), param->getMax());
-            param->setNormalizedValue(val);
+            param->setNormalizedValue(slider->getValue());
         }
         
         // Pitch - Cutoff - Glide for every step
@@ -634,29 +625,29 @@ void App::guiEvent(ofxUIEventArgs &e){
         int glideStartIndex = 4;
         
         // Pitch
-        for (int i=0; i<tonicPitches.size(); i++) {
+        for (int i=0; i<COLUMNS; i++) {
             param = &synthParameters.at(pitchStartIndex + i * 3);
             if (e.widget->getName() == param->getName()){
-                TonicFloat pitchVal = ofNormalize(tonicPitches.at(i), param->getMin(), param->getMax());
-                param->setNormalizedValue(pitchVal);
+                slider = (ofxUIMinimalSlider *) e.widget;
+                param->setNormalizedValue(slider->getValue());
             }
         }
         
         // Cutoff
-        for (int i=0; i<tonicCutoffs.size(); i++) {
+        for (int i=0; i<COLUMNS; i++) {
             param = &synthParameters.at(cutoffStartIndex + i * 3);
             if (e.widget->getName() == param->getName()){
-                TonicFloat cutoffVal = ofNormalize(tonicCutoffs.at(i), param->getMin(), param->getMax());
-                param->setNormalizedValue(cutoffVal);
+                slider = (ofxUIMinimalSlider *) e.widget;
+                param->setNormalizedValue(slider->getValue());
             }
         }
         
         // Glide
-        for (int i=0; i<tonicGlides.size(); i++) {
+        for (int i=0; i<COLUMNS; i++) {
             param = &synthParameters.at(glideStartIndex + i * 3);
             if (e.widget->getName() == param->getName()){
-                TonicFloat glideVal = ofNormalize(tonicGlides.at(i), param->getMin(), param->getMax());
-                param->setNormalizedValue(glideVal);
+                slider = (ofxUIMinimalSlider *) e.widget;
+                param->setNormalizedValue(slider->getValue());
             }
         }
     }
@@ -831,8 +822,8 @@ void App::setupSynth(){
     
     // synth paramters are like instance variables -- they're values you can set later, by
     // calling synth.setParameter()
-    ControlGenerator bpm = synth.addParameter("tempo", tonicTempo).min(16).max(96);
-    ControlGenerator transpose = synth.addParameter("transpose", tonicTranspose).min(-6).max(6);
+    ControlGenerator bpm = synth.addParameter("tempo", TEMPO).min(16).max(96);
+    ControlGenerator transpose = synth.addParameter("transpose", TRANSPOSE).min(-6).max(6);
     
     // ControlMetro generates a "trigger" message at a given bpm. We multiply it by NOTE_MULTIPLIER because we
     // want four NOTE_MULTIPLIER * 4th notes for every beat
@@ -842,6 +833,7 @@ void App::setupSynth(){
     // Here, we're using it to move forward in the sequence
     ControlGenerator step = ControlStepper().end(COLUMNS).trigger(metro);
     
+    // Register step event handler for OF
     ofEvent<float> *stepEvent = synth.createOFEvent(step);
     ofAddListener(*stepEvent, sequencer, &Sequencer::stepEvent);
     
@@ -859,7 +851,7 @@ void App::setupSynth(){
         ControlGenerator cutoff = synth.addParameter("Step " + ofToString(i) + " Cutoff", 240).min(0).max(1500);
         cutoffs.addInput(cutoff);
         
-        ControlGenerator glide = synth.addParameter("Step " + ofToString(i) + " Glide", 0.02).min(0).max(0.1);
+        ControlGenerator glide = synth.addParameter("Step " + ofToString(i) + " Glide", 0.02).min(0).max(0.9);
         glides.addInput(glide);
     }
     
@@ -880,7 +872,7 @@ void App::setupSynth(){
     ControlGenerator frequencyInHertz = ControlMidiToFreq().input(midiNote);
     
     // now that we've done all that, we have a frequency signal that's changing 4x per beat
-    Generator tone = RectWave().freq( frequencyInHertz.smoothed().length(glides) );
+    Generator tone = RectWave().freq(frequencyInHertz.smoothed().length(glides));
     
     // create an amplitude signal with an ADSR envelope, and scale it down a little so it's not scary loud
     Generator amplitude = ADSR(0.01, 0.1, 0,0).trigger(metro) * 0.3;

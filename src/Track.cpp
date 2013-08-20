@@ -31,6 +31,8 @@ void Track::setup(int id, const ofRectangle &bb, int cols){
 	for(int i = 0; i<columns; i++){
         cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
+    
+    cellValues.assign(columns, bool(false));
 }
 
 //--------------------------------------------------------------
@@ -50,9 +52,8 @@ void Track::update(int step){
         }
     }
     
-    cellValues.assign(columns, bool(false));
-    for (int i=0; i<cells.size(); i++) {
-        cellValues[i] = cells[i].getState() == on;
+    for (int i=0; i<cellValues.size(); i++) {
+        cellValues[i] = (cells[i].getState() != off);
     }
 }
 

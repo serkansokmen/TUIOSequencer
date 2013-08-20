@@ -24,7 +24,10 @@
 
 #define COLUMNS             8
 #define ROWS                8
+
 #define NOTE_MULTIPLIER     8
+#define TEMPO               100
+#define TRANSPOSE           0
 
 
 #ifdef USE_KINECT
@@ -100,12 +103,6 @@ public:
     // Tonic
     void                setupSynth();
     ofxTonicSynth       synth;
-    
-    float               tonicTempo;
-    float               tonicTranspose;
-    vector<float>       tonicPitches;
-    vector<float>       tonicCutoffs;
-    vector<float>       tonicGlides;
     
 #ifdef USE_OSC
     // OSC
