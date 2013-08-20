@@ -1,8 +1,6 @@
-ofxOpenCv
 ofxOsc
 ofxXmlSettings
-ofxFlob
-ofxKinect
-ofxTonic
+ofxMSABPMTapper
+ofxMSATimer
 ofxTweener
 ofxUI

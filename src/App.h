@@ -9,57 +9,24 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTonic.h"
+#include "MSABPMTapper.h"
 #include "ofxUI.h"
-#include "ofxTweener.h"
 #include "Sequencer.h"
-
-// Use Kinect to track blobs
-//#define USE_KINECT
-// Use ofxFlob Blob Tracker
-//#define USE_FLOB
-// Use OSC Controller
-#define USE_OSC
-
-
-#define COLUMNS             8
-#define ROWS                8
-
-#define NOTE_MULTIPLIER     8
-#define TEMPO               100
-#define TRANSPOSE           0
-
-
-#ifdef USE_KINECT
-#include "ofxOpenCv.h"
-#include "ofxKinect.h"
-#include "ofxKinectBlobFinder.h"
-#include "ofxKinectBlobTracker.h"
-#endif
-
-#ifdef USE_FLOB
-#include "ofxFlob.h"
-#endif
-
-#ifdef USE_OSC
 #include "OSCPoint.h"
+
 #define OSC_HOST            "192.168.254.39"
 #define OSC_RECEIVE_PORT    8000
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
-#endif
+
+#define COLUMNS             4
+#define ROWS                4
 
 
-using namespace Tonic;
+using namespace msa;
 
 
-
-#ifdef USE_KINECT
-class App : public ofBaseApp, public ofxKinectBlobListener {
-#else
 class App : public ofBaseApp {
-#endif
-    
     
 public:
     void setup();
@@ -77,93 +44,32 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-#ifdef USE_KINECT
-    void drawPointCloud();
-    void blobOn(ofVec3f centroid, int id, int order);
-    void blobMoved(ofVec3f centroid, int id, int order);
-    void blobOff(ofVec3f centroid, int id, int order);
-#endif
-    
     void audioRequested(float * output, int bufferSize, int nChannels);
     
     void setupGUIMain();
-    void setupGUIKinect();
-    void setupGUIFlob();
-    void setupGUITonic();
-    
     void saveGUISettings();
     void loadGUISettings();
     
     void guiEvent(ofxUIEventArgs &e);
-    void resetScanRect();
     
     Sequencer           *sequencer;
+    BPMTapper           bpmTapper;
+    
     ofRectangle         scanRect;
     
-    // Tonic
-    void                setupSynth();
-    ofxTonicSynth       synth;
-    
-#ifdef USE_OSC
     // OSC
     ofxOscReceiver      oscReceiver;
     ofxOscSender        oscSender;
     
-    vector <OSCPoint>   oscPoints;
-#endif
+    float       bpm;
+    int         totalSteps;
+    int         currentStep;
     
-#ifdef USE_KINECT
+    bool        bDebugMode;
+    bool        bInitGrid;
     
-    // Kinect
-    ofxKinect kinect;
-    ofxKinectBlobFinder  blobFinder;
-    ofxKinectBlobTracker blobTracker;
-    
-    // OpenCV
-    ofxCvColorImage     colorImg;
-    ofxCvGrayscaleImage grayImage; // grayscale depth image
-	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
-	ofxCvGrayscaleImage grayThreshFar; // the far thresholded image
-    ofxCvGrayscaleImage bgImage;
-    ofxCvGrayscaleImage grayDiff;
-    
-    ofImage             grayDiffOfImage;    // For ofxKinectBlobTracker
-    
-    ofVec3f             cropBoxMin;
-    ofVec3f             cropBoxMax;
-    ofVec3f             thresh3D;
-    
-    float               minBlobVol;
-	float               maxBlobVol;
-    float               angle;
-    int                 numPixels;
-    int                 minBlobPoints;
-    int                 thresh2D;
-    unsigned int        maxBlobs;
-    
-    bool                bDrawPointCloud;
-	bool                bDrawIDs;
-	bool                bLearnBackground;
-#endif
-    
-#ifdef USE_FLOB
-    ofVideoGrabber 		vidGrabber;
-    
-    // ofxFlob
-    Flob                flob;
-	vector<ABlob*>      *blobs;
-    float               threshold;
-    float               fade;
-#endif
-    
-    int                 camWidth;
-    int                 camHeight;
-    bool                bMirrorX;
-    bool                bMirrorY;
-    bool                bDrawBlobs;
-    bool                bDrawVideo;
-    bool                bDebugMode;
-    bool                bInitGrid;
+    //
+    vector <OSCPoint>           oscPoints;
     
     // GUI
     vector<ofxUICanvas*>        guis;

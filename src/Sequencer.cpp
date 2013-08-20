@@ -48,7 +48,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
 };
 
 //--------------------------------------------------------------
-void Sequencer::update(){
+void Sequencer::update(int step){
     
     // Update tracks
     for (int i=0; i<tracks.size(); i++){
@@ -106,11 +106,6 @@ void Sequencer::reset(){
 }
 
 //--------------------------------------------------------------
-void Sequencer::stepEvent(float &val){
-    step = val;
-}
-
-//--------------------------------------------------------------
 void Sequencer::toggle(int x, int y){
     for (int i=0; i<tracks.size(); i++){
         tracks[i].toggle(x, y);
@@ -127,28 +122,6 @@ void Sequencer::toggleIndex(int i, int j){
     }
 }
 
-
-//--------------------------------------------------------------
-void Sequencer::checkSegments(const vector<ABlob *> *blobs){
-    // Reset segment touch states
-//    vector<GridSegment>::iterator segment;
-//    for (segment = segments.begin(); segment != segments.end(); segment++){
-//        segment->setState(off);
-//    }
-//    
-//    for (int i=0; i<segments.size(); i++){
-//        GridSegment *segmentPtr = &segments[i];
-//        
-//        for(int i=0; i<blobs->size(); i++){
-//            ABlob &aBlob = *(blobs->at(i));
-//            ofRectangle blobRect(aBlob.bx, aBlob.by, aBlob.dimx, aBlob.dimy);
-//            if (segmentPtr->boundingBox.inside(blobRect.getCenter()) &&
-//                segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
-//                segmentPtr->setState(on);
-//            }
-//        }
-//    }
-}
 
 //--------------------------------------------------------------
 void Sequencer::checkSegments(const vector<OSCPoint> &points){
@@ -173,15 +146,3 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
 //    }
 };
 
-//
-////--------------------------------------------------------------
-//void Sequencer::segmentOn(int x, int y){
-//    int i = y * columns + x;
-//    segments[i].bTouchesBlob = true;
-//}
-//
-////--------------------------------------------------------------
-//void Sequencer::segmentOff(int x, int y){
-//    int i = y * columns + x;
-//    segments[i].bTouchesBlob = false;
-//}

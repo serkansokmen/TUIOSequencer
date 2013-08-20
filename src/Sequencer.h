@@ -10,7 +10,6 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
-#include "ABlob.h"
 #include "Track.h"
 #include "OSCPoint.h"
 
@@ -30,7 +29,6 @@ class Sequencer {
     
     float               aTimer, rTimer, diffTime;
     int                 bpm;
-    int                 step;
     
     vector<Track>       tracks;
     
@@ -43,21 +41,17 @@ public:
                int columnCount=8,
                int rowCount=8);
     
-    void update();
+    void update(int step);
     void draw();
     
     void stepEvent(float& val);
     
     void reset();
     
+    void setStep(int val);
+    
     void toggle(int x, int y);
     void toggleIndex(int i, int j);
     
-    // Check segments against ofxFlob blobs
-    void checkSegments(const vector<ABlob*> *blobs);
-    
-    // Check segments against ofPoint objects
     void checkSegments(const vector<OSCPoint> &points);
-    
-    void audioRequested(float * output, int bufferSize, int nChannels);
 };
