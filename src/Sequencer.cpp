@@ -22,7 +22,7 @@ Sequencer::~Sequencer(){
 //--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
-    reset();
+    diffTime = 0;
     
     columns = columCount;
     rows = rowCount;
@@ -64,7 +64,7 @@ void Sequencer::draw(){
     
     ofPushStyle();
     ofNoFill();
-    ofSetColor(ofColor::darkGreen);
+    ofSetColor(ofColor::grey);
     ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
     ofPopStyle();
     
@@ -76,7 +76,7 @@ void Sequencer::draw(){
     ofTranslate(scrubber.getTopLeft());
     ofPushStyle();
     
-    ofSetColor(ofColor::green, 200);
+    ofSetColor(ofColor::greenYellow, 200);
     // Draw circle pins
     ofSetLineWidth(1.0);
     
@@ -92,7 +92,7 @@ void Sequencer::draw(){
     
     ofFill();
     
-    ofSetColor(ofColor::green, 10);
+    ofSetColor(ofColor::greenYellow, 10);
     ofRect(0, 0, scrubber.getWidth(), scrubber.getHeight());
     
     ofPopStyle();
@@ -101,8 +101,7 @@ void Sequencer::draw(){
 
 //--------------------------------------------------------------
 void Sequencer::reset(){
-    rTimer = 0;
-	diffTime = 0;
+    diffTime = 0;
 }
 
 //--------------------------------------------------------------
@@ -122,10 +121,14 @@ void Sequencer::toggleIndex(int i, int j){
     }
 }
 
+const ofRectangle &Sequencer::getBoundingBox(){
+    return boundingBox;
+}
+
 
 //--------------------------------------------------------------
-void Sequencer::checkSegments(const vector<OSCPoint> &points){
-    // Reset segment touch states
+//void Sequencer::checkSegments(const vector<OSCPoint> &points){
+//    // Reset segment touch states
 //    vector<GridSegment>::iterator segment;
 //    for (segment = segments.begin(); segment != segments.end(); segment++){
 //        segment->setState(off);
@@ -144,5 +147,5 @@ void Sequencer::checkSegments(const vector<OSCPoint> &points){
 //            }
 //        }
 //    }
-};
+//};
 

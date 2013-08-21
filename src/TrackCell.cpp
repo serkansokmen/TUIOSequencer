@@ -30,18 +30,18 @@ void TrackCell::draw(){
     
     switch (state) {
         case off:
-            ofSetColor(ofColor::gray);
+            ofSetColor(ofColor::grey);
             ofNoFill();
             ofRect(outerBox);
-            ofSetColor(ofColor::gray, 100);
+            ofSetColor(ofColor::grey, 100);
             ofFill();
             ofRect(innerBox);
             break;
         case active:
-            ofSetColor(ofColor::gray);
+            ofSetColor(ofColor::grey);
             ofNoFill();
             ofRect(outerBox);
-            ofSetColor(ofColor::blueViolet, 100);
+            ofSetColor(ofColor::greenYellow, 100);
             ofFill();
             ofRect(innerBox);
             break;
@@ -49,7 +49,7 @@ void TrackCell::draw(){
             ofSetColor(ofColor::white);
             ofNoFill();
             ofRect(outerBox);
-            ofSetColor(ofColor::blueViolet);
+            ofSetColor(ofColor::greenYellow);
             ofFill();
             ofRect(innerBox);
             break;

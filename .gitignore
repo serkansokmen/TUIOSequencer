@@ -85,3 +85,6 @@ Desktop.ini
 
 bin/data/sounds/
 bin/data/GUI/*.xml
+
+// Ignore soundbank files
+bin/data/soundbank/

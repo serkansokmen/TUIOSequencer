@@ -13,7 +13,7 @@
 Track::~Track(){
     
     cells.clear();
-    cellValues.clear();
+    cellStates.clear();
     
 }
 
@@ -32,7 +32,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols){
         cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
     
-    cellValues.assign(columns, bool(false));
+    cellStates.assign(columns, bool(false));
 }
 
 //--------------------------------------------------------------
@@ -52,8 +52,8 @@ void Track::update(int step){
         }
     }
     
-    for (int i=0; i<cellValues.size(); i++) {
-        cellValues[i] = (cells[i].getState() != off);
+    for (int i=0; i<cellStates.size(); i++) {
+        cellStates[i] = (cells[i].getState() != off);
     }
 }
 

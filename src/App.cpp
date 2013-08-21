@@ -7,6 +7,12 @@
 //
 
 #include "App.h"
+#include "maximilian.h"
+
+
+App::App(){
+    sequencer = new Sequencer();
+}
 
 
 //--------------------------------------------------------------
@@ -19,38 +25,70 @@ void App::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetLineWidth(2.0);
     
-    // Scan rect
-    float w = 640;
-    float h = 480;
-    scanRect.set(ofPoint(ofGetWidth() - w - 20, 20), w, h);
+    // Sound & Maximilian setup
+    /* This is stuff you always need.*/
+	sampleRate 			= 44100; /* Sampling Rate */
+	initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
     
-    // Initialize Sequencer
-    sequencer = new Sequencer();
-    sequencer->setup(scanRect, COLUMNS, ROWS);
+    lAudioOut			= new float[initialBufferSize];/* outputs */
+	rAudioOut			= new float[initialBufferSize];
     
-    // initialize ofSoundStreamSetup
-    ofSoundStreamSetup(2, 0, this, 44100, 256, 4);
+    /* This is a nice safe piece of code */
+	memset(lAudioOut, 0, initialBufferSize * sizeof(float));
+	memset(rAudioOut, 0, initialBufferSize * sizeof(float));
+    
+    ofxMaxiSettings::setup(sampleRate, 2, initialBufferSize);
+    // Setup OF Sound last
+	ofSoundStreamSetup(2, 0, this, maxiSettings::sampleRate, initialBufferSize, 4);
     
     // Setup GUIs
     setupGUIMain();
     
-    // BPM
-    bpm = 120.0f;
-    totalSteps = 4;
-    currentStep = 0;
-    
-    // Debug bools
+    // Set initial values
     bDebugMode = true;
     bInitGrid = false;
     
     // Load GUI Settings
     loadGUISettings();
     
+    columns = 8;
+    rows = 8;
+    
+    // Sound Bank
+    ofDirectory dir;
+    dir.listDir("soundbank/tracks/");
+    if (dir.size()){
+        samples.assign(dir.size(), ofxMaxiSample());
+    }
+    
+    for (int i=0; i<dir.size(); i++) {
+        samples[i].load(ofToDataPath(dir.getPath(i)));
+        samples[i].getLength();
+        
+        ofLog(OF_LOG_NOTICE, samples[i].getSummary());
+    }
+    
     // Hide all guis
     for (int i=0; i<guihash.size(); i++) {
         guihash[ofToString(i+1)]->setVisible(false);
     }
     guihash["1"]->setVisible(true);
+    
+    // BPM
+    bpm = 120.0f;
+    totalSteps = columns;
+    currentStep = 0;
+    
+    
+    // Scan rect
+    float w = 640;
+    float h = 480;
+    ofRectangle scanRect(ofPoint(ofGetWidth() - w - 20, 20), w, h);
+    
+    // Initialize Sequencer
+    sequencer->setup(scanRect, columns, rows);
+    
+    
     
     // Setup OSC
     oscReceiver.setup(OSC_RECEIVE_PORT);
@@ -64,6 +102,10 @@ void App::update(){
     
     // Update sound
     ofSoundUpdate();
+    
+    // Convert to int
+    columns = (int)columns;
+    rows = (int)rows;
     
     // Update bpm
     bpmTapper.update();
@@ -101,8 +143,8 @@ void App::update(){
             
             if (m.getAddress() == "/simulate/blobs/" + indexStr){
 
-                float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, scanRect.getWidth());
-                float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, scanRect.getHeight());
+                float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, sequencer->getBoundingBox().getWidth());
+                float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, sequencer->getBoundingBox().getHeight());
                 
                 p.isOn = true;
                 p.position.set(posX, posY);
@@ -114,13 +156,15 @@ void App::update(){
                 bCheckPoints = true;
             }
             if (bCheckPoints) {
-                sequencer->checkSegments(oscPoints);
+#warning needs OSC - check cells implementation.
+//                sequencer->checkSegments(oscPoints);
             }
         }
         
         // check for bpm message
 		if (m.getAddress() == "/controller/bpm"){
             float tempo = m.getArgAsFloat(0);
+#warning handle OSC bpm message.
 //            synth.setParameter("tempo", tempo);
             ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(tempo));
 		}
@@ -140,7 +184,7 @@ void App::update(){
 
     // Restart Sequencer
     if (bInitGrid) {
-        sequencer->setup(scanRect, COLUMNS, ROWS);
+        sequencer->setup(sequencer->getBoundingBox(), columns, rows);
         bInitGrid = false;
     }
     
@@ -153,19 +197,20 @@ void App::draw(){
     
     // Draw scan rect
     ofPushMatrix();
-    ofTranslate(scanRect.getPositionRef());
+    ofTranslate(sequencer->getBoundingBox().getPosition());
     
     sequencer->draw();
     
-    if (bDebugMode){
-        float s = 12;
-        ofSetColor(ofColor::gray);
-        ofRect(0, scanRect.getHeight() + s + 10, s * totalSteps, s);
-        ofSetColor(ofColor::greenYellow);
-        ofRect(currentStep * s, scanRect.getHeight() + s + 10, s, s);
-    }
-    
     ofPopMatrix();
+    
+    if (bDebugMode){
+        float sx = 12;
+        float sy = 12;
+        ofSetColor(ofColor::grey);
+        ofRect(10, 240, sx * totalSteps, sy);
+        ofSetColor(ofColor::greenYellow);
+        ofRect(10 + currentStep * sx, 240, sx, sy);
+    }
 }
 
 //--------------------------------------------------------------
@@ -181,11 +226,13 @@ void App::setupGUIMain(){
     {
         guiMain->addLabel("MAIN");
         guiMain->addSpacer();
-        guiMain->addFPSSlider("FPS");
-        guiMain->addSpacer();
+//        guiMain->addMinimalSlider("COLUMNS", 4, 16, &columns);
+//        guiMain->addMinimalSlider("ROWS", 4, 16, &rows);
         guiMain->addMinimalSlider("BPM", 32.0f, 240.0f, &bpm);
         guiMain->addLabelToggle("RESET", &bInitGrid);
         guiMain->addToggle("DEBUG MODE", &bDebugMode);
+        guiMain->addSpacer();
+        guiMain->addFPSSlider("FPS");
     }
     guiMain->autoSizeToFitWidgets();
     
@@ -229,6 +276,14 @@ void App::guiEvent(ofxUIEventArgs &e){
         bpmTapper.startFresh();
         sequencer->reset();
     }
+    
+    // Columns and rows
+//    if (e.widget->getName() == "COLUMNS" || e.widget->getName() == "ROWS"){
+//        if (sequencer != NULL) {
+//            sequencer->setup(ofRectangle(0, 0, 20, 20), columns, rows);
+//            totalSteps = columns;
+//        }
+//    }
 }
 
 //--------------------------------------------------------------
@@ -236,6 +291,7 @@ void App::keyPressed(int key){
     
     switch (key)
     {
+        
         case '1':
         {
             // Hide all guis
@@ -243,15 +299,6 @@ void App::keyPressed(int key){
                 guihash[ofToString(i+1)]->setVisible(false);
             }
             guihash["1"]->toggleVisible();
-        }
-            break;
-        case '2':
-        {
-            // Hide all guis
-            for (int i=0; i<guihash.size(); i++) {
-                guihash[ofToString(i+1)]->setVisible(false);
-            }
-            guihash["2"]->toggleVisible();
         }
             break;
             
@@ -301,8 +348,8 @@ void App::mouseDragged(int x, int y, int button){
 void App::mousePressed(int x, int y, int button){
     
     if (bDebugMode){
-        float rx = x - scanRect.getX();
-        float ry = y - scanRect.getY();
+        float rx = x - sequencer->getBoundingBox().getX();
+        float ry = y - sequencer->getBoundingBox().getY();
         sequencer->toggle(rx, ry);
     }
 }
@@ -344,6 +391,28 @@ void App::exit(){
 
 
 //--------------------------------------------------------------
-void App::audioRequested(float * output, int bufferSize, int nChannels){
+void App::audioRequested(float *output, int bufferSize, int nChannels){
     
+    for (int i = 0; i < bufferSize; i++){
+        
+        compositeSample = 0;
+		
+        // Check on/off states
+        for (int j=0; j<sequencer->tracks.size(); j++) {
+            
+            Track *track = &sequencer->tracks[j];
+            maxiSample *ms = &samples[j];
+            
+            if (track->cellStates[currentStep] > 0){
+                compositeSample += ms->play(bpmTapper.beatPerc());
+            } else {
+                ms->setPosition(0);
+            }
+        }
+		
+        mix.stereo(compositeSample, outputs, 0);
+		
+        lAudioOut[i] = output[i*nChannels    ] = outputs[0];
+        rAudioOut[i] = output[i*nChannels + 1] = outputs[1];
+	}
 }

@@ -28,5 +28,5 @@ public:
     void draw();
     void toggle(int x, int y);
     
-    vector<bool>    cellValues;
+    vector<bool>    cellStates;
 };

@@ -27,19 +27,15 @@ class Sequencer {
     int                 columns;
     int                 rows;
     
-    float               aTimer, rTimer, diffTime;
+    float               aTimer, diffTime;
     int                 bpm;
-    
-    vector<Track>       tracks;
     
 public:
     
     Sequencer();
     ~Sequencer();
     
-    void setup(const ofRectangle rect,
-               int columnCount=8,
-               int rowCount=8);
+    void setup(const ofRectangle rect, int columns, int rows);
     
     void update(int step);
     void draw();
@@ -53,5 +49,9 @@ public:
     void toggle(int x, int y);
     void toggleIndex(int i, int j);
     
-    void checkSegments(const vector<OSCPoint> &points);
+    const ofRectangle &getBoundingBox();
+    
+//    void checkSegments(const vector<OSCPoint> &points);
+    
+    vector<Track>       tracks;
 };

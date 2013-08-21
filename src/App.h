@@ -9,8 +9,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "MSABPMTapper.h"
+#include "ofxMaxim.h"
+#include "ofxOsc.h"
 #include "ofxUI.h"
+#include "MSABPMTapper.h"
+
 #include "Sequencer.h"
 #include "OSCPoint.h"
 
@@ -19,9 +22,6 @@
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
 
-#define COLUMNS             4
-#define ROWS                4
-
 
 using namespace msa;
 
@@ -29,6 +29,9 @@ using namespace msa;
 class App : public ofBaseApp {
     
 public:
+    
+    App();
+    
     void setup();
     void update();
     void draw();
@@ -44,7 +47,13 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    void audioRequested(float * output, int bufferSize, int nChannels);
+    void audioRequested(float * input, int bufferSize, int nChannels); /* output method */
+	
+    float 	*lAudioOut; /* outputs */
+	float   *rAudioOut;
+	
+	int		initialBufferSize; /* buffer size */
+	int		sampleRate;
     
     void setupGUIMain();
     void saveGUISettings();
@@ -55,13 +64,19 @@ public:
     Sequencer           *sequencer;
     BPMTapper           bpmTapper;
     
-    ofRectangle         scanRect;
+    // Sounds
+    vector<ofxMaxiSample>   samples;
+    
+    double                  compositeSample, outputs[2];
+    ofxMaxiMix              mix;
     
     // OSC
     ofxOscReceiver      oscReceiver;
     ofxOscSender        oscSender;
     
     float       bpm;
+    float       columns;
+    float       rows;
     int         totalSteps;
     int         currentStep;
     
