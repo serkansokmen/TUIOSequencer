@@ -7,7 +7,6 @@
 //
 
 #include "App.h"
-#include "maximilian.h"
 
 
 App::App(){
@@ -382,9 +381,12 @@ void App::exit(){
     for(int i = 0; i < guis.size(); i++)
     {
         ofxUICanvas *gui = guis[i];
+        gui = 0;
         delete gui;
     }
+    
     guis.clear();
+    samples.clear();
     
     delete sequencer;
 }
@@ -396,7 +398,7 @@ void App::audioRequested(float *output, int bufferSize, int nChannels){
     for (int i = 0; i < bufferSize; i++){
         
         compositeSample = 0;
-		
+        
         // Check on/off states
         for (int j=0; j<sequencer->tracks.size(); j++) {
             
@@ -404,9 +406,7 @@ void App::audioRequested(float *output, int bufferSize, int nChannels){
             maxiSample *ms = &samples[j];
             
             if (track->cellStates[currentStep] > 0){
-                compositeSample += ms->play(bpmTapper.beatPerc());
-            } else {
-                ms->setPosition(0);
+                compositeSample += ms->playOnce(1.);
             }
         }
 		

@@ -121,6 +121,20 @@ void Sequencer::toggleIndex(int i, int j){
     }
 }
 
+//--------------------------------------------------------------
+void Sequencer::randomize(){
+    
+    int num = (int)ofRandom(columns * rows);
+    
+    for (int i=0; i<num; i++) {
+        float x = boundingBox.getX() + ofRandom(0, boundingBox.getWidth()) * stepButtonWidth;
+        float y = boundingBox.getY() + ofRandom(0, boundingBox.getHeight()) * stepButtonHeight;
+        toggle(x, y);
+    }
+}
+
+
+//--------------------------------------------------------------
 const ofRectangle &Sequencer::getBoundingBox(){
     return boundingBox;
 }

@@ -49,6 +49,8 @@ public:
     void toggle(int x, int y);
     void toggleIndex(int i, int j);
     
+    void randomize();
+    
     const ofRectangle &getBoundingBox();
     
 //    void checkSegments(const vector<OSCPoint> &points);
