@@ -131,7 +131,6 @@ void Sequencer::randomize(){
         int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());
         int y = (int)ofRandom(0, boundingBox.getY() + boundingBox.getHeight());
         
-        cout << "num: " << num << ", i: " << x << ", j: " << y << endl;
         toggle(x, y);
     }
 }
