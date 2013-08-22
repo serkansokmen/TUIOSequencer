@@ -49,10 +49,12 @@ void App::setup(){
     // Sound Bank
     ofDirectory dir;
     dir.listDir("soundbank/piano/");
+    
     if (dir.size()){
+        dir.sort();
         for (int i=0; i<rows; i++) {
             
-            int soundPathIndex = i % dir.numFiles();
+            int soundPathIndex = dir.numFiles() - (i % dir.numFiles()) - 1;
             
             ofSoundPlayer player;
             player.loadSound(dir.getPath(soundPathIndex));
