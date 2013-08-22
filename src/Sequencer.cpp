@@ -124,11 +124,13 @@ void Sequencer::toggleIndex(int i, int j){
 //--------------------------------------------------------------
 void Sequencer::randomize(){
     
-    int num = (int)ofRandom(columns * rows);
+    int num = (int)ofRandom(columns);
     
-    for (int i=0; i<num; i++) {
-        float x = boundingBox.getX() + ofRandom(0, boundingBox.getWidth()) * stepButtonWidth;
-        float y = boundingBox.getY() + ofRandom(0, boundingBox.getHeight()) * stepButtonHeight;
+    for (int r=0; r<num; r++) {
+        int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());
+        int y = (int)ofRandom(0, boundingBox.getY() + boundingBox.getHeight());
+        
+        cout << "num: " << num << ", i: " << x << ", j: " << y << endl;
         toggle(x, y);
     }
 }

@@ -111,6 +111,11 @@ void App::update(){
     columns = (int)columns;
     rows = (int)rows;
     
+    if (bRandomizeSequencer){
+        sequencer->randomize();
+        bRandomizeSequencer = false;
+    }
+    
     // Update bpm
     bpmTapper.update();
     currentStep = (int)bpmTapper.beatTime() % totalSteps;
@@ -247,7 +252,8 @@ void App::setupGUIMain(){
 //        guiMain->addMinimalSlider("ROWS", 4, 16, &rows);
         guiMain->addMinimalSlider("BPM", 32.0f, 240.0f, &bpm);
         guiMain->addLabelToggle("RESET", &bInitGrid);
-        guiMain->addToggle("DEBUG MODE", &bDebugMode);
+        guiMain->addLabelToggle("RANDOMIZE", &bRandomizeSequencer);
+//        guiMain->addToggle("DEBUG MODE", &bDebugMode);
         guiMain->addSpacer();
         guiMain->addFPSSlider("FPS");
     }

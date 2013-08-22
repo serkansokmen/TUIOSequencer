@@ -69,6 +69,8 @@ public:
     BPMTapper           bpmTapper;
     int                 lastStep;
     
+    bool                bRandomizeSequencer;
+    
     // Sounds
     vector<ofSoundPlayer> soundPlayers;
     /*
