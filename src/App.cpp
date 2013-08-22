@@ -60,7 +60,6 @@ void App::setup(){
         for (int i=0; i<rows; i++) {
             
             int soundPathIndex = i % dir.numFiles();
-            cout << soundPathIndex << endl;
             
             ofSoundPlayer player;
             player.loadSound(dir.getPath(soundPathIndex));
