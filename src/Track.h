@@ -29,4 +29,5 @@ public:
     void toggle(int x, int y);
     
     vector<bool>    cellStates;
+    bool            bIsReady = false;
 };

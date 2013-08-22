@@ -50,21 +50,26 @@ void App::setup(){
     // Load GUI Settings
     loadGUISettings();
     
-    columns = 8;
-    rows = 8;
+    columns = 12;
+    rows = 12;
     
     // Sound Bank
     ofDirectory dir;
-    dir.listDir("soundbank/tracks/");
+    dir.listDir("soundbank/piano/");
     if (dir.size()){
-        samples.assign(dir.size(), ofxMaxiSample());
-    }
-    
-    for (int i=0; i<dir.size(); i++) {
-        samples[i].load(ofToDataPath(dir.getPath(i)));
-        samples[i].getLength();
-        
-        ofLog(OF_LOG_NOTICE, samples[i].getSummary());
+        for (int i=0; i<rows; i++) {
+            
+            int soundPathIndex = i % dir.numFiles();
+            cout << soundPathIndex << endl;
+            
+            ofSoundPlayer player;
+            player.loadSound(dir.getPath(soundPathIndex));
+            player.setMultiPlay(false);
+            
+            soundPlayers.push_back(player);
+            
+            ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(i + 1));
+        }
     }
     
     // Hide all guis
@@ -77,6 +82,7 @@ void App::setup(){
     bpm = 120.0f;
     totalSteps = columns;
     currentStep = 0;
+    lastStep = 0;
     
     
     // Scan rect
@@ -109,7 +115,9 @@ void App::update(){
     // Update bpm
     bpmTapper.update();
     currentStep = (int)bpmTapper.beatTime() % totalSteps;
-    if (currentStep > totalSteps) currentStep = 0;
+    if (currentStep > totalSteps){
+        currentStep = 0;
+    }
     
     bool bCheckPoints = false;
     
@@ -189,6 +197,17 @@ void App::update(){
     
     // Update sequencer
     sequencer->update(currentStep);
+    
+    // Check on/off states
+    for (int i=0; i<sequencer->tracks.size(); i++) {
+        
+        Track *track = &sequencer->tracks[i];
+        if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
+            soundPlayers[i].play();
+        }
+    }
+    
+    lastStep = currentStep;
 }
 
 //--------------------------------------------------------------
@@ -335,18 +354,17 @@ void App::keyReleased(int key){
 
 //--------------------------------------------------------------
 void App::mouseMoved(int x, int y ){
-    
+
 }
 
 //--------------------------------------------------------------
 void App::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void App::mousePressed(int x, int y, int button){
-    
-    if (bDebugMode){
+    if (bDebugMode && sequencer->getBoundingBox().inside(x, y)){
         float rx = x - sequencer->getBoundingBox().getX();
         float ry = y - sequencer->getBoundingBox().getY();
         sequencer->toggle(rx, ry);
@@ -386,7 +404,8 @@ void App::exit(){
     }
     
     guis.clear();
-    samples.clear();
+//    samples.clear();
+    soundPlayers.clear();
     
     delete sequencer;
 }
@@ -395,6 +414,7 @@ void App::exit(){
 //--------------------------------------------------------------
 void App::audioRequested(float *output, int bufferSize, int nChannels){
     
+    /*
     for (int i = 0; i < bufferSize; i++){
         
         compositeSample = 0;
@@ -406,13 +426,14 @@ void App::audioRequested(float *output, int bufferSize, int nChannels){
             maxiSample *ms = &samples[j];
             
             if (track->cellStates[currentStep] > 0){
-                compositeSample += ms->playOnce(1.);
+                compositeSample += ms->play();
             }
         }
 		
-        mix.stereo(compositeSample, outputs, 0);
+        mix.stereo(compositeSample, outputs, 0.5);
 		
         lAudioOut[i] = output[i*nChannels    ] = outputs[0];
         rAudioOut[i] = output[i*nChannels + 1] = outputs[1];
 	}
+     */
 }

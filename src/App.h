@@ -13,6 +13,8 @@
 #include "ofxOsc.h"
 #include "ofxUI.h"
 #include "MSABPMTapper.h"
+#include "maxiGrains.h"
+#include <sys/time.h>
 
 #include "Sequencer.h"
 #include "OSCPoint.h"
@@ -24,6 +26,8 @@
 
 
 using namespace msa;
+
+typedef hannWinFunctor grainPlayerWin;
 
 
 class App : public ofBaseApp {
@@ -63,12 +67,20 @@ public:
     
     Sequencer           *sequencer;
     BPMTapper           bpmTapper;
+    int                 lastStep;
     
     // Sounds
-    vector<ofxMaxiSample>   samples;
+    vector<ofSoundPlayer> soundPlayers;
+    /*
+    vector<maxiSample>   samples;
     
-    double                  compositeSample, outputs[2];
-    ofxMaxiMix              mix;
+    ofxMaxiMix      mix;
+    maxiOsc         timer;
+    
+    double          compositeSample, outputs[2];
+    int             currentCount, lastCount, playHead;
+    int             trigger;
+     */
     
     // OSC
     ofxOscReceiver      oscReceiver;

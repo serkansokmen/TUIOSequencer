@@ -33,6 +33,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols){
 	}
     
     cellStates.assign(columns, bool(false));
+    bIsReady = true;
 }
 
 //--------------------------------------------------------------
