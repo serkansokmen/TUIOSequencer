@@ -14,18 +14,22 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
     
     float padding = 8.0f;
     
-    state = off;
     step = s;
     
-    red = 255.0;
-    green = 255.0;
-    blue = 255.0;
+    hue = c.getHue();
+    saturation = c.getSaturation();
+    brightness = 255;
     
-    setColor(c);
+    state = off;
+    color.set(c);
     
     boundingBox.set(bb);
     outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding*.2, boundingBox.getHeight() - padding*.2);
     innerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding, boundingBox.getHeight() - padding);
+}
+
+void TrackCell::update(){
+    color.setHsb(hue, saturation, brightness);
 }
 
 //--------------------------------------------------------------
@@ -35,38 +39,28 @@ void TrackCell::draw(){
     ofPushStyle();
     ofSetLineWidth(2.0);
     
-    float roundedRadius = innerBox.getArea() * 0.01f;
-    cout << roundedRadius << endl;
-    
     switch (state) {
         case off:
-//            ofSetColor(ofColor::white);
-//            ofNoFill();
-//            ofRect(outerBox);
-            ofSetColor(ofColor(red, green, blue), 50);
-            ofFill();
+            ofSetColor(color, 255);
+            ofNoFill();
+            ofRectRounded(innerBox, 16);
 //            ofRect(innerBox);
-            ofRectRounded(innerBox, roundedRadius);
             break;
         case active:
-            ofSetColor(ofColor(red, green, blue));
-            ofNoFill();
+//            ofSetColor(color, alpha * .5);
+//            ofNoFill();
 //            ofRect(outerBox);
-            ofRectRounded(outerBox, roundedRadius);
-            ofSetColor(ofColor(red, green, blue), 150);
+            ofSetColor(color, alpha);
             ofFill();
-//            ofRect(innerBox);
-            ofRectRounded(innerBox, roundedRadius);
+            ofRectRounded(innerBox, 16);
             break;
         case on:
-            ofSetColor(ofColor(red, green, blue));
-            ofNoFill();
+//            ofSetColor(color, alpha * .5);
+//            ofNoFill();
 //            ofRect(outerBox);
-            ofRectRounded(outerBox, roundedRadius);
-            ofSetColor(ofColor(red, green, blue));
+            ofSetColor(color, alpha);
             ofFill();
-//            ofRect(innerBox);
-            ofRectRounded(innerBox, roundedRadius);
+            ofRectRounded(innerBox, 16);
             break;
             
         default:
@@ -78,7 +72,23 @@ void TrackCell::draw(){
 
 //--------------------------------------------------------------
 void TrackCell::setState(TrackCellState s){
+    
     state = s;
+    
+    switch (state) {
+        case off:
+            Tweener.addTween(alpha, 50, .2);
+            break;
+        case active:
+            Tweener.addTween(alpha, 150, .2);
+            break;
+        case on:
+            Tweener.addTween(alpha, 255, .2);
+            break;
+            
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------
@@ -88,9 +98,9 @@ const TrackCellState &TrackCell::getState(){
 
 //--------------------------------------------------------------
 void TrackCell::setColor(ofColor c){
-    Tweener.addTween(red, c.r, .2);
-    Tweener.addTween(green, c.g, .2);
-    Tweener.addTween(blue, c.b, .2);
+    Tweener.addTween(hue, c.getHue(), .2);
+    Tweener.addTween(saturation, c.getSaturation(), .2);
+//    Tweener.addTween(brightness, 255, .2);
 }
 
 //--------------------------------------------------------------

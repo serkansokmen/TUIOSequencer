@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxTuio.h"
 #include "ofxOsc.h"
 #include "ofxUI.h"
 #include "ofxTweener.h"
@@ -24,8 +25,6 @@
 
 
 using namespace msa;
-
-typedef hannWinFunctor grainPlayerWin;
 
 
 class App : public ofBaseApp {
@@ -49,19 +48,29 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    void tuioAdded(ofxTuioCursor &tuioCursor);
+	void tuioRemoved(ofxTuioCursor &tuioCursor);
+	void tuioUpdated(ofxTuioCursor &tuioCursor);
+    
     void setupGUIMain();
     void saveGUISettings();
     void loadGUISettings();
     void guiEvent(ofxUIEventArgs &e);
     
+    // Sequencer
     Sequencer           *sequencer;
     BPMTapper           bpmTapper;
+    ofFbo               sequencerFbo;
+    ofPoint             sequencerPosition;
     int                 lastStep;
     
     bool                bRandomizeSequencer;
     
+    // TUIO Client
+    ofxTuioClient           tuioClient;
+    
     // Sounds
-    vector<ofSoundPlayer> soundPlayers;
+    vector<ofSoundPlayer>   soundPlayers;
     /*
     vector<maxiSample>   samples;
     

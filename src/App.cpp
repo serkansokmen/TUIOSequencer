@@ -24,23 +24,14 @@ void App::setup(){
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLineWidth(2.0);
     
+    tuioClient.start(3333);
+    
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
     // Sound & Maximilian setup
     /* This is stuff you always need.*/
-	sampleRate 			= 44100; /* Sampling Rate */
-	initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
-    
-    lAudioOut			= new float[initialBufferSize];/* outputs */
-	rAudioOut			= new float[initialBufferSize];
-    
-    /* This is a nice safe piece of code */
-	memset(lAudioOut, 0, initialBufferSize * sizeof(float));
-	memset(rAudioOut, 0, initialBufferSize * sizeof(float));
-    
-    ofxMaxiSettings::setup(sampleRate, 2, initialBufferSize);
     // Setup OF Sound last
-	ofSoundStreamSetup(2, 0, this, maxiSettings::sampleRate, initialBufferSize, 4);
+//	ofSoundStreamSetup(2, 0, this, 44100, 512, 4);
     
     // Setup GUIs
     setupGUIMain();
@@ -89,12 +80,12 @@ void App::setup(){
     // Scan rect
     float w = 640;
     float h = 480;
-    ofRectangle scanRect(ofPoint(ofGetWidth() - w - 20, 20), w, h);
+    ofRectangle scanRect(0, 0, w, h);
     
     // Initialize Sequencer
     sequencer->setup(scanRect, columns, rows);
-    
-    
+    // Allocate draw FBO
+    sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
     
     // Setup OSC
     oscReceiver.setup(OSC_RECEIVE_PORT);
@@ -105,6 +96,9 @@ void App::setup(){
 
 //--------------------------------------------------------------
 void App::update(){
+    
+    // Get TUIO messages
+    tuioClient.getMessage();
     
     // Update sound
     ofSoundUpdate();
@@ -217,6 +211,11 @@ void App::update(){
     }
     
     lastStep = currentStep;
+    
+    sequencerFbo.begin();
+    ofBackground(0);
+    sequencer->draw();
+    sequencerFbo.end();
 }
 
 //--------------------------------------------------------------
@@ -225,9 +224,7 @@ void App::draw(){
     // Draw scan rect
     ofPushMatrix();
     ofTranslate(sequencer->getBoundingBox().getPosition());
-    
-    sequencer->draw();
-    
+    sequencerFbo.draw(sequencerPosition.x, sequencerPosition.y);
     ofPopMatrix();
     
     if (bDebugMode){
@@ -237,7 +234,25 @@ void App::draw(){
         ofRect(10, 240, sx * totalSteps, sy);
         ofSetColor(ofColor::greenYellow);
         ofRect(10 + currentStep * sx, 240, sx, sy);
+
+        tuioClient.drawCursors();
     }
+}
+
+//--------------------------------------------------------------
+void App::tuioAdded(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
+}
+
+void App::tuioUpdated(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
+}
+
+void App::tuioRemoved(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+	cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
 }
 
 //--------------------------------------------------------------
@@ -374,11 +389,19 @@ void App::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::mousePressed(int x, int y, int button){
-    if (bDebugMode && sequencer->getBoundingBox().inside(x, y)){
-        float rx = x - sequencer->getBoundingBox().getX();
-        float ry = y - sequencer->getBoundingBox().getY();
+    
+    ofRectangle *currentRect = new ofRectangle;
+    currentRect->set(sequencer->getBoundingBox());
+    currentRect->setPosition(sequencerPosition);
+    
+    if (bDebugMode && currentRect->inside(x, y)){
+        float rx = x - sequencerPosition.x;
+        float ry = y - sequencerPosition.y;
         sequencer->toggle(rx, ry);
     }
+    
+    currentRect = 0;
+    delete currentRect;
 }
 
 //--------------------------------------------------------------
@@ -388,7 +411,8 @@ void App::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::windowResized(int w, int h){
-
+    // Re-layout Sequencer
+    sequencerPosition.set(ofGetWidth() - sequencer->getBoundingBox().getWidth(), 20);
 }
 
 //--------------------------------------------------------------
@@ -422,28 +446,26 @@ void App::exit(){
 
 
 //--------------------------------------------------------------
-void App::audioRequested(float *output, int bufferSize, int nChannels){
-    
-    /*
-    for (int i = 0; i < bufferSize; i++){
-        
-        compositeSample = 0;
-        
-        // Check on/off states
-        for (int j=0; j<sequencer->tracks.size(); j++) {
-            
-            Track *track = &sequencer->tracks[j];
-            maxiSample *ms = &samples[j];
-            
-            if (track->cellStates[currentStep] > 0){
-                compositeSample += ms->play();
-            }
-        }
-		
-        mix.stereo(compositeSample, outputs, 0.5);
-		
-        lAudioOut[i] = output[i*nChannels    ] = outputs[0];
-        rAudioOut[i] = output[i*nChannels + 1] = outputs[1];
-	}
-     */
-}
+//void App::audioRequested(float *output, int bufferSize, int nChannels){
+//    
+//    for (int i = 0; i < bufferSize; i++){
+//        
+//        compositeSample = 0;
+//        
+//        // Check on/off states
+//        for (int j=0; j<sequencer->tracks.size(); j++) {
+//            
+//            Track *track = &sequencer->tracks[j];
+//            maxiSample *ms = &samples[j];
+//            
+//            if (track->cellStates[currentStep] > 0){
+//                compositeSample += ms->play();
+//            }
+//        }
+//		
+//        mix.stereo(compositeSample, outputs, 0.5);
+//		
+//        lAudioOut[i] = output[i*nChannels    ] = outputs[0];
+//        rAudioOut[i] = output[i*nChannels + 1] = outputs[1];
+//	}
+//}

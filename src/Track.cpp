@@ -19,7 +19,7 @@ Track::~Track(){
 
 
 //--------------------------------------------------------------
-void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &c){
+void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color){
     
     trackId = id;
     columns = cols;
@@ -29,7 +29,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &c){
 	
     cells.assign(cols, TrackCell());
 	for(int i = 0; i<columns; i++){
-        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i, c);
+        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i, color);
 	}
     
     cellStates.assign(columns, bool(false));
@@ -40,6 +40,8 @@ void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &c){
 void Track::update(int step){
     
     for (int i=0; i<cells.size(); i++){
+        
+        cells[i].update();
         
         if (step == cells[i].step){
             // Current step column
@@ -61,7 +63,6 @@ void Track::update(int step){
 //--------------------------------------------------------------
 void Track::draw(){
 	for(int i=0; i<cells.size(); i++){
-        
         cells[i].draw();
 	}
     

@@ -30,11 +30,13 @@ class TrackCell {
     ofRectangle     innerBox;
     
     TrackCellState  state;
-    float           red, green, blue;
+    float           hue, saturation, brightness;
     ofColor         color;
+    float           alpha;
     
 public:
     void setup(const ofRectangle &boundingBox, int step, const ofColor &color);
+    void update();
     void draw();
     void toggle(int x, int y);
     
