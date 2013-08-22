@@ -19,7 +19,7 @@ Track::~Track(){
 
 
 //--------------------------------------------------------------
-void Track::setup(int id, const ofRectangle &bb, int cols){
+void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color){
     
     trackId = id;
     columns = cols;
@@ -29,7 +29,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols){
 	
     cells.assign(cols, TrackCell());
 	for(int i = 0; i<columns; i++){
-        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
+        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i, color);
 	}
     
     cellStates.assign(columns, bool(false));
