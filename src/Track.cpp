@@ -19,7 +19,7 @@ Track::~Track(){
 
 
 //--------------------------------------------------------------
-void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color){
+void Track::setup(int id, const ofRectangle &bb, int cols){
     
     trackId = id;
     columns = cols;
@@ -29,7 +29,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color)
 	
     cells.assign(cols, TrackCell());
 	for(int i = 0; i<columns; i++){
-        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i, color);
+        cells[i].setup(ofRectangle(buttonWidth * i, bb.getY(), buttonWidth, trackHeight), i);
 	}
     
     cellStates.assign(columns, bool(false));
@@ -65,11 +65,6 @@ void Track::draw(){
 	for(int i=0; i<cells.size(); i++){
         cells[i].draw();
 	}
-    
-    ofPushMatrix();
-    ofSetColor(ofColor::white, 100);
-    ofTranslate(0, trackHeight * trackId);
-    ofPopMatrix();
 }
 
 //--------------------------------------------------------------

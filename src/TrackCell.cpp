@@ -21,7 +21,7 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
     brightness = 255;
     
     state = off;
-    color.set(c);
+    color.set(hue, saturation, brightness);
     
     boundingBox.set(bb);
     outerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding*.2, boundingBox.getHeight() - padding*.2);
@@ -29,44 +29,41 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
 }
 
 void TrackCell::update(){
-    color.setHsb(hue, saturation, brightness);
+    color.setHsb(255, 255, 255);
 }
 
 //--------------------------------------------------------------
 void TrackCell::draw(){
     
     ofPushMatrix();
-    ofPushStyle();
-    ofSetLineWidth(2.0);
+    
+    float radius = (innerBox.getWidth() * innerBox.getHeight()) * .1;
+    ofSetLineWidth(radius * .001);
     
     switch (state) {
         case off:
+            ofPushStyle();
             ofSetColor(color, 255);
             ofNoFill();
-            ofRectRounded(innerBox, 16);
-//            ofRect(innerBox);
+            ofRectRounded(innerBox, radius);
+            ofPopStyle();
             break;
         case active:
-//            ofSetColor(color, alpha * .5);
-//            ofNoFill();
-//            ofRect(outerBox);
+            ofPushStyle();
             ofSetColor(color, alpha);
-            ofFill();
-            ofRectRounded(innerBox, 16);
+            ofRectRounded(innerBox, radius);
+            ofPopStyle();
             break;
         case on:
-//            ofSetColor(color, alpha * .5);
-//            ofNoFill();
-//            ofRect(outerBox);
+            ofPushStyle();
             ofSetColor(color, alpha);
-            ofFill();
-            ofRectRounded(innerBox, 16);
+            ofRectRounded(innerBox, radius);
+            ofPopStyle();
             break;
             
         default:
             break;
     }
-    ofPopStyle();
     ofPopMatrix();
 };
 

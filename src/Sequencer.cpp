@@ -45,7 +45,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
         tracks[i].setup(i,
                         ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
                         columns,
-                        ofColor(val, ofRandom(200, 255), ofRandom(200, 255)));
+                        ofColor(val, 255, 255));
     }
     
     scrubber.set(0, 0, stepButtonWidth, rect.getHeight());
@@ -81,20 +81,17 @@ void Sequencer::draw(){
     ofPushStyle();
     
     ofSetColor(ofColor::greenYellow, 200);
-    // Draw circle pins
-    ofSetLineWidth(1.0);
     
-    
+    // Draw ends
     float endSize = 8.0f;
+    
     ofPoint lStart(0, -endSize*.2);
     ofPoint lEnd(0, stepButtonHeight * rows + endSize*.2);
-    
     lStart -= ofPoint(0, endSize);
     
+    ofFill();
     ofRect(lStart, stepButtonWidth, endSize);
     ofRect(lEnd, stepButtonWidth, endSize);
-    
-    ofFill();
     
     ofSetColor(ofColor::greenYellow, 10);
     ofRect(0, 0, scrubber.getWidth(), scrubber.getHeight());
@@ -128,7 +125,7 @@ void Sequencer::toggleIndex(int i, int j){
 //--------------------------------------------------------------
 void Sequencer::randomize(){
     
-    int num = (int)ofRandom(columns);
+    int num = (int)ofRandom(columns * rows);
     
     for (int r=0; r<num; r++) {
         int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());

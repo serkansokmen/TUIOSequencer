@@ -43,8 +43,8 @@ void App::setup(){
     // Load GUI Settings
     loadGUISettings();
     
-    columns = 4;
-    rows = 4;
+    columns = 8;
+    rows = 8;
     
     // Sound Bank
     ofDirectory dir;
@@ -268,8 +268,8 @@ void App::setupGUIMain(){
     {
         guiMain->addLabel("MAIN");
         guiMain->addSpacer();
-//        guiMain->addMinimalSlider("COLUMNS", 4, 16, &columns);
-//        guiMain->addMinimalSlider("ROWS", 4, 16, &rows);
+        guiMain->addMinimalSlider("COLUMNS", 4, 16, &columns);
+        guiMain->addMinimalSlider("ROWS", 4, 16, &rows);
         guiMain->addMinimalSlider("BPM", 32.0f, 240.0f, &bpm);
         guiMain->addLabelToggle("RESET", &bInitGrid);
         guiMain->addLabelToggle("RANDOMIZE", &bRandomizeSequencer);
@@ -321,12 +321,12 @@ void App::guiEvent(ofxUIEventArgs &e){
     }
     
     // Columns and rows
-//    if (e.widget->getName() == "COLUMNS" || e.widget->getName() == "ROWS"){
-//        if (sequencer != NULL) {
-//            sequencer->setup(ofRectangle(0, 0, 20, 20), columns, rows);
-//            totalSteps = columns;
-//        }
-//    }
+    if (e.widget->getName() == "COLUMNS" || e.widget->getName() == "ROWS"){
+        if (sequencer != NULL) {
+            sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
+            totalSteps = columns;
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -412,7 +412,8 @@ void App::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void App::windowResized(int w, int h){
     // Re-layout Sequencer
-    sequencerPosition.set(ofGetWidth() - sequencer->getBoundingBox().getWidth(), 20);
+    sequencerPosition.set((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5,
+                          (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5);
 }
 
 //--------------------------------------------------------------
