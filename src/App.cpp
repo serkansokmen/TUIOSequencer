@@ -1,6 +1,6 @@
 //
-//  sequencer.h
-//  PresenceDetectorGrid
+//  App.cpp
+//  BodySequencerApp
 //
 //  Created by Serkan Sškmen on 29.07.2013.
 //

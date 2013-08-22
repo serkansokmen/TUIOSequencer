@@ -1,6 +1,6 @@
 //
-//  SegmentsContainer.cpp
-//  PresenceDetectorGrid
+//  App.h
+//  BodySequencerApp
 //
 //  Created by Serkan Sškmen on 29.07.2013.
 //
@@ -9,7 +9,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxMaxim.h"
 #include "ofxOsc.h"
 #include "ofxUI.h"
 #include "ofxTweener.h"
@@ -50,18 +49,9 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    void audioRequested(float * input, int bufferSize, int nChannels); /* output method */
-	
-    float 	*lAudioOut; /* outputs */
-	float   *rAudioOut;
-	
-	int		initialBufferSize; /* buffer size */
-	int		sampleRate;
-    
     void setupGUIMain();
     void saveGUISettings();
     void loadGUISettings();
-    
     void guiEvent(ofxUIEventArgs &e);
     
     Sequencer           *sequencer;

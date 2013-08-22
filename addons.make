@@ -1,7 +1,7 @@
 ofxOsc
 ofxXmlSettings
-ofxMaxim
 ofxMSABPMTapper
 ofxMSATimer
+ofxTuio
 ofxTweener
 ofxUI

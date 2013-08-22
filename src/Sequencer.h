@@ -1,6 +1,6 @@
 //
 //  SegmentsContainer.h
-//  PresenceDetectorGrid
+//  BodySequencerApp
 //
 //  Created by Serkan Sökmen on 31.07.2013.
 //

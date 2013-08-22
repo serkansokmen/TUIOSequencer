@@ -1,6 +1,6 @@
 //
 //  OSCPoint.h
-//  MotionSynth
+//  BodySequencerApp
 //
 //  Created by Serkan Sökmen on 08.08.2013.
 //

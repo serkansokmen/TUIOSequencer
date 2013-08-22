@@ -1,6 +1,6 @@
 //
 //  TrackCell.cpp
-//  MotionSynth
+//  BodySequencerApp
 //
 //  Created by Serkan Sokmen on 31.07.2013.
 //
