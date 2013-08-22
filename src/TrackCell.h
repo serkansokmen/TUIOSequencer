@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxTweener.h"
 
 
 #define TRACK_CELL_OFF       0
@@ -28,15 +29,20 @@ class TrackCell {
     ofRectangle     outerBox;
     ofRectangle     innerBox;
     
-    TrackCellState state;
+    TrackCellState  state;
+    float           red, green, blue;
+    ofColor         color;
     
 public:
-    void setup(const ofRectangle &boundingBox, int step);
+    void setup(const ofRectangle &boundingBox, int step, const ofColor &color);
     void draw();
     void toggle(int x, int y);
     
     void setState(TrackCellState s);
     const TrackCellState &getState();
+    
+    void setColor(ofColor c);
+    ofColor &getColor();
     
     ofRectangle     boundingBox;
     int             step;

@@ -39,9 +39,13 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
     // Create tracks
     for (int i = 0; i < rows; i++) {
+        
+        float val = ofMap(i, 0, rows, 0.0f, 255.0f);
+        
         tracks[i].setup(i,
                         ofRectangle(rect.getX(), stepButtonHeight * i, rect.getWidth(), stepButtonHeight),
-                        columns);
+                        columns,
+                        ofColor(val, ofRandom(200, 255), ofRandom(200, 255)));
     }
     
     scrubber.set(0, 0, stepButtonWidth, rect.getHeight());
@@ -62,11 +66,11 @@ void Sequencer::update(int step){
 //--------------------------------------------------------------
 void Sequencer::draw(){
     
-    ofPushStyle();
-    ofNoFill();
-    ofSetColor(ofColor::grey);
-    ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
-    ofPopStyle();
+//    ofPushStyle();
+//    ofNoFill();
+//    ofSetColor(ofColor::grey);
+//    ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
+//    ofPopStyle();
     
     for (int i=0; i<tracks.size(); i++){
         tracks[i].draw();

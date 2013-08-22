@@ -3,4 +3,5 @@ ofxXmlSettings
 ofxMaxim
 ofxMSABPMTapper
 ofxMSATimer
+ofxTweener
 ofxUI

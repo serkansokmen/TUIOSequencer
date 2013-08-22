@@ -21,8 +21,10 @@ void App::setup(){
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
     ofEnableAlphaBlending();
-    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetLogLevel(OF_LOG_WARNING);
     ofSetLineWidth(2.0);
+    
+    Tweener.setMode(TWEENMODE_OVERRIDE);
     
     // Sound & Maximilian setup
     /* This is stuff you always need.*/
@@ -50,8 +52,8 @@ void App::setup(){
     // Load GUI Settings
     loadGUISettings();
     
-    columns = 12;
-    rows = 12;
+    columns = 4;
+    rows = 4;
     
     // Sound Bank
     ofDirectory dir;
@@ -106,6 +108,9 @@ void App::update(){
     
     // Update sound
     ofSoundUpdate();
+    
+    // Update Tweener
+    Tweener.update();
     
     // Convert to int
     columns = (int)columns;

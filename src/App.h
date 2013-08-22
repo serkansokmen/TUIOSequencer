@@ -12,9 +12,8 @@
 #include "ofxMaxim.h"
 #include "ofxOsc.h"
 #include "ofxUI.h"
+#include "ofxTweener.h"
 #include "MSABPMTapper.h"
-#include "maxiGrains.h"
-#include <sys/time.h>
 
 #include "Sequencer.h"
 #include "OSCPoint.h"
