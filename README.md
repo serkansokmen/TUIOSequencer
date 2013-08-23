@@ -1,4 +1,4 @@
-Body Sequencer
+TUIO Sequencer
 ==============
 
-TUIO Based Step Sequencer Application
+TUIO Based Step Sequencer application for the upcoming "Body Sequencer" project
