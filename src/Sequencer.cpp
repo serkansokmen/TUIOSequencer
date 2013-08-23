@@ -1,8 +1,8 @@
 //
-//  SegmentsContainer.cpp
-//  BodySequencerApp
+//  Sequencer.cpp
+//  TUIOSequencer
 //
-//  Created by Serkan Sökmen on 31.07.2013.
+//  Created by Serkan Sokmen on 31.07.2013.
 //
 //
 

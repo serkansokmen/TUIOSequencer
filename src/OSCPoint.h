@@ -1,8 +1,8 @@
 //
 //  OSCPoint.h
-//  BodySequencerApp
+//  TUIOSequencer
 //
-//  Created by Serkan Sökmen on 08.08.2013.
+//  Created by Serkan Sokmen on 08.08.2013.
 //
 //
 

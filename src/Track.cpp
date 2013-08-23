@@ -1,6 +1,6 @@
 //
 //  Track.cpp
-//  BodySequencerApp
+//  TUIOSequencer
 //
 //  Created by Serkan Sokmen on 14.08.2013.
 //

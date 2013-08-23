@@ -1,8 +1,8 @@
 //
 //  App.cpp
-//  BodySequencerApp
+//  TUIOSequencer
 //
-//  Created by Serkan Sškmen on 29.07.2013.
+//  Created by Serkan Sokmen on 29.07.2013.
 //
 //
 
