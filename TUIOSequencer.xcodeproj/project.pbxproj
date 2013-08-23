@@ -94,27 +94,6 @@
 		193b78fc56a59a581d17a40baa4139a9 /* ofxTweener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTweener.h; path = ../../../addons/ofxTweener/src/ofxTweener.h; sourceTree = SOURCE_ROOT; };
 		1c43cdb79bf40ea7424b96804209f474 /* ofxUISuperCanvas.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUISuperCanvas.h; path = ../../../addons/ofxUI/src/ofxUISuperCanvas.h; sourceTree = SOURCE_ROOT; };
 		1e29c7e8c47e3e2db1c5876646df436b /* ofxUIRectangle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRectangle.h; path = ../../../addons/ofxUI/src/ofxUIRectangle.h; sourceTree = SOURCE_ROOT; };
-		20BA54D717C6E1B900D28582 /* BodySequencerAppDebug.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = BodySequencerAppDebug.app; sourceTree = "<group>"; };
-		20BA54DA17C6E1B900D28582 /* EnvyCodeR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EnvyCodeR.ttf; sourceTree = "<group>"; };
-		20BA54DB17C6E1B900D28582 /* MAINSettings.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MAINSettings.xml; sourceTree = "<group>"; };
-		20BA54DC17C6E1B900D28582 /* NewMedia Fett.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewMedia Fett.ttf"; sourceTree = "<group>"; };
-		20BA54DE17C6E1B900D28582 /* 78872__jojokyra__mini-glitch3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "78872__jojokyra__mini-glitch3.mp3"; sourceTree = "<group>"; };
-		20BA54E017C6E1B900D28582 /* 01_Piano_ff_Gb1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 01_Piano_ff_Gb1.wav; sourceTree = "<group>"; };
-		20BA54E117C6E1B900D28582 /* 02_Piano_ff_Eb2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 02_Piano_ff_Eb2.wav; sourceTree = "<group>"; };
-		20BA54E217C6E1B900D28582 /* 03_Piano_ff_E2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 03_Piano_ff_E2.wav; sourceTree = "<group>"; };
-		20BA54E317C6E1B900D28582 /* 04_Piano_ff_F2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 04_Piano_ff_F2.wav; sourceTree = "<group>"; };
-		20BA54E417C6E1B900D28582 /* 05_Piano_ff_Gb2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 05_Piano_ff_Gb2.wav; sourceTree = "<group>"; };
-		20BA54E517C6E1B900D28582 /* 06_Piano_ff_G2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 06_Piano_ff_G2.wav; sourceTree = "<group>"; };
-		20BA54E617C6E1B900D28582 /* 07_Piano_ff_A2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 07_Piano_ff_A2.wav; sourceTree = "<group>"; };
-		20BA54E717C6E1B900D28582 /* 08_Piano_ff_B2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 08_Piano_ff_B2.wav; sourceTree = "<group>"; };
-		20BA54E917C6E1B900D28582 /* 01_36847__ecodtr__laserrocket2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 01_36847__ecodtr__laserrocket2.wav; sourceTree = "<group>"; };
-		20BA54EA17C6E1B900D28582 /* 02_49678__ejfortin__energy-short-sword-7.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "02_49678__ejfortin__energy-short-sword-7.wav"; sourceTree = "<group>"; };
-		20BA54EB17C6E1B900D28582 /* 03_49695__ejfortin__energy-whip-2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "03_49695__ejfortin__energy-whip-2.wav"; sourceTree = "<group>"; };
-		20BA54EC17C6E1B900D28582 /* 04_27568__suonho__memorymoon-space-blaster-plays.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "04_27568__suonho__memorymoon-space-blaster-plays.wav"; sourceTree = "<group>"; };
-		20BA54ED17C6E1B900D28582 /* 05_42796__digifishmusic__sonar-ping.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "05_42796__digifishmusic__sonar-ping.wav"; sourceTree = "<group>"; };
-		20BA54EE17C6E1B900D28582 /* 06_3638__suonho__futuretrocomputing-01-suonho.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "06_3638__suonho__futuretrocomputing-01-suonho.wav"; sourceTree = "<group>"; };
-		20BA54EF17C6E1B900D28582 /* 07_36847__ecodtr__laserrocket2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 07_36847__ecodtr__laserrocket2.wav; sourceTree = "<group>"; };
-		20BA54F017C6E1B900D28582 /* 08_49678__ejfortin__energy-short-sword-7.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "08_49678__ejfortin__energy-short-sword-7.wav"; sourceTree = "<group>"; };
 		20f35afadaf0068b067e713fa3152568 /* OscReceivedElements.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscReceivedElements.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h; sourceTree = SOURCE_ROOT; };
 		23640f57df6c4bb6bfc5da4c2199c7dd /* PacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = PacketListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/PacketListener.h; sourceTree = SOURCE_ROOT; };
 		2a5b1fad3f30c8065c396acbb72e5d95 /* NetworkingUtilsWin.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtilsWin.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/win32/NetworkingUtilsWin.cpp; sourceTree = SOURCE_ROOT; };
@@ -176,7 +155,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69B5B0A3A1756003C02F2 /* BodySequencerAppDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BodySequencerAppDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* TUIOSequencerDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUIOSequencerDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4C2424410CC5A17004149E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -278,74 +257,6 @@
 				abdafdb1f6294114432947614e19f68e /* src */,
 			);
 			name = ofxTweener;
-			sourceTree = "<group>";
-		};
-		20BA54D617C6E1B900D28582 /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54D717C6E1B900D28582 /* BodySequencerAppDebug.app */,
-				20BA54D817C6E1B900D28582 /* data */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		20BA54D817C6E1B900D28582 /* data */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54D917C6E1B900D28582 /* GUI */,
-				20BA54DD17C6E1B900D28582 /* soundbank */,
-			);
-			path = data;
-			sourceTree = "<group>";
-		};
-		20BA54D917C6E1B900D28582 /* GUI */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54DA17C6E1B900D28582 /* EnvyCodeR.ttf */,
-				20BA54DB17C6E1B900D28582 /* MAINSettings.xml */,
-				20BA54DC17C6E1B900D28582 /* NewMedia Fett.ttf */,
-			);
-			path = GUI;
-			sourceTree = "<group>";
-		};
-		20BA54DD17C6E1B900D28582 /* soundbank */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54DE17C6E1B900D28582 /* 78872__jojokyra__mini-glitch3.mp3 */,
-				20BA54DF17C6E1B900D28582 /* piano */,
-				20BA54E817C6E1B900D28582 /* tracks */,
-			);
-			path = soundbank;
-			sourceTree = "<group>";
-		};
-		20BA54DF17C6E1B900D28582 /* piano */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54E017C6E1B900D28582 /* 01_Piano_ff_Gb1.wav */,
-				20BA54E117C6E1B900D28582 /* 02_Piano_ff_Eb2.wav */,
-				20BA54E217C6E1B900D28582 /* 03_Piano_ff_E2.wav */,
-				20BA54E317C6E1B900D28582 /* 04_Piano_ff_F2.wav */,
-				20BA54E417C6E1B900D28582 /* 05_Piano_ff_Gb2.wav */,
-				20BA54E517C6E1B900D28582 /* 06_Piano_ff_G2.wav */,
-				20BA54E617C6E1B900D28582 /* 07_Piano_ff_A2.wav */,
-				20BA54E717C6E1B900D28582 /* 08_Piano_ff_B2.wav */,
-			);
-			path = piano;
-			sourceTree = "<group>";
-		};
-		20BA54E817C6E1B900D28582 /* tracks */ = {
-			isa = PBXGroup;
-			children = (
-				20BA54E917C6E1B900D28582 /* 01_36847__ecodtr__laserrocket2.wav */,
-				20BA54EA17C6E1B900D28582 /* 02_49678__ejfortin__energy-short-sword-7.wav */,
-				20BA54EB17C6E1B900D28582 /* 03_49695__ejfortin__energy-whip-2.wav */,
-				20BA54EC17C6E1B900D28582 /* 04_27568__suonho__memorymoon-space-blaster-plays.wav */,
-				20BA54ED17C6E1B900D28582 /* 05_42796__digifishmusic__sonar-ping.wav */,
-				20BA54EE17C6E1B900D28582 /* 06_3638__suonho__futuretrocomputing-01-suonho.wav */,
-				20BA54EF17C6E1B900D28582 /* 07_36847__ecodtr__laserrocket2.wav */,
-				20BA54F017C6E1B900D28582 /* 08_49678__ejfortin__energy-short-sword-7.wav */,
-			);
-			path = tracks;
 			sourceTree = "<group>";
 		};
 		30cb364908817057b430d52805394cbc /* osc */ = {
@@ -522,14 +433,13 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
-				20BA54D617C6E1B900D28582 /* bin */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* BodySequencerAppDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* TUIOSequencerDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -702,9 +612,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* BodySequencerApp */ = {
+		E4B69B5A0A3A1756003C02F2 /* TUIOSequencer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "BodySequencerApp" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "TUIOSequencer" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -716,9 +626,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = BodySequencerApp;
+			name = TUIOSequencer;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* BodySequencerAppDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* TUIOSequencerDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -728,7 +638,7 @@
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "BodySequencerApp" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "TUIOSequencer" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -749,7 +659,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* BodySequencerApp */,
+				E4B69B5A0A3A1756003C02F2 /* TUIOSequencer */,
 			);
 		};
 /* End PBXProject section */
@@ -1017,7 +927,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				PRODUCT_NAME = TUIOSequencerDebug;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1103,7 +1013,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TUIOSequencer;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1111,7 +1021,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "BodySequencerApp" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "TUIOSequencer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -1120,7 +1030,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "BodySequencerApp" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "TUIOSequencer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,

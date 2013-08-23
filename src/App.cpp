@@ -24,7 +24,7 @@ void App::setup(){
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLineWidth(2.0);
     
-    ofSetWindowTitle("Body Sequencer");
+    ofSetWindowTitle("TUIO Sequencer");
     ofSetWindowPosition((ofGetScreenWidth()-ofGetWidth())*.5, (ofGetScreenHeight()-ofGetHeight())*.5);
     
     tuioClient.start(3333);
@@ -280,7 +280,7 @@ void App::setupGUIMain(){
     guiMain->setColorFillHighlight(ofxUIColor(255));
     guiMain->setColorBack(ofxUIColor(20, 20, 20, 150));
     {
-        guiMain->addLabel("MAIN");
+        guiMain->addLabel("MAIN SETTINGS");
         guiMain->addSpacer();
         guiMain->addSlider("COLUMNS", 4, 16, &columns);
         guiMain->addSlider("ROWS", 4, 16, &rows);
