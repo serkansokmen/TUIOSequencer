@@ -23,6 +23,8 @@
 #define OSC_SEND_PORT       9000
 #define OSC_POINT_COUNT     5
 
+#define SOUND_BANK_DIR      "soundbank/piano/"
+
 
 using namespace msa;
 
@@ -52,6 +54,8 @@ public:
 	void tuioRemoved(ofxTuioCursor &tuioCursor);
 	void tuioUpdated(ofxTuioCursor &tuioCursor);
     
+    void loadSoundBank();
+    
     void setupGUIMain();
     void saveGUISettings();
     void loadGUISettings();
@@ -63,7 +67,7 @@ public:
     ofFbo               sequencerFbo;
     ofPoint             sequencerPosition;
     int                 lastStep;
-    
+    float               randomizeRate;
     bool                bRandomizeSequencer;
     
     // TUIO Client

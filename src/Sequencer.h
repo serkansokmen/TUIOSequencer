@@ -19,7 +19,6 @@ using namespace std;
 
 class Sequencer {
     
-    ofRectangle         scrubber;
     ofRectangle         boundingBox;
     
     float               stepButtonWidth;
@@ -29,6 +28,7 @@ class Sequencer {
     
     float               aTimer, diffTime;
     int                 bpm;
+    int                 currentStep;
     
 public:
     
@@ -39,17 +39,19 @@ public:
     
     void update(int step);
     void draw();
-    
-    void stepEvent(float& val);
-    
     void reset();
     
-    void setStep(int val);
+    void setStep(int val) {
+        currentStep = val;
+    };
+    int getStep(){
+        return currentStep;
+    };
     
     void toggle(int x, int y);
     void toggleIndex(int i, int j);
     
-    void randomize();
+    void randomize(float rate);
     
     const ofRectangle &getBoundingBox();
     

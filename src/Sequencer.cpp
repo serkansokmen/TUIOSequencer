@@ -30,6 +30,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     // Dimensions
     boundingBox.set(rect);
     
+    currentStep = 0;
     stepButtonWidth = rect.getWidth() / columns;
     stepButtonHeight = rect.getHeight() / rows;
     
@@ -47,20 +48,17 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
                         columns,
                         ofColor(val, 255, 255));
     }
-    
-    scrubber.set(0, 0, stepButtonWidth, rect.getHeight());
 };
 
 //--------------------------------------------------------------
 void Sequencer::update(int step){
     
+    currentStep = step;
+    
     // Update tracks
     for (int i=0; i<tracks.size(); i++){
         tracks[i].update(step);
     }
-    
-    // Move indicator line
-    scrubber.setX(step * stepButtonWidth);
 };
 
 //--------------------------------------------------------------
@@ -72,37 +70,39 @@ void Sequencer::draw(){
 //    ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
 //    ofPopStyle();
     
-    for (int i=0; i<tracks.size(); i++){
-        tracks[i].draw();
-    }
-    
     ofPushMatrix();
-    ofTranslate(scrubber.getTopLeft());
     ofPushStyle();
     
-    ofSetColor(ofColor::greenYellow, 200);
-    
     // Draw ends
-    float endSize = 8.0f;
+    float endSize = 20.0f;
     
-    ofPoint lStart(0, -endSize*.2);
-    ofPoint lEnd(0, stepButtonHeight * rows + endSize*.2);
-    lStart -= ofPoint(0, endSize);
+    // Draw scrubber
+    ofRectangle scrubberRect(currentStep * stepButtonWidth, 0, stepButtonWidth, stepButtonHeight * rows);
+    ofRectangle scrubberRectTop(currentStep * stepButtonWidth, -24, stepButtonWidth, 20);
+    ofRectangle scrubberRectBottom(currentStep * stepButtonWidth, stepButtonHeight * rows + 4, stepButtonWidth, 20);
+    
+    ofNoFill();
+    ofSetColor(ofColor::greenYellow, 200);
+    ofRect(scrubberRectTop);
+    ofRect(scrubberRectBottom);
     
     ofFill();
-    ofRect(lStart, stepButtonWidth, endSize);
-    ofRect(lEnd, stepButtonWidth, endSize);
-    
-    ofSetColor(ofColor::greenYellow, 10);
-    ofRect(0, 0, scrubber.getWidth(), scrubber.getHeight());
+    ofSetColor(ofColor::gray, 100);
+    ofRect(scrubberRect);
     
     ofPopStyle();
     ofPopMatrix();
+    
+    // Draw tracks
+    for (int i=0; i<tracks.size(); i++){
+        tracks[i].draw();
+    }
 };
 
 //--------------------------------------------------------------
 void Sequencer::reset(){
     diffTime = 0;
+    setup(boundingBox, columns, rows);
 }
 
 //--------------------------------------------------------------
@@ -123,11 +123,9 @@ void Sequencer::toggleIndex(int i, int j){
 }
 
 //--------------------------------------------------------------
-void Sequencer::randomize(){
+void Sequencer::randomize(float rate){
     
-    int num = (int)ofRandom(columns * rows);
-    
-    for (int r=0; r<num; r++) {
+    for (int r=0; r<(int)rate; r++) {
         int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());
         int y = (int)ofRandom(0, boundingBox.getY() + boundingBox.getHeight());
         

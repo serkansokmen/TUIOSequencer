@@ -24,14 +24,12 @@ void App::setup(){
     ofSetLogLevel(OF_LOG_WARNING);
     ofSetLineWidth(2.0);
     
+    ofSetWindowTitle("Body Sequencer");
+    ofSetWindowPosition((ofGetScreenWidth()-ofGetWidth())*.5, (ofGetScreenHeight()-ofGetHeight())*.5);
+    
     tuioClient.start(3333);
     
     Tweener.setMode(TWEENMODE_OVERRIDE);
-    
-    // Sound & Maximilian setup
-    /* This is stuff you always need.*/
-    // Setup OF Sound last
-//	ofSoundStreamSetup(2, 0, this, 44100, 512, 4);
     
     // Setup GUIs
     setupGUIMain();
@@ -39,6 +37,7 @@ void App::setup(){
     // Set initial values
     bDebugMode = true;
     bInitGrid = false;
+    randomizeRate = 1.0f;
     
     // Load GUI Settings
     loadGUISettings();
@@ -46,25 +45,8 @@ void App::setup(){
     columns = 8;
     rows = 8;
     
-    // Sound Bank
-    ofDirectory dir;
-    dir.listDir("soundbank/piano/");
-    
-    if (dir.size()){
-        dir.sort();
-        for (int i=0; i<rows; i++) {
-            
-            int soundPathIndex = dir.numFiles() - (i % dir.numFiles()) - 1;
-            
-            ofSoundPlayer player;
-            player.loadSound(dir.getPath(soundPathIndex));
-            player.setMultiPlay(false);
-            
-            soundPlayers.push_back(player);
-            
-            ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(i + 1));
-        }
-    }
+    // Initialize Sound Bank
+    loadSoundBank();
     
     // Hide all guis
     for (int i=0; i<guihash.size(); i++) {
@@ -112,20 +94,41 @@ void App::update(){
     columns = (int)columns;
     rows = (int)rows;
     
-    if (bRandomizeSequencer){
-        sequencer->randomize();
-        bRandomizeSequencer = false;
-    }
-    
     // Update bpm
     bpmTapper.update();
     currentStep = (int)bpmTapper.beatTime() % totalSteps;
     if (currentStep > totalSteps){
+        // Testing automated play
+        bRandomizeSequencer = true;
         currentStep = 0;
     }
     
-    bool bCheckPoints = false;
+    // Restart sequencer when needed
+    if (bInitGrid) {
+        sequencer->setup(sequencer->getBoundingBox(), columns, rows);
+        bInitGrid = false;
+    }
+    // Randomize sequencer when needed
+    if (bRandomizeSequencer){
+        sequencer->reset();
+        sequencer->randomize(randomizeRate);
+        bRandomizeSequencer = false;
+    }
+    // Update sequencer
+    sequencer->update(currentStep);
     
+    // Check on/off states
+    for (int i=0; i<sequencer->tracks.size(); i++) {
+        Track *track = &sequencer->tracks[i];
+        if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
+            soundPlayers[i].play();
+        }
+    }
+    lastStep = currentStep;
+    
+    
+    // OSC Messages
+    bool bCheckPoints = false;
     // check for waiting messages
     while (oscReceiver.hasWaitingMessages()){
         
@@ -141,10 +144,8 @@ void App::update(){
             int gridIndY = 6 - ofToInt(addrs[3]);
             
             float val = m.getArgAsFloat(0);
-//            if (val == 1.0f){
+//          if (val == 1.0f){}
             sequencer->toggleIndex(gridIndX, gridIndY);
-//            }
-            
             ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridIndX) + ", " + ofToString(gridIndY) + " value:" + ofToString(val));
         }
         
@@ -194,26 +195,6 @@ void App::update(){
 		}
 	}
 
-    // Restart Sequencer
-    if (bInitGrid) {
-        sequencer->setup(sequencer->getBoundingBox(), columns, rows);
-        bInitGrid = false;
-    }
-    
-    // Update sequencer
-    sequencer->update(currentStep);
-    
-    // Check on/off states
-    for (int i=0; i<sequencer->tracks.size(); i++) {
-        
-        Track *track = &sequencer->tracks[i];
-        if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
-            soundPlayers[i].play();
-        }
-    }
-    
-    lastStep = currentStep;
-    
     sequencerFbo.begin();
     ofBackground(0);
     sequencer->draw();
@@ -230,13 +211,19 @@ void App::draw(){
     ofPopMatrix();
     
     if (bDebugMode){
-        float sx = 12;
-        float sy = 12;
+        ofPushStyle();
+        float sx = 10;
+        float sy = 320;
+        float sw = 10;
+        float sh = 10;
         ofSetColor(ofColor::grey);
-        ofRect(10, 240, sx * totalSteps, sy);
+        ofRect(sx, sy, sw * totalSteps, sh);
         ofSetColor(ofColor::greenYellow);
-        ofRect(10 + currentStep * sx, 240, sx, sy);
-
+        ofRect((currentStep + 1) * sx, sy, sw, sh);
+        ofSetColor(ofColor::darkGrey);
+        ofDrawBitmapString(ofToString(currentStep+1), (currentStep + 1) * sx + 1, sy + sh*2+4);
+        ofPopStyle();
+        
         tuioClient.drawCursors();
     }
 }
@@ -258,6 +245,31 @@ void App::tuioRemoved(ofxTuioCursor &tuioCursor){
 }
 
 //--------------------------------------------------------------
+void App::loadSoundBank(){
+    
+    soundPlayers.clear();
+    
+    ofDirectory dir;
+    dir.listDir(SOUND_BANK_DIR);
+    
+    if (dir.size()){
+        dir.sort();
+        for (int i=0; i<rows; i++) {
+            
+            int soundPathIndex = dir.numFiles() - (i % dir.numFiles()) - 1;
+            
+            ofSoundPlayer player;
+            player.loadSound(dir.getPath(soundPathIndex));
+            player.setMultiPlay(false);
+            
+            soundPlayers.push_back(player);
+            
+            ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(i + 1));
+        }
+    }
+}
+
+//--------------------------------------------------------------
 void App::setupGUIMain(){
     
     // ---
@@ -270,12 +282,16 @@ void App::setupGUIMain(){
     {
         guiMain->addLabel("MAIN");
         guiMain->addSpacer();
-        guiMain->addMinimalSlider("COLUMNS", 4, 16, &columns);
-        guiMain->addMinimalSlider("ROWS", 4, 16, &rows);
-        guiMain->addMinimalSlider("BPM", 32.0f, 240.0f, &bpm);
-        guiMain->addLabelToggle("RESET", &bInitGrid);
-        guiMain->addLabelToggle("RANDOMIZE", &bRandomizeSequencer);
-//        guiMain->addToggle("DEBUG MODE", &bDebugMode);
+        guiMain->addSlider("COLUMNS", 4, 16, &columns);
+        guiMain->addSlider("ROWS", 4, 16, &rows);
+        guiMain->addSpacer();
+        guiMain->addSlider("BPM", 32.0f, 240.0f, &bpm);
+        guiMain->addSpacer();
+        guiMain->addToggle("RESET", &bInitGrid);
+        guiMain->addSpacer();
+        guiMain->addSlider("RANDOMIZE RATE", 0, 100, &randomizeRate);
+        guiMain->addToggle("RANDOMIZE", &bRandomizeSequencer);
+        guiMain->addToggle("DEBUG MODE", &bDebugMode);
         guiMain->addSpacer();
         guiMain->addFPSSlider("FPS");
     }
@@ -325,6 +341,7 @@ void App::guiEvent(ofxUIEventArgs &e){
     // Columns and rows
     if (e.widget->getName() == "COLUMNS" || e.widget->getName() == "ROWS"){
         if (sequencer != NULL) {
+            loadSoundBank();
             sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
             totalSteps = columns;
         }
@@ -366,7 +383,10 @@ void App::keyPressed(int key){
             }
         }
             break;
-            
+        
+        case 'd':
+            bDebugMode = !bDebugMode;
+            break;
             
             
         default:
