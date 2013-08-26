@@ -9,6 +9,7 @@
 #include "App.h"
 
 
+#pragma mark App
 App::App(){
     sequencer = new Sequencer();
 }
@@ -27,8 +28,7 @@ void App::setup(){
     ofSetWindowTitle("TUIO Sequencer");
     ofSetWindowPosition((ofGetScreenWidth()-ofGetWidth())*.5, (ofGetScreenHeight()-ofGetHeight())*.5);
     
-    tuioClient.start(3333);
-    
+    // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
     // Setup GUIs
@@ -70,19 +70,10 @@ void App::setup(){
     sequencer->setup(scanRect, columns, rows);
     // Allocate draw FBO
     sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
-    
-    // Setup OSC
-    oscReceiver.setup(OSC_RECEIVE_PORT);
-    oscSender.setup(OSC_HOST, OSC_SEND_PORT);
-    
-    oscPoints.assign(OSC_POINT_COUNT, OSCPoint());
 }
 
 //--------------------------------------------------------------
 void App::update(){
-    
-    // Get TUIO messages
-    tuioClient.getMessage();
     
     // Update sound
     ofSoundUpdate();
@@ -116,6 +107,7 @@ void App::update(){
     }
     // Update sequencer
     sequencer->update(currentStep);
+//    sequencer->update(currentStep, tuioCursors);
     
     // Check on/off states
     for (int i=0; i<sequencer->tracks.size(); i++) {
@@ -126,75 +118,6 @@ void App::update(){
     }
     lastStep = currentStep;
     
-    
-    // OSC Messages
-    bool bCheckPoints = false;
-    // check for waiting messages
-    while (oscReceiver.hasWaitingMessages()){
-        
-        // get the next message
-		ofxOscMessage m;
-		oscReceiver.getNextMessage(&m);
-        
-        // check for grid message
-        vector<string> addrs = ofSplitString(m.getAddress(), "/");
-        
-        if (addrs.size() == 5 && addrs[1] == "controller" && addrs[2] == "grid"){
-            int gridIndX = ofToInt(addrs[4]) - 1;
-            int gridIndY = 6 - ofToInt(addrs[3]);
-            
-            float val = m.getArgAsFloat(0);
-//          if (val == 1.0f){}
-            sequencer->toggleIndex(gridIndX, gridIndY);
-            ofLog(OF_LOG_NOTICE, "OSC Blob: " + ofToString(gridIndX) + ", " + ofToString(gridIndY) + " value:" + ofToString(val));
-        }
-        
-        // check for position messages
-        for (int i=0; i<OSC_POINT_COUNT; i++) {
-            string indexStr = ofToString(i);
-            OSCPoint &p = oscPoints[i];
-            
-            if (m.getAddress() == "/simulate/blobs/" + indexStr){
-
-                float posX = ofMap(m.getArgAsFloat(1), 0.0f, 1.0f, 0.0f, sequencer->getBoundingBox().getWidth());
-                float posY = ofMap(m.getArgAsFloat(0), 0.0f, 1.0f, 0.0f, sequencer->getBoundingBox().getHeight());
-                
-                p.isOn = true;
-                p.position.set(posX, posY);
-                
-                ofLog(OF_LOG_NOTICE, "Watching Blob " + indexStr);
-                ofLog(OF_LOG_NOTICE, "X: " + ofToString(posX));
-                ofLog(OF_LOG_NOTICE, "Y: " + ofToString(posY));
-                
-                bCheckPoints = true;
-            }
-            if (bCheckPoints) {
-#warning needs OSC - check cells implementation.
-//                sequencer->checkSegments(oscPoints);
-            }
-        }
-        
-        // check for bpm message
-		if (m.getAddress() == "/controller/bpm"){
-            float tempo = m.getArgAsFloat(0);
-#warning handle OSC bpm message.
-//            synth.setParameter("tempo", tempo);
-            ofLog(OF_LOG_NOTICE, "BPM: " + ofToString(tempo));
-		}
-        
-        // check debug message
-		if (m.getAddress() == "/controller/debug"){
-			bDebugMode = !(m.getArgAsFloat(0) == 0.0f);
-            ofLog(OF_LOG_NOTICE, "Debug mode:" + ofToString(bDebugMode));
-		}
-        
-        // check for init message
-		if (m.getAddress() == "/controller/init"){
-			bInitGrid = !(m.getArgAsFloat(0) == 0.0f);
-            ofLog(OF_LOG_NOTICE, "initializing grid...");
-		}
-	}
-
     sequencerFbo.begin();
     ofBackground(0);
     sequencer->draw();
@@ -223,27 +146,128 @@ void App::draw(){
         ofSetColor(ofColor::darkGrey);
         ofDrawBitmapString(ofToString(currentStep+1), (currentStep + 1) * sx + 1, sy + sh*2+4);
         ofPopStyle();
-        
-        tuioClient.drawCursors();
     }
 }
 
 //--------------------------------------------------------------
-void App::tuioAdded(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
-	cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
+void App::keyPressed(int key){
+    
+    switch (key)
+    {
+        
+        case '1':
+        {
+            // Hide all guis
+            for (int i=0; i<guihash.size(); i++) {
+                guihash[ofToString(i+1)]->setVisible(false);
+            }
+            guihash["1"]->toggleVisible();
+        }
+            break;
+            
+        case 'p':
+        {
+            vector<ofxUICanvas *>::iterator it;
+            for(it = guis.begin(); it != guis.end(); it++)
+            {
+                (*it)->setDrawWidgetPadding(true);
+            }
+        }
+            break;
+            
+        case 'P':
+        {
+            vector<ofxUICanvas *>::iterator it;
+            for(it = guis.begin(); it != guis.end(); it++)
+            {
+                (*it)->setDrawWidgetPadding(false);
+            }
+        }
+            break;
+        
+        case 'd':
+            bDebugMode = !bDebugMode;
+            break;
+            
+            
+        default:
+            break;
+    }
 }
 
-void App::tuioUpdated(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
-	cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
+//--------------------------------------------------------------
+void App::keyReleased(int key){
+
 }
 
-void App::tuioRemoved(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
-	cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
+//--------------------------------------------------------------
+void App::mouseMoved(int x, int y ){
+
 }
 
+//--------------------------------------------------------------
+void App::mouseDragged(int x, int y, int button){
+    
+}
+
+//--------------------------------------------------------------
+void App::mousePressed(int x, int y, int button){
+    ofRectangle *currentRect = new ofRectangle;
+    currentRect->set(sequencer->getBoundingBox());
+    currentRect->setPosition(sequencerPosition);
+    
+    if (bDebugMode && currentRect->inside(x, y)){
+        float rx = x - sequencerPosition.x;
+        float ry = y - sequencerPosition.y;
+        sequencer->toggle(rx, ry);
+    }
+    
+    currentRect = 0;
+    delete currentRect;
+}
+
+//--------------------------------------------------------------
+void App::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void App::windowResized(int w, int h){
+    // Re-layout Sequencer
+    sequencerPosition.set((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5,
+                          (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5);
+}
+
+//--------------------------------------------------------------
+void App::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void App::dragEvent(ofDragInfo dragInfo){ 
+
+}
+
+//--------------------------------------------------------------
+void App::exit(){
+
+    saveGUISettings();
+    
+    for(int i = 0; i < guis.size(); i++)
+    {
+        ofxUICanvas *gui = guis[i];
+        gui = 0;
+        delete gui;
+    }
+    
+    guis.clear();
+    soundPlayers.clear();
+    
+    sequencer = 0;
+    delete sequencer;
+}
+
+#pragma mark - Sound
 //--------------------------------------------------------------
 void App::loadSoundBank(){
     
@@ -269,6 +293,7 @@ void App::loadSoundBank(){
     }
 }
 
+#pragma mark - GUI
 //--------------------------------------------------------------
 void App::setupGUIMain(){
     
@@ -347,148 +372,3 @@ void App::guiEvent(ofxUIEventArgs &e){
         }
     }
 }
-
-//--------------------------------------------------------------
-void App::keyPressed(int key){
-    
-    switch (key)
-    {
-        
-        case '1':
-        {
-            // Hide all guis
-            for (int i=0; i<guihash.size(); i++) {
-                guihash[ofToString(i+1)]->setVisible(false);
-            }
-            guihash["1"]->toggleVisible();
-        }
-            break;
-            
-        case 'p':
-        {
-            vector<ofxUICanvas *>::iterator it;
-            for(it = guis.begin(); it != guis.end(); it++)
-            {
-                (*it)->setDrawWidgetPadding(true);
-            }
-        }
-            break;
-            
-        case 'P':
-        {
-            vector<ofxUICanvas *>::iterator it;
-            for(it = guis.begin(); it != guis.end(); it++)
-            {
-                (*it)->setDrawWidgetPadding(false);
-            }
-        }
-            break;
-        
-        case 'd':
-            bDebugMode = !bDebugMode;
-            break;
-            
-            
-        default:
-            break;
-    }
-}
-
-//--------------------------------------------------------------
-void App::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void App::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void App::mouseDragged(int x, int y, int button){
-    
-}
-
-//--------------------------------------------------------------
-void App::mousePressed(int x, int y, int button){
-    
-    ofRectangle *currentRect = new ofRectangle;
-    currentRect->set(sequencer->getBoundingBox());
-    currentRect->setPosition(sequencerPosition);
-    
-    if (bDebugMode && currentRect->inside(x, y)){
-        float rx = x - sequencerPosition.x;
-        float ry = y - sequencerPosition.y;
-        sequencer->toggle(rx, ry);
-    }
-    
-    currentRect = 0;
-    delete currentRect;
-}
-
-//--------------------------------------------------------------
-void App::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void App::windowResized(int w, int h){
-    // Re-layout Sequencer
-    sequencerPosition.set((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5,
-                          (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5);
-}
-
-//--------------------------------------------------------------
-void App::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void App::dragEvent(ofDragInfo dragInfo){ 
-
-}
-
-//--------------------------------------------------------------
-void App::exit(){
-
-    saveGUISettings();
-    
-    for(int i = 0; i < guis.size(); i++)
-    {
-        ofxUICanvas *gui = guis[i];
-        gui = 0;
-        delete gui;
-    }
-    
-    guis.clear();
-//    samples.clear();
-    soundPlayers.clear();
-    
-    delete sequencer;
-}
-
-
-//--------------------------------------------------------------
-//void App::audioRequested(float *output, int bufferSize, int nChannels){
-//    
-//    for (int i = 0; i < bufferSize; i++){
-//        
-//        compositeSample = 0;
-//        
-//        // Check on/off states
-//        for (int j=0; j<sequencer->tracks.size(); j++) {
-//            
-//            Track *track = &sequencer->tracks[j];
-//            maxiSample *ms = &samples[j];
-//            
-//            if (track->cellStates[currentStep] > 0){
-//                compositeSample += ms->play();
-//            }
-//        }
-//		
-//        mix.stereo(compositeSample, outputs, 0.5);
-//		
-//        lAudioOut[i] = output[i*nChannels    ] = outputs[0];
-//        rAudioOut[i] = output[i*nChannels + 1] = outputs[1];
-//	}
-//}

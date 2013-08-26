@@ -9,15 +9,16 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxOsc.h"
+#include "ofxTuio.h"
 #include "Track.h"
-#include "OSCPoint.h"
 
 
 using namespace std;
 
 
 class Sequencer {
+    
+    ofxTuioClient       tuioClient;
     
     ofRectangle         boundingBox;
     
@@ -41,6 +42,10 @@ public:
     void draw();
     void reset();
     
+    void tuioAdded(ofxTuioCursor &tuioCursor);
+	void tuioRemoved(ofxTuioCursor &tuioCursor);
+	void tuioUpdated(ofxTuioCursor &tuioCursor);
+    
     void setStep(int val) {
         currentStep = val;
     };
@@ -49,13 +54,13 @@ public:
     };
     
     void toggle(int x, int y);
-    void toggleIndex(int i, int j);
     
     void randomize(float rate);
     
-    const ofRectangle &getBoundingBox();
+    const ofRectangle &getBoundingBox(){
+        return boundingBox;
+    };
     
-//    void checkSegments(const vector<OSCPoint> &points);
-    
-    vector<Track>       tracks;
+    vector<Track>   tracks;
+    vector<int>     existingCursors;
 };

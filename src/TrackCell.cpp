@@ -20,7 +20,7 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
     saturation = c.getSaturation();
     brightness = 255;
     
-    state = off;
+    state = cellOff;
     color.set(hue, saturation, brightness);
     
     boundingBox.set(bb);
@@ -41,20 +41,20 @@ void TrackCell::draw(){
     ofSetLineWidth(radius * .001);
     
     switch (state) {
-        case off:
+        case cellOff:
             ofPushStyle();
             ofSetColor(color, 255);
             ofNoFill();
             ofRectRounded(innerBox, radius);
             ofPopStyle();
             break;
-        case active:
+        case cellActive:
             ofPushStyle();
             ofSetColor(color, alpha);
             ofRectRounded(innerBox, radius);
             ofPopStyle();
             break;
-        case on:
+        case cellOn:
             ofPushStyle();
             ofSetColor(color, alpha);
             ofRectRounded(innerBox, radius);
@@ -73,13 +73,13 @@ void TrackCell::setState(TrackCellState s){
     state = s;
     
     switch (state) {
-        case off:
+        case cellOff:
             Tweener.addTween(alpha, 50, .2);
             break;
-        case active:
+        case cellActive:
             Tweener.addTween(alpha, 150, .2);
             break;
-        case on:
+        case cellOn:
             Tweener.addTween(alpha, 255, .2);
             break;
             
@@ -106,15 +106,29 @@ ofColor &TrackCell::getColor(){
 }
 
 //--------------------------------------------------------------
+void TrackCell::on(int x, int y){
+    if (boundingBox.inside(x, y)){
+        setState(cellActive);
+    }
+}
+
+//--------------------------------------------------------------
+void TrackCell::off(int x, int y){
+    if (boundingBox.inside(x, y)){
+        setState(cellOff);
+    }
+}
+
+//--------------------------------------------------------------
 void TrackCell::toggle(int x, int y){
     if (boundingBox.inside(x, y)){
         switch (getState()) {
-            case off:
-                setState(active);
+            case cellOff:
+                setState(cellActive);
                 break;
-            case on:
-            case active:
-                setState(off);
+            case cellOn:
+            case cellActive:
+                setState(cellOff);
                 break;
         }
     }

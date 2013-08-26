@@ -17,6 +17,7 @@ Sequencer::Sequencer(){
 //--------------------------------------------------------------
 Sequencer::~Sequencer(){
     tracks.clear();
+    existingCursors.clear();
 }
 
 //--------------------------------------------------------------
@@ -48,10 +49,20 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
                         columns,
                         ofColor(val, 255, 255));
     }
+    
+    // Setup TUIO
+    tuioClient.start(3333);
+    
+    ofAddListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
+	ofAddListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
+	ofAddListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
 };
 
 //--------------------------------------------------------------
 void Sequencer::update(int step){
+    
+    // Get TUIO messages
+    tuioClient.getMessage();
     
     currentStep = step;
     
@@ -59,16 +70,18 @@ void Sequencer::update(int step){
     for (int i=0; i<tracks.size(); i++){
         tracks[i].update(step);
     }
+    
+    vector<int>::iterator it = existingCursors.begin();
+    
+    cout << "Cursor IDs: ";
+    for(; it != existingCursors.end(); ++it){
+        cout << *it << ", ";
+    }
+    cout << endl;
 };
 
 //--------------------------------------------------------------
 void Sequencer::draw(){
-    
-//    ofPushStyle();
-//    ofNoFill();
-//    ofSetColor(ofColor::grey);
-//    ofRect(0, 0, stepButtonWidth * columns, stepButtonHeight * rows);
-//    ofPopStyle();
     
     ofPushMatrix();
     ofPushStyle();
@@ -106,17 +119,47 @@ void Sequencer::reset(){
 }
 
 //--------------------------------------------------------------
-void Sequencer::toggle(int x, int y){
-    for (int i=0; i<tracks.size(); i++){
-        tracks[i].toggle(x, y);
+void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
+    
+    if (boundingBox.inside(loc)){
+        existingCursors.push_back(tuioCursor.getSessionId());
     }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
 }
 
 //--------------------------------------------------------------
-void Sequencer::toggleIndex(int i, int j){
-    float x = boundingBox.getX() + i * stepButtonWidth;
-    float y = boundingBox.getY() + j * stepButtonHeight;
+void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
     
+    if (boundingBox.inside(loc)){
+        
+    }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
+}
+
+//--------------------------------------------------------------
+void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
+	
+    if (boundingBox.inside(loc)){
+        for (int i=0; i<existingCursors.size(); i++) {
+            if (tuioCursor.getSessionId() == existingCursors[i]){
+                existingCursors.erase(existingCursors.begin() + i);
+            }
+        }
+    }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
+}
+
+//--------------------------------------------------------------
+void Sequencer::toggle(int x, int y){
     for (int i=0; i<tracks.size(); i++){
         tracks[i].toggle(x, y);
     }
@@ -125,6 +168,8 @@ void Sequencer::toggleIndex(int i, int j){
 //--------------------------------------------------------------
 void Sequencer::randomize(float rate){
     
+    reset();
+    
     for (int r=0; r<(int)rate; r++) {
         int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());
         int y = (int)ofRandom(0, boundingBox.getY() + boundingBox.getHeight());
@@ -132,34 +177,4 @@ void Sequencer::randomize(float rate){
         toggle(x, y);
     }
 }
-
-
-//--------------------------------------------------------------
-const ofRectangle &Sequencer::getBoundingBox(){
-    return boundingBox;
-}
-
-
-//--------------------------------------------------------------
-//void Sequencer::checkSegments(const vector<OSCPoint> &points){
-//    // Reset segment touch states
-//    vector<GridSegment>::iterator segment;
-//    for (segment = segments.begin(); segment != segments.end(); segment++){
-//        segment->setState(off);
-//    }
-//    
-//    if (points.size() > 0){
-//        for (int i=0; i<segments.size(); i++){
-//            GridSegment *segmentPtr = &segments[i];
-//            
-//            for(int i=0; i<points.size(); i++){
-//                segmentPtr->setState(active);
-//                if (segmentPtr->boundingBox.inside(ofVec2f(points[i].position)) &&
-//                    segmentPtr->boundingBox.intersects(lineStartPos, lineEndPos)){
-//                    segmentPtr->setState(on);
-//                }
-//            }
-//        }
-//    }
-//};
 

@@ -18,9 +18,9 @@
 
 
 enum TrackCellState {
-    off = TRACK_CELL_OFF,
-    active = TRACK_CELL_ACTIVE,
-    on = TRACK_CELL_ON
+    cellOff = TRACK_CELL_OFF,
+    cellActive = TRACK_CELL_ACTIVE,
+    cellOn = TRACK_CELL_ON
 };
 
 
@@ -38,6 +38,8 @@ public:
     void setup(const ofRectangle &boundingBox, int step, const ofColor &color);
     void update();
     void draw();
+    void on(int x, int y);
+    void off(int x, int y);
     void toggle(int x, int y);
     
     void setState(TrackCellState s);

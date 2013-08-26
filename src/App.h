@@ -9,19 +9,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTuio.h"
-#include "ofxOsc.h"
-#include "ofxUI.h"
+#include "ofxGui.h"
 #include "ofxTweener.h"
 #include "MSABPMTapper.h"
 
 #include "Sequencer.h"
-#include "OSCPoint.h"
-
-#define OSC_HOST            "192.168.254.39"
-#define OSC_RECEIVE_PORT    8000
-#define OSC_SEND_PORT       9000
-#define OSC_POINT_COUNT     5
 
 #define SOUND_BANK_DIR      "soundbank/piano/"
 
@@ -50,10 +42,6 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    void tuioAdded(ofxTuioCursor &tuioCursor);
-	void tuioRemoved(ofxTuioCursor &tuioCursor);
-	void tuioUpdated(ofxTuioCursor &tuioCursor);
-    
     void loadSoundBank();
     
     void setupGUIMain();
@@ -62,33 +50,16 @@ public:
     void guiEvent(ofxUIEventArgs &e);
     
     // Sequencer
-    Sequencer           *sequencer;
-    BPMTapper           bpmTapper;
-    ofFbo               sequencerFbo;
-    ofPoint             sequencerPosition;
-    int                 lastStep;
-    float               randomizeRate;
-    bool                bRandomizeSequencer;
+    Sequencer     *sequencer;
+    BPMTapper     bpmTapper;
+    ofFbo         sequencerFbo;
+    ofPoint       sequencerPosition;
+    int           lastStep;
+    float         randomizeRate;
+    bool          bRandomizeSequencer;
     
-    // TUIO Client
-    ofxTuioClient           tuioClient;
-    
-    // Sounds
-    vector<ofSoundPlayer>   soundPlayers;
-    /*
-    vector<maxiSample>   samples;
-    
-    ofxMaxiMix      mix;
-    maxiOsc         timer;
-    
-    double          compositeSample, outputs[2];
-    int             currentCount, lastCount, playHead;
-    int             trigger;
-     */
-    
-    // OSC
-    ofxOscReceiver      oscReceiver;
-    ofxOscSender        oscSender;
+    // Sound Players
+    vector<ofSoundPlayer> soundPlayers;
     
     float       bpm;
     float       columns;
@@ -98,9 +69,6 @@ public:
     
     bool        bDebugMode;
     bool        bInitGrid;
-    
-    //
-    vector <OSCPoint>           oscPoints;
     
     // GUI
     vector<ofxUICanvas*>        guis;

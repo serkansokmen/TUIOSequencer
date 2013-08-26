@@ -26,6 +26,7 @@ public:
     void setup(int trackId, const ofRectangle &boundingBox, int columns, const ofColor &color);
     void update(int step);
     void draw();
+    
     void toggle(int x, int y);
     
     vector<bool>    cellStates;

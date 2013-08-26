@@ -45,18 +45,18 @@ void Track::update(int step){
         
         if (step == cells[i].step){
             // Current step column
-            if (cells[i].getState() == active){
-                cells[i].setState(on);
+            if (cells[i].getState() == cellActive){
+                cells[i].setState(cellOn);
             }
         } else {
-            if (cells[i].getState() == on){
-                cells[i].setState(active);
+            if (cells[i].getState() == cellOn){
+                cells[i].setState(cellActive);
             }
         }
     }
     
     for (int i=0; i<cellStates.size(); i++) {
-        cellStates[i] = (cells[i].getState() != off);
+        cellStates[i] = (cells[i].getState() != cellOff);
     }
 }
 
