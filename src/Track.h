@@ -27,6 +27,8 @@ public:
     void update(int step);
     void draw();
     
+    void on(int x, int y);
+    void off(int x, int y);
     void toggle(int x, int y);
     
     vector<bool>    cellStates;

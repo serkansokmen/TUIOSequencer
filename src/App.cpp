@@ -29,18 +29,23 @@ void App::setup(){
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
+    // Scan rect
+    float w = 640;
+    float h = 480;
+    ofRectangle scanRect(0, 0, w, h);
+    
     // Setup GUIs
     setupGUI();
+    // Load existing values
     gui.loadFromFile("settings.xml");
+    
+    // Initialize Sequencer
+    sequencer->setup(scanRect, columns, rows);
+    // Allocate draw FBO
+    sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
     
     // Set initial values
     bHideGui = false;
-//    bDebugMode = true;
-//    bInitGrid = false;
-//    randomizeRate = 1.0f;
-//    bpm = 120.0f;
-//    columns = 8;
-//    rows = 8;
     
     // Initialize Sound Bank
     loadSoundBank();
@@ -48,17 +53,6 @@ void App::setup(){
     totalSteps = columns;
     currentStep = 0;
     lastStep = 0;
-    
-    
-    // Scan rect
-    float w = 640;
-    float h = 480;
-    ofRectangle scanRect(0, 0, w, h);
-    
-    // Initialize Sequencer
-    sequencer->setup(scanRect, columns, rows);
-    // Allocate draw FBO
-    sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
 }
 
 //--------------------------------------------------------------
@@ -77,11 +71,6 @@ void App::update(){
         currentStep = 0;
     }
     
-    // Restart sequencer when needed
-    if (bInitGrid) {
-        sequencer->setup(sequencer->getBoundingBox(), columns, rows);
-        bInitGrid = false;
-    }
     // Update sequencer
     sequencer->update(currentStep);
     
@@ -95,7 +84,7 @@ void App::update(){
     lastStep = currentStep;
     
     sequencerFbo.begin();
-    ofBackground(0);
+    ofClear(255);
     sequencer->draw();
     sequencerFbo.end();
 }
@@ -103,26 +92,13 @@ void App::update(){
 //--------------------------------------------------------------
 void App::draw(){
     
+    ofBackground(ofColor::black);
+    
     // Draw scan rect
     ofPushMatrix();
     ofTranslate(sequencer->getBoundingBox().getPosition());
     sequencerFbo.draw(sequencerPosition->x, sequencerPosition->y);
     ofPopMatrix();
-    
-    if (bDebugMode){
-        ofPushStyle();
-        float sx = 10;
-        float sy = 320;
-        float sw = 10;
-        float sh = 10;
-        ofSetColor(ofColor::grey);
-        ofRect(sx, sy, sw * totalSteps, sh);
-        ofSetColor(ofColor::greenYellow);
-        ofRect((currentStep + 1) * sx, sy, sw, sh);
-        ofSetColor(ofColor::darkGrey);
-        ofDrawBitmapString(ofToString(currentStep+1), (currentStep + 1) * sx + 1, sy + sh*2+4);
-        ofPopStyle();
-    }
     
     if (!bHideGui) {
         gui.draw();
@@ -134,41 +110,9 @@ void App::keyPressed(int key){
     
     switch (key)
     {
-        /*
-        case '1':
-        {
-            // Hide all guis
-            for (int i=0; i<guihash.size(); i++) {
-                guihash[ofToString(i+1)]->setVisible(false);
-            }
-            guihash["1"]->toggleVisible();
-        }
-            break;
-            
-        case 'p':
-        {
-            vector<ofxUICanvas *>::iterator it;
-            for(it = guis.begin(); it != guis.end(); it++)
-            {
-                (*it)->setDrawWidgetPadding(true);
-            }
-        }
-            break;
-            
-        case 'P':
-        {
-            vector<ofxUICanvas *>::iterator it;
-            for(it = guis.begin(); it != guis.end(); it++)
-            {
-                (*it)->setDrawWidgetPadding(false);
-            }
-        }
-            break;
-        */
         case 'd':
             bHideGui = !bHideGui;
             break;
-            
             
         default:
             break;
@@ -213,7 +157,8 @@ void App::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::windowResized(int w, int h){
-    
+//    sequencerPosition->x = (w - sequencer->getBoundingBox().getWidth()) * .5;
+//    sequencerPosition->y = (h - sequencer->getBoundingBox().getHeight()) * .5;
 }
 
 //--------------------------------------------------------------
@@ -235,6 +180,64 @@ void App::exit(){
     
     sequencer = 0;
     delete sequencer;
+}
+
+#pragma mark - GUI
+//--------------------------------------------------------------
+void App::setupGUI(){
+    gui.setup("Settings");
+    gui.add(columns.set("Columns", 8, 4, 20));
+    gui.add(rows.set("Rows", 8, 4, 20));
+    
+    float diffW = ofGetWidth() - sequencer->getBoundingBox().getWidth();
+    float diffH = ofGetHeight() - sequencer->getBoundingBox().getHeight();
+    gui.add(sequencerPosition.set("Sequencer Position",
+                                  ofVec2f(diffW * .5, diffH * .5),
+                                  ofVec2f(0,0),
+                                  ofVec2f(diffW, diffH)));
+    
+    gui.add(bpm.set("BPM", 100.0f, 32.0f, 240.0f));
+    
+    gui.add(randomizeRate.set("Randomize Rate", 1, 1, 100));
+    gui.add(randomizeButton.setup("Randomize"));
+    gui.add(resetButton.setup("Reset"));
+    
+    columns.addListener(this, &App::columnsChanged);
+    rows.addListener(this, &App::rowsChanged);
+    bpm.addListener(this, &App::bpmChanged);
+    randomizeButton.addListener(this, &App::randomizeSequencer);
+    resetButton.addListener(this, &App::resetSequencer);
+}
+
+//--------------------------------------------------------------
+void App::columnsChanged(int &newColumns){
+    loadSoundBank();
+    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
+    totalSteps = columns;
+}
+
+//--------------------------------------------------------------
+void App::rowsChanged(int &newRows){
+    loadSoundBank();
+    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
+}
+
+//--------------------------------------------------------------
+void App::bpmChanged(float &newBpm){
+    bpmTapper.setBpm(newBpm);
+}
+
+//--------------------------------------------------------------
+void App::randomizeSequencer(){
+    sequencer->reset();
+    sequencer->randomize(randomizeRate);
+}
+
+//--------------------------------------------------------------
+void App::resetSequencer(){
+    sequencer->reset();
+    sequencer->setup(sequencer->getBoundingBox(), columns, rows);
+    bpmTapper.startFresh();
 }
 
 #pragma mark - Sound
@@ -262,52 +265,3 @@ void App::loadSoundBank(){
         }
     }
 }
-
-#pragma mark - GUI
-//--------------------------------------------------------------
-void App::setupGUI(){
-    gui.setup("Settings");
-    gui.add(columns.set("Columns", 8, 4, 20));
-    gui.add(rows.set("Rows", 8, 4, 20));
-    gui.add(sequencerPosition.set("Sequencer Position",
-                                  ofVec2f((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5, (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5),
-                                  ofVec2f(0,0),
-                                  ofVec2f(ofGetWidth(),ofGetHeight())));
-    
-    gui.add(bpm.set("BPM", 100.0f, 32.0f, 240.0f));
-    
-    gui.add(randomizeRate.set("Randomize Rate", 1, 1, 100));
-    gui.add(randomizeButton.setup("Randomize"));
-    
-    columns.addListener(this, &App::columnsChanged);
-    rows.addListener(this, &App::rowsChanged);
-    bpm.addListener(this, &App::bpmChanged);
-    randomizeButton.addListener(this, &App::randomizeSequencer);
-}
-
-//--------------------------------------------------------------
-void App::columnsChanged(int &newColumns){
-    loadSoundBank();
-    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
-    totalSteps = columns;
-}
-
-//--------------------------------------------------------------
-void App::rowsChanged(int &newRows){
-    loadSoundBank();
-    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
-}
-
-//--------------------------------------------------------------
-void App::bpmChanged(float &newBpm){
-    bpmTapper.setBpm(newBpm);
-//    bpmTapper.startFresh();
-//    sequencer->reset();
-}
-
-//--------------------------------------------------------------
-void App::randomizeSequencer(){
-    sequencer->reset();
-    sequencer->randomize(randomizeRate);
-}
-

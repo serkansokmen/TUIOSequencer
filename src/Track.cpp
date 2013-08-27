@@ -68,6 +68,20 @@ void Track::draw(){
 }
 
 //--------------------------------------------------------------
+void Track::on(int x, int y){
+	for(int i=0; i<cells.size(); i++){
+		cells[i].on(x, y);
+	}
+}
+
+//--------------------------------------------------------------
+void Track::off(int x, int y){
+	for(int i=0; i<cells.size(); i++){
+		cells[i].off(x, y);
+	}
+}
+
+//--------------------------------------------------------------
 void Track::toggle(int x, int y){
 	for(int i=0; i<cells.size(); i++){
 		cells[i].toggle(x, y);

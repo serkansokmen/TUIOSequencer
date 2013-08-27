@@ -8,7 +8,7 @@
 
 #include "Sequencer.h"
 
-
+#pragma mark Sequencer
 //--------------------------------------------------------------
 Sequencer::Sequencer(){
     
@@ -70,14 +70,6 @@ void Sequencer::update(int step){
     for (int i=0; i<tracks.size(); i++){
         tracks[i].update(step);
     }
-    
-//    vector<int>::iterator it = existingCursors.begin();
-//    
-//    cout << "Cursor IDs: ";
-//    for(; it != existingCursors.end(); ++it){
-//        cout << *it << ", ";
-//    }
-//    cout << endl;
 };
 
 //--------------------------------------------------------------
@@ -100,7 +92,7 @@ void Sequencer::draw(){
     ofRect(scrubberRectBottom);
     
     ofFill();
-    ofSetColor(ofColor::gray, 100);
+    ofSetColor(ofColor::greenYellow, 100);
     ofRect(scrubberRect);
     
     ofPopStyle();
@@ -116,46 +108,6 @@ void Sequencer::draw(){
 void Sequencer::reset(){
     diffTime = 0;
     setup(boundingBox, columns, rows);
-}
-
-//--------------------------------------------------------------
-void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
-    
-    if (boundingBox.inside(loc)){
-        existingCursors.push_back(tuioCursor.getSessionId());
-    }
-    
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
-}
-
-//--------------------------------------------------------------
-void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
-    
-    if (boundingBox.inside(loc)){
-        
-    }
-    
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
-}
-
-//--------------------------------------------------------------
-void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
-	
-    if (boundingBox.inside(loc)){
-        for (int i=0; i<existingCursors.size(); i++) {
-            if (tuioCursor.getSessionId() == existingCursors[i]){
-                existingCursors.erase(existingCursors.begin() + i);
-            }
-        }
-    }
-    
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
 }
 
 //--------------------------------------------------------------
@@ -178,3 +130,47 @@ void Sequencer::randomize(float rate){
     }
 }
 
+#pragma mark - TUIO
+//--------------------------------------------------------------
+void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
+    
+    if (boundingBox.inside(loc)){
+        existingCursors.push_back(&tuioCursor);
+    }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
+}
+
+//--------------------------------------------------------------
+void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
+    
+    vector<ofxTuioCursor *>::iterator it = existingCursors.begin();
+    for(; it != existingCursors.end(); ++it){
+        ofxTuioCursor *cursor = *it;
+        for (int i=0; i<tracks.size(); i++){
+            tracks[i].on(cursor->getX() * boundingBox.getWidth(), cursor->getY() * boundingBox.getHeight());
+        }
+    }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
+}
+
+//--------------------------------------------------------------
+void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
+	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
+                          tuioCursor.getY()*boundingBox.getHeight());
+	
+    if (boundingBox.inside(loc)){
+        for (int i=0; i<existingCursors.size(); i++) {
+            if (tuioCursor.getSessionId() == existingCursors[i]->getSessionId()){
+                existingCursors.erase(existingCursors.begin() + i);
+            }
+        }
+    }
+    
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
+}

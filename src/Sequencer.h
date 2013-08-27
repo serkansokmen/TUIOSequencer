@@ -61,6 +61,6 @@ public:
         return boundingBox;
     };
     
-    vector<Track>   tracks;
-    vector<int>     existingCursors;
+    vector<Track>               tracks;
+    vector<ofxTuioCursor *>     existingCursors;
 };

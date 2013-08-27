@@ -50,6 +50,7 @@ public:
     void rowsChanged(int &newRows);
     void bpmChanged(float &newBpm);
     void randomizeSequencer();
+    void resetSequencer();
     
     // Sequencer
     Sequencer     *sequencer;
@@ -63,9 +64,10 @@ public:
     ofParameter<int>        columns;
     ofParameter<int>        rows;
     ofParameter<bool>       bDebugMode;
-    ofParameter<bool>       bInitGrid;
+    ofParameter<bool>       bResetGrid;
     
     ofxButton               randomizeButton;
+    ofxButton               resetButton;
     
     ofxPanel                gui;
     bool                    bHideGui;
