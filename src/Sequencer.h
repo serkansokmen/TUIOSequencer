@@ -46,20 +46,14 @@ public:
 	void tuioRemoved(ofxTuioCursor &tuioCursor);
 	void tuioUpdated(ofxTuioCursor &tuioCursor);
     
-    void setStep(int val) {
-        currentStep = val;
-    };
-    int getStep(){
-        return currentStep;
-    };
+    void refreshCells();
     
     void toggle(int x, int y);
-    
     void randomize(float rate);
     
-    const ofRectangle &getBoundingBox(){
-        return boundingBox;
-    };
+    const ofRectangle   &getBoundingBox() { return boundingBox; };
+    void                setStep(int val)  { currentStep = val; };
+    int                 getStep()         { return currentStep; };
     
     vector<Track>               tracks;
     vector<ofxTuioCursor *>     existingCursors;

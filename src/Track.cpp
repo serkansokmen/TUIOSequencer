@@ -75,9 +75,9 @@ void Track::on(int x, int y){
 }
 
 //--------------------------------------------------------------
-void Track::off(int x, int y){
+void Track::offAll(){
 	for(int i=0; i<cells.size(); i++){
-		cells[i].off(x, y);
+		cells[i].setState(cellOff);
 	}
 }
 

@@ -28,7 +28,7 @@ public:
     void draw();
     
     void on(int x, int y);
-    void off(int x, int y);
+    void offAll();
     void toggle(int x, int y);
     
     vector<bool>    cellStates;
