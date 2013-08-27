@@ -21,9 +21,7 @@ void App::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
-    ofEnableAlphaBlending();
     ofSetLogLevel(OF_LOG_WARNING);
-    ofSetLineWidth(2.0);
     
     ofSetWindowTitle("TUIO Sequencer");
     ofSetWindowPosition((ofGetScreenWidth()-ofGetWidth())*.5, (ofGetScreenHeight()-ofGetHeight())*.5);
@@ -32,30 +30,21 @@ void App::setup(){
     Tweener.setMode(TWEENMODE_OVERRIDE);
     
     // Setup GUIs
-    setupGUIMain();
+    setupGUI();
+    gui.loadFromFile("settings.xml");
     
     // Set initial values
-    bDebugMode = true;
-    bInitGrid = false;
-    randomizeRate = 1.0f;
-    
-    // Load GUI Settings
-    loadGUISettings();
-    
-    columns = 8;
-    rows = 8;
+    bHideGui = false;
+//    bDebugMode = true;
+//    bInitGrid = false;
+//    randomizeRate = 1.0f;
+//    bpm = 120.0f;
+//    columns = 8;
+//    rows = 8;
     
     // Initialize Sound Bank
     loadSoundBank();
     
-    // Hide all guis
-    for (int i=0; i<guihash.size(); i++) {
-        guihash[ofToString(i+1)]->setVisible(false);
-    }
-    guihash["1"]->setVisible(true);
-    
-    // BPM
-    bpm = 120.0f;
     totalSteps = columns;
     currentStep = 0;
     lastStep = 0;
@@ -81,16 +70,10 @@ void App::update(){
     // Update Tweener
     Tweener.update();
     
-    // Convert to int
-    columns = (int)columns;
-    rows = (int)rows;
-    
     // Update bpm
     bpmTapper.update();
     currentStep = (int)bpmTapper.beatTime() % totalSteps;
     if (currentStep > totalSteps){
-        // Testing automated play
-        bRandomizeSequencer = true;
         currentStep = 0;
     }
     
@@ -99,15 +82,8 @@ void App::update(){
         sequencer->setup(sequencer->getBoundingBox(), columns, rows);
         bInitGrid = false;
     }
-    // Randomize sequencer when needed
-    if (bRandomizeSequencer){
-        sequencer->reset();
-        sequencer->randomize(randomizeRate);
-        bRandomizeSequencer = false;
-    }
     // Update sequencer
     sequencer->update(currentStep);
-//    sequencer->update(currentStep, tuioCursors);
     
     // Check on/off states
     for (int i=0; i<sequencer->tracks.size(); i++) {
@@ -130,7 +106,7 @@ void App::draw(){
     // Draw scan rect
     ofPushMatrix();
     ofTranslate(sequencer->getBoundingBox().getPosition());
-    sequencerFbo.draw(sequencerPosition.x, sequencerPosition.y);
+    sequencerFbo.draw(sequencerPosition->x, sequencerPosition->y);
     ofPopMatrix();
     
     if (bDebugMode){
@@ -147,6 +123,10 @@ void App::draw(){
         ofDrawBitmapString(ofToString(currentStep+1), (currentStep + 1) * sx + 1, sy + sh*2+4);
         ofPopStyle();
     }
+    
+    if (!bHideGui) {
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
@@ -154,7 +134,7 @@ void App::keyPressed(int key){
     
     switch (key)
     {
-        
+        /*
         case '1':
         {
             // Hide all guis
@@ -184,9 +164,9 @@ void App::keyPressed(int key){
             }
         }
             break;
-        
+        */
         case 'd':
-            bDebugMode = !bDebugMode;
+            bHideGui = !bHideGui;
             break;
             
             
@@ -214,11 +194,11 @@ void App::mouseDragged(int x, int y, int button){
 void App::mousePressed(int x, int y, int button){
     ofRectangle *currentRect = new ofRectangle;
     currentRect->set(sequencer->getBoundingBox());
-    currentRect->setPosition(sequencerPosition);
+    currentRect->setPosition(sequencerPosition->x, sequencerPosition->y);
     
-    if (bDebugMode && currentRect->inside(x, y)){
-        float rx = x - sequencerPosition.x;
-        float ry = y - sequencerPosition.y;
+    if (currentRect->inside(x, y)){
+        float rx = x - sequencerPosition->x;
+        float ry = y - sequencerPosition->y;
         sequencer->toggle(rx, ry);
     }
     
@@ -233,9 +213,7 @@ void App::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::windowResized(int w, int h){
-    // Re-layout Sequencer
-    sequencerPosition.set((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5,
-                          (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5);
+    
 }
 
 //--------------------------------------------------------------
@@ -250,17 +228,9 @@ void App::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void App::exit(){
-
-    saveGUISettings();
     
-    for(int i = 0; i < guis.size(); i++)
-    {
-        ofxUICanvas *gui = guis[i];
-        gui = 0;
-        delete gui;
-    }
+    gui.saveToFile("settings.xml");
     
-    guis.clear();
     soundPlayers.clear();
     
     sequencer = 0;
@@ -295,80 +265,49 @@ void App::loadSoundBank(){
 
 #pragma mark - GUI
 //--------------------------------------------------------------
-void App::setupGUIMain(){
+void App::setupGUI(){
+    gui.setup("Settings");
+    gui.add(columns.set("Columns", 8, 4, 20));
+    gui.add(rows.set("Rows", 8, 4, 20));
+    gui.add(sequencerPosition.set("Sequencer Position",
+                                  ofVec2f((ofGetWidth() - sequencer->getBoundingBox().getWidth()) * .5, (ofGetHeight() - sequencer->getBoundingBox().getHeight()) * .5),
+                                  ofVec2f(0,0),
+                                  ofVec2f(ofGetWidth(),ofGetHeight())));
     
-    // ---
-    ofxUICanvas *guiMain = new ofxUICanvas();
-    guiMain->setName("MAIN");
-    guiMain->setFont("GUI/EnvyCodeR.ttf");
-    guiMain->setColorFill(ofxUIColor(200));
-    guiMain->setColorFillHighlight(ofxUIColor(255));
-    guiMain->setColorBack(ofxUIColor(20, 20, 20, 150));
-    {
-        guiMain->addLabel("MAIN SETTINGS");
-        guiMain->addSpacer();
-        guiMain->addSlider("COLUMNS", 4, 16, &columns);
-        guiMain->addSlider("ROWS", 4, 16, &rows);
-        guiMain->addSpacer();
-        guiMain->addSlider("BPM", 32.0f, 240.0f, &bpm);
-        guiMain->addSpacer();
-        guiMain->addToggle("RESET", &bInitGrid);
-        guiMain->addSpacer();
-        guiMain->addSlider("RANDOMIZE RATE", 0, 100, &randomizeRate);
-        guiMain->addToggle("RANDOMIZE", &bRandomizeSequencer);
-        guiMain->addToggle("DEBUG MODE", &bDebugMode);
-        guiMain->addSpacer();
-        guiMain->addFPSSlider("FPS");
-    }
-    guiMain->autoSizeToFitWidgets();
+    gui.add(bpm.set("BPM", 100.0f, 32.0f, 240.0f));
     
-    // add gui to a c++ stl vector
-    guis.push_back(guiMain);
-    // add gui to a c++ stl map
-    guihash["1"] = guiMain;
+    gui.add(randomizeRate.set("Randomize Rate", 1, 1, 100));
+    gui.add(randomizeButton.setup("Randomize"));
     
-    ofAddListener(guiMain->newGUIEvent, this, &App::guiEvent);
+    columns.addListener(this, &App::columnsChanged);
+    rows.addListener(this, &App::rowsChanged);
+    bpm.addListener(this, &App::bpmChanged);
+    randomizeButton.addListener(this, &App::randomizeSequencer);
 }
 
 //--------------------------------------------------------------
-void App::loadGUISettings()
-{
-    vector<ofxUICanvas *>::iterator it;
-    for(it = guis.begin(); it != guis.end(); it++)
-    {
-        (*it)->loadSettings("GUI/"+(*it)->getName()+"Settings.xml");
-    }
-}
-//--------------------------------------------------------------
-void App::saveGUISettings()
-{
-    vector<ofxUICanvas *>::iterator it;
-    for(it = guis.begin(); it != guis.end(); it++)
-    {
-        (*it)->saveSettings("GUI/"+(*it)->getName()+"Settings.xml");
-    }
+void App::columnsChanged(int &newColumns){
+    loadSoundBank();
+    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
+    totalSteps = columns;
 }
 
+//--------------------------------------------------------------
+void App::rowsChanged(int &newRows){
+    loadSoundBank();
+    sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
+}
 
 //--------------------------------------------------------------
-void App::guiEvent(ofxUIEventArgs &e){
-    
-    ofxUIMinimalSlider *slider;
-    
-    // Tempo
-    if (e.widget->getName() == "BPM"){
-        slider = (ofxUIMinimalSlider *) e.widget;
-        bpmTapper.setBpm(slider->getScaledValue());
-        bpmTapper.startFresh();
-        sequencer->reset();
-    }
-    
-    // Columns and rows
-    if (e.widget->getName() == "COLUMNS" || e.widget->getName() == "ROWS"){
-        if (sequencer != NULL) {
-            loadSoundBank();
-            sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
-            totalSteps = columns;
-        }
-    }
+void App::bpmChanged(float &newBpm){
+    bpmTapper.setBpm(newBpm);
+//    bpmTapper.startFresh();
+//    sequencer->reset();
 }
+
+//--------------------------------------------------------------
+void App::randomizeSequencer(){
+    sequencer->reset();
+    sequencer->randomize(randomizeRate);
+}
+

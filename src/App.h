@@ -44,33 +44,35 @@ public:
     
     void loadSoundBank();
     
-    void setupGUIMain();
-    void saveGUISettings();
-    void loadGUISettings();
-    void guiEvent(ofxUIEventArgs &e);
+    void setupGUI();
+    
+    void columnsChanged(int &newColumns);
+    void rowsChanged(int &newRows);
+    void bpmChanged(float &newBpm);
+    void randomizeSequencer();
     
     // Sequencer
     Sequencer     *sequencer;
     BPMTapper     bpmTapper;
     ofFbo         sequencerFbo;
-    ofPoint       sequencerPosition;
     int           lastStep;
-    float         randomizeRate;
-    bool          bRandomizeSequencer;
+    
+    ofParameter<ofVec2f>    sequencerPosition;
+    ofParameter<float>      randomizeRate;
+    ofParameter<float>      bpm;
+    ofParameter<int>        columns;
+    ofParameter<int>        rows;
+    ofParameter<bool>       bDebugMode;
+    ofParameter<bool>       bInitGrid;
+    
+    ofxButton               randomizeButton;
+    
+    ofxPanel                gui;
+    bool                    bHideGui;
     
     // Sound Players
     vector<ofSoundPlayer> soundPlayers;
     
-    float       bpm;
-    float       columns;
-    float       rows;
     int         totalSteps;
     int         currentStep;
-    
-    bool        bDebugMode;
-    bool        bInitGrid;
-    
-    // GUI
-    vector<ofxUICanvas*>        guis;
-	map<string, ofxUICanvas*>   guihash;
 };

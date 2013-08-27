@@ -71,13 +71,13 @@ void Sequencer::update(int step){
         tracks[i].update(step);
     }
     
-    vector<int>::iterator it = existingCursors.begin();
-    
-    cout << "Cursor IDs: ";
-    for(; it != existingCursors.end(); ++it){
-        cout << *it << ", ";
-    }
-    cout << endl;
+//    vector<int>::iterator it = existingCursors.begin();
+//    
+//    cout << "Cursor IDs: ";
+//    for(; it != existingCursors.end(); ++it){
+//        cout << *it << ", ";
+//    }
+//    cout << endl;
 };
 
 //--------------------------------------------------------------

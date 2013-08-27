@@ -83,8 +83,8 @@ Desktop.ini
 # Miscellaneous
 .mailmap
 
-bin/data/sounds/
-bin/data/GUI/*.xml
+# Ignore settings file
+bin/data/settings.xml
 
-// Ignore soundbank files
+# Ignore soundbank files
 bin/data/soundbank/

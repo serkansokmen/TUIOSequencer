@@ -28,43 +28,44 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
     innerBox.setFromCenter(boundingBox.getCenter(), boundingBox.getWidth() - padding, boundingBox.getHeight() - padding);
 }
 
+//--------------------------------------------------------------
 void TrackCell::update(){
-    color.setHsb(255, 255, 255);
+    color.set(hue, saturation, brightness);
 }
 
 //--------------------------------------------------------------
 void TrackCell::draw(){
     
     ofPushMatrix();
-    
-    float radius = (innerBox.getWidth() * innerBox.getHeight()) * .1;
-    ofSetLineWidth(radius * .001);
+    ofSetLineWidth(1.0f);
     
     switch (state) {
         case cellOff:
             ofPushStyle();
             ofSetColor(color, 255);
             ofNoFill();
-            ofRectRounded(innerBox, radius);
+            ofRect(innerBox);
             ofPopStyle();
             break;
         case cellActive:
             ofPushStyle();
             ofSetColor(color, alpha);
-            ofRectRounded(innerBox, radius);
+            ofRect(innerBox);
             ofPopStyle();
             break;
         case cellOn:
             ofPushStyle();
             ofSetColor(color, alpha);
-            ofRectRounded(innerBox, radius);
+            ofRect(innerBox);
             ofPopStyle();
             break;
             
         default:
             break;
     }
+    
     ofPopMatrix();
+    
 };
 
 //--------------------------------------------------------------

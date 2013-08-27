@@ -1,4 +1,5 @@
 ofxGui
+ofxOsc
 ofxMSABPMTapper
 ofxMSATimer
 ofxTuio
