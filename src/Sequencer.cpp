@@ -135,29 +135,30 @@ void Sequencer::randomize(float rate){
 void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
                           tuioCursor.getY()*boundingBox.getHeight());
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
     
     if (boundingBox.inside(loc)){
         existingCursors.push_back(&tuioCursor);
     }
     
     refreshCells();
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
 }
 
 //--------------------------------------------------------------
 void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
                           tuioCursor.getY()*boundingBox.getHeight());
+    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
     
     refreshCells();
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
 }
 
 //--------------------------------------------------------------
 void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
                           tuioCursor.getY()*boundingBox.getHeight());
-	
+	ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
+    
     if (boundingBox.inside(loc)){
         for (int i=0; i<existingCursors.size(); i++) {
             if (tuioCursor.getSessionId() == existingCursors[i]->getSessionId()){
@@ -165,9 +166,8 @@ void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
             }
         }
     }
-    refreshCells();
     
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
+    refreshCells();
 }
 
 //--------------------------------------------------------------
