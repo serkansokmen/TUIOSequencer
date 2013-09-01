@@ -174,7 +174,7 @@ void App::dragEvent(ofDragInfo dragInfo){
 //--------------------------------------------------------------
 void App::exit(){
     
-    gui.saveToFile("settings.xml");
+    clearGUI();
     
     soundPlayers.clear();
     
@@ -238,6 +238,18 @@ void App::resetSequencer(){
     sequencer->reset();
     sequencer->setup(sequencer->getBoundingBox(), columns, rows);
     bpmTapper.startFresh();
+}
+
+//--------------------------------------------------------------
+void App::clearGUI(){
+    
+    gui.saveToFile("settings.xml");
+    
+    columns.removeListener(this, &App::columnsChanged);
+    rows.removeListener(this, &App::rowsChanged);
+    bpm.removeListener(this, &App::bpmChanged);
+    randomizeButton.removeListener(this, &App::randomizeSequencer);
+    resetButton.removeListener(this, &App::resetSequencer);
 }
 
 #pragma mark - Sound

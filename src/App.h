@@ -15,7 +15,7 @@
 
 #include "Sequencer.h"
 
-#define SOUND_BANK_DIR      "soundbank/piano/"
+#define SOUND_BANK_DIR      "soundbank/pack_1/"
 
 
 using namespace msa;
@@ -45,6 +45,7 @@ public:
     void loadSoundBank();
     
     void setupGUI();
+    void clearGUI();
     
     void columnsChanged(int &newColumns);
     void rowsChanged(int &newRows);
