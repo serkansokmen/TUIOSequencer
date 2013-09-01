@@ -41,6 +41,7 @@ void App::setup(){
     
     // Initialize Sequencer
     sequencer->setup(scanRect, columns, rows);
+    sequencer->loadSounds("soundbank/pack_1/");
     // Allocate draw FBO
     sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
     
@@ -71,9 +72,8 @@ void App::update(){
     // Check on/off states and play cell sound
     for (int i=0; i<sequencer->tracks.size(); i++) {
         Track *track = &sequencer->tracks[i];
-        if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
+        if (track->cellStates[currentStep] > 0 && lastStep != currentStep && sequencer->bIsReady){
             track->cells[currentStep].play();
-            cout << i << ", " << currentStep << "," << track->cells[currentStep].soundPath <<  endl;
         }
     }
     lastStep = currentStep;
@@ -179,6 +179,10 @@ void App::exit(){
 //--------------------------------------------------------------
 void App::setupGUI(){
     gui.setup("Settings");
+    
+    load_Piano_Pack_Button.addListener(this, &App::load_Piano_Pack);
+    load_Pack_1_Button.addListener(this, &App::load_Pack_1);
+    
     gui.add(columns.set("Columns", 8, 4, 20));
     gui.add(rows.set("Rows", 8, 4, 20));
     
@@ -195,11 +199,26 @@ void App::setupGUI(){
     gui.add(randomizeButton.setup("Randomize"));
     gui.add(resetButton.setup("Reset"));
     
+    gui.add(load_Piano_Pack_Button.setup("Load Piano Sample Bank"));
+    gui.add(load_Pack_1_Button.setup("Load Pack 1 Bank"));
+    
     columns.addListener(this, &App::columnsChanged);
     rows.addListener(this, &App::rowsChanged);
     bpm.addListener(this, &App::bpmChanged);
     randomizeButton.addListener(this, &App::randomizeSequencer);
     resetButton.addListener(this, &App::resetSequencer);
+}
+
+//--------------------------------------------------------------
+void App::load_Piano_Pack(){
+    currentPack = "soundbank/piano";
+    sequencer->loadSounds(currentPack);
+}
+
+//--------------------------------------------------------------
+void App::load_Pack_1(){
+    currentPack = "soundbank/pack_1";
+    sequencer->loadSounds(currentPack);
 }
 
 //--------------------------------------------------------------
@@ -222,6 +241,7 @@ void App::bpmChanged(float &newBpm){
 void App::randomizeSequencer(){
     sequencer->reset();
     sequencer->randomize(randomizeRate);
+    sequencer->loadSounds(currentPack);
 }
 
 //--------------------------------------------------------------
@@ -235,6 +255,9 @@ void App::resetSequencer(){
 void App::clearGUI(){
     
     gui.saveToFile("settings.xml");
+    
+    load_Piano_Pack_Button.removeListener(this, &App::load_Piano_Pack);
+    load_Pack_1_Button.removeListener(this, &App::load_Pack_1);
     
     columns.removeListener(this, &App::columnsChanged);
     rows.removeListener(this, &App::rowsChanged);

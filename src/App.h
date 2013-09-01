@@ -49,6 +49,9 @@ public:
     void randomizeSequencer();
     void resetSequencer();
     
+    void load_Piano_Pack();
+    void load_Pack_1();
+    
     // Sequencer
     Sequencer     *sequencer;
     BPMTapper     bpmTapper;
@@ -62,9 +65,12 @@ public:
     ofParameter<int>        rows;
     ofParameter<bool>       bDebugMode;
     ofParameter<bool>       bResetGrid;
+    ofParameter<string>     currentPack;
     
     ofxButton               randomizeButton;
     ofxButton               resetButton;
+    ofxButton               load_Piano_Pack_Button;
+    ofxButton               load_Pack_1_Button;
     
     ofxPanel                gui;
     bool                    bHideGui;

@@ -23,6 +23,7 @@ Sequencer::~Sequencer(){
 //--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
+    bIsReady = false;
     diffTime = 0;
     
     columns = columCount;
@@ -56,9 +57,6 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     ofAddListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
 	ofAddListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
 	ofAddListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
-    
-    // Load sounds
-    loadSounds();
 };
 
 //--------------------------------------------------------------
@@ -189,10 +187,12 @@ void Sequencer::refreshCells(){
 
 #pragma mark - Sound
 //--------------------------------------------------------------
-void Sequencer::loadSounds(){
+void Sequencer::loadSounds(string soundBankDir){
     // Sound
     ofDirectory dir;
-    dir.listDir(SOUND_BANK_DIR);
+    dir.listDir(soundBankDir);
+    
+    bIsReady = false;
     
     if (dir.size()){
         dir.sort();
@@ -211,6 +211,8 @@ void Sequencer::loadSounds(){
             tracks[trackIndex].cells[cellIndex].loadSound(dir.getPath(soundPathIndex));
             ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(trackIndex) + ", cell " + ofToString(cellIndex));
         }
+        
+        bIsReady = true;
         
 //        for (int j=0; j<columns; j++){
 //            for (int i=0; i<rows; i++){

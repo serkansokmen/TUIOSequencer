@@ -12,8 +12,6 @@
 #include "ofxTuio.h"
 #include "Track.h"
 
-#define SOUND_BANK_DIR      "soundbank/pack_1/"
-
 
 using namespace std;
 
@@ -48,7 +46,7 @@ public:
 	void tuioRemoved(ofxTuioCursor &tuioCursor);
 	void tuioUpdated(ofxTuioCursor &tuioCursor);
     
-    void loadSounds();
+    void loadSounds(string soundBankDir);
     
     void refreshCells();
     
@@ -61,4 +59,6 @@ public:
     
     vector<Track>               tracks;
     vector<ofxTuioCursor *>     existingCursors;
+    
+    bool bIsReady;
 };
