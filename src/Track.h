@@ -18,8 +18,6 @@ class Track {
     int                     columns;
     int                     trackId;
     
-    vector<TrackCell>       cells;
-    
 public:
     ~Track();
     
@@ -31,6 +29,7 @@ public:
     void offAll();
     void toggle(int x, int y);
     
-    vector<bool>    cellStates;
-    bool            bIsReady = false;
+    vector<TrackCell>   cells;
+    vector<bool>        cellStates;
+    bool                bIsReady = false;
 };

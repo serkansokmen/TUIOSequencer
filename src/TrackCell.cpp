@@ -65,8 +65,19 @@ void TrackCell::draw(){
     }
     
     ofPopMatrix();
-    
 };
+
+//--------------------------------------------------------------
+void TrackCell::loadSound(string path){
+    soundPlayer.loadSound(path);
+    soundPath = path;
+}
+
+//--------------------------------------------------------------
+void TrackCell::play(){
+    soundPlayer.loadSound(soundPath);
+    soundPlayer.play();
+}
 
 //--------------------------------------------------------------
 void TrackCell::setState(TrackCellState s){

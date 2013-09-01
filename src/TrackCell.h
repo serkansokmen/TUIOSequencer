@@ -28,6 +28,7 @@ class TrackCell {
     
     ofRectangle     outerBox;
     ofRectangle     innerBox;
+    ofSoundPlayer   soundPlayer;
     
     TrackCellState  state;
     float           hue, saturation, brightness;
@@ -41,6 +42,8 @@ public:
     void on(int x, int y);
     void off(int x, int y);
     void toggle(int x, int y);
+    void loadSound(string path);
+    void play();
     
     void setState(TrackCellState s);
     const TrackCellState &getState();
@@ -49,5 +52,6 @@ public:
     ofColor &getColor();
     
     ofRectangle     boundingBox;
+    string          soundPath;
     int             step;
 };

@@ -15,8 +15,6 @@
 
 #include "Sequencer.h"
 
-#define SOUND_BANK_DIR      "soundbank/pack_1/"
-
 
 using namespace msa;
 
@@ -41,8 +39,6 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    
-    void loadSoundBank();
     
     void setupGUI();
     void clearGUI();
@@ -72,9 +68,6 @@ public:
     
     ofxPanel                gui;
     bool                    bHideGui;
-    
-    // Sound Players
-    vector<ofSoundPlayer> soundPlayers;
     
     int         totalSteps;
     int         currentStep;

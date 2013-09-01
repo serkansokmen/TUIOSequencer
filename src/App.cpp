@@ -21,7 +21,7 @@ void App::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
-    ofSetLogLevel(OF_LOG_WARNING);
+    ofSetLogLevel(OF_LOG_VERBOSE);
     
     ofSetWindowTitle("TUIO Sequencer");
     ofSetWindowPosition((ofGetScreenWidth()-ofGetWidth())*.5, (ofGetScreenHeight()-ofGetHeight())*.5);
@@ -47,9 +47,6 @@ void App::setup(){
     // Set initial values
     bHideGui = false;
     
-    // Initialize Sound Bank
-    loadSoundBank();
-    
     totalSteps = columns;
     currentStep = 0;
     lastStep = 0;
@@ -57,9 +54,6 @@ void App::setup(){
 
 //--------------------------------------------------------------
 void App::update(){
-    
-    // Update sound
-    ofSoundUpdate();
     
     // Update Tweener
     Tweener.update();
@@ -74,11 +68,12 @@ void App::update(){
     // Update sequencer
     sequencer->update(currentStep);
     
-    // Check on/off states
+    // Check on/off states and play cell sound
     for (int i=0; i<sequencer->tracks.size(); i++) {
         Track *track = &sequencer->tracks[i];
         if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
-            soundPlayers[i].play();
+            track->cells[currentStep].play();
+            cout << i << ", " << currentStep << "," << track->cells[currentStep].soundPath <<  endl;
         }
     }
     lastStep = currentStep;
@@ -176,8 +171,6 @@ void App::exit(){
     
     clearGUI();
     
-    soundPlayers.clear();
-    
     sequencer = 0;
     delete sequencer;
 }
@@ -211,14 +204,12 @@ void App::setupGUI(){
 
 //--------------------------------------------------------------
 void App::columnsChanged(int &newColumns){
-    loadSoundBank();
     sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
     totalSteps = columns;
 }
 
 //--------------------------------------------------------------
 void App::rowsChanged(int &newRows){
-    loadSoundBank();
     sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);
 }
 
@@ -250,30 +241,4 @@ void App::clearGUI(){
     bpm.removeListener(this, &App::bpmChanged);
     randomizeButton.removeListener(this, &App::randomizeSequencer);
     resetButton.removeListener(this, &App::resetSequencer);
-}
-
-#pragma mark - Sound
-//--------------------------------------------------------------
-void App::loadSoundBank(){
-    
-    soundPlayers.clear();
-    
-    ofDirectory dir;
-    dir.listDir(SOUND_BANK_DIR);
-    
-    if (dir.size()){
-        dir.sort();
-        for (int i=0; i<rows; i++) {
-            
-            int soundPathIndex = dir.numFiles() - (i % dir.numFiles()) - 1;
-            
-            ofSoundPlayer player;
-            player.loadSound(dir.getPath(soundPathIndex));
-            player.setMultiPlay(false);
-            
-            soundPlayers.push_back(player);
-            
-            ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(i + 1));
-        }
-    }
 }
