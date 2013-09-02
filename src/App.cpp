@@ -221,6 +221,7 @@ void App::load_Pack_1(){
     sequencer->loadSounds(currentPack);
 }
 
+
 //--------------------------------------------------------------
 void App::columnsChanged(int &newColumns){
     sequencer->setup(ofRectangle(0, 0, sequencer->getBoundingBox().getWidth(), sequencer->getBoundingBox().getHeight()), columns, rows);

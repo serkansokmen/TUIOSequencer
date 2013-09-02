@@ -16,6 +16,8 @@
 #define TRACK_CELL_ACTIVE    1
 #define TRACK_CELL_ON        2
 
+#define INNER_STROKE_COUNT   8
+
 
 enum TrackCellState {
     cellOff = TRACK_CELL_OFF,
@@ -34,6 +36,8 @@ class TrackCell {
     float           hue, saturation, brightness;
     ofColor         color;
     float           alpha;
+    
+    vector<float>   rectSizes;
     
 public:
     void setup(const ofRectangle &boundingBox, int step, const ofColor &color);

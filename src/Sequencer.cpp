@@ -11,13 +11,22 @@
 #pragma mark Sequencer
 //--------------------------------------------------------------
 Sequencer::Sequencer(){
+    // Setup TUIO
+    tuioClient.start(3333);
     
+    ofAddListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
+	ofAddListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
+	ofAddListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
 }
 
 //--------------------------------------------------------------
 Sequencer::~Sequencer(){
     tracks.clear();
     existingCursors.clear();
+    
+    ofRemoveListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
+	ofRemoveListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
+	ofRemoveListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
 }
 
 //--------------------------------------------------------------
@@ -50,13 +59,6 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
                         columns,
                         ofColor(val, 255, 255));
     }
-    
-    // Setup TUIO
-    tuioClient.start(3333);
-    
-    ofAddListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
-	ofAddListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
-	ofAddListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
 };
 
 //--------------------------------------------------------------
