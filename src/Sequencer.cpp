@@ -134,8 +134,10 @@ void Sequencer::randomize(float rate){
 #pragma mark - TUIO
 //--------------------------------------------------------------
 void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
+    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
+    float y = tuioCursor.getY()*boundingBox.getHeight();
+    
+	ofPoint loc = ofPoint(x, y);
     ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
     
     if (boundingBox.inside(loc)){
@@ -147,8 +149,11 @@ void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
 
 //--------------------------------------------------------------
 void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
+    
+    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
+    float y = tuioCursor.getY()*boundingBox.getHeight();
+    
+	ofPoint loc = ofPoint(x, y);
     ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
     
     refreshCells();
@@ -156,8 +161,10 @@ void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
 
 //--------------------------------------------------------------
 void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
-	ofPoint loc = ofPoint(tuioCursor.getX()*boundingBox.getWidth(),
-                          tuioCursor.getY()*boundingBox.getHeight());
+    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
+    float y = tuioCursor.getY()*boundingBox.getHeight();
+    
+	ofPoint loc = ofPoint(x, y);
 	ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
     
     if (boundingBox.inside(loc)){
