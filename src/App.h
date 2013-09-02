@@ -49,8 +49,8 @@ public:
     void randomizeSequencer();
     void resetSequencer();
     
-    void load_Piano_Pack();
     void load_Pack_1();
+    void load_Pack_2();
     
     // Sequencer
     Sequencer     *sequencer;
@@ -69,8 +69,8 @@ public:
     
     ofxButton               randomizeButton;
     ofxButton               resetButton;
-    ofxButton               load_Piano_Pack_Button;
     ofxButton               load_Pack_1_Button;
+    ofxButton               load_Pack_2_Button;
     
     ofxPanel                gui;
     bool                    bHideGui;
