@@ -49,8 +49,7 @@ public:
     void randomizeSequencer();
     void resetSequencer();
     
-    void load_Pack_1();
-    void load_Pack_2();
+    void reloadSoundPackClicked();
     
     // Sequencer
     Sequencer     *sequencer;
@@ -66,14 +65,16 @@ public:
     ofParameter<bool>       bDebugMode;
     ofParameter<bool>       bResetGrid;
     ofParameter<string>     currentPack;
+    ofParameter<int>        currentPackId;
     
     ofxButton               randomizeButton;
     ofxButton               resetButton;
-    ofxButton               load_Pack_1_Button;
-    ofxButton               load_Pack_2_Button;
+    ofxButton               reloadSoundPackButton;
     
     ofxPanel                gui;
-    bool                    bHideGui;
+    
+    bool                bReloadSoundPack;
+    bool                bHideGui;
     
     int         totalSteps;
     int         currentStep;

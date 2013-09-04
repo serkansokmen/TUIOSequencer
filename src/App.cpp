@@ -36,17 +36,15 @@ void App::setup(){
     
     // Setup GUIs
     setupGUI();
-    // Load existing values
-    gui.loadFromFile("settings.xml");
     
     // Initialize Sequencer
     sequencer->setup(scanRect, columns, rows);
-    sequencer->loadSounds("soundbank/pack_1/");
     // Allocate draw FBO
     sequencerFbo.allocate(scanRect.getWidth(), scanRect.getHeight());
     
     // Set initial values
     bHideGui = false;
+    bReloadSoundPack = true;
     
     totalSteps = columns;
     currentStep = 0;
@@ -55,6 +53,12 @@ void App::setup(){
 
 //--------------------------------------------------------------
 void App::update(){
+    
+    if (bReloadSoundPack){
+        currentPack = "soundbank/pack_" + ofToString(currentPackId);
+        sequencer->loadSounds(currentPack);
+        bReloadSoundPack = false;
+    }
     
     // Update Tweener
     Tweener.update();
@@ -180,9 +184,6 @@ void App::exit(){
 void App::setupGUI(){
     gui.setup("Settings");
     
-    load_Pack_1_Button.addListener(this, &App::load_Pack_1);
-    load_Pack_2_Button.addListener(this, &App::load_Pack_2);
-    
     gui.add(columns.set("Columns", 8, 4, 20));
     gui.add(rows.set("Rows", 8, 4, 20));
     
@@ -199,26 +200,30 @@ void App::setupGUI(){
     gui.add(randomizeButton.setup("Randomize"));
     gui.add(resetButton.setup("Reset"));
     
-    gui.add(load_Pack_1_Button.setup("Load Pack 1"));
-    gui.add(load_Pack_2_Button.setup("Load Pack 2"));
+    ofDirectory soundBankDir;
+    soundBankDir.listDir("soundbank/");
+    
+    int soundPackCount = soundBankDir.size();
+    gui.add(currentPackId.set("Sound Pack", 1, 1, soundPackCount));
+    gui.add(reloadSoundPackButton.setup("Reload Sound Pack"));
     
     columns.addListener(this, &App::columnsChanged);
     rows.addListener(this, &App::rowsChanged);
     bpm.addListener(this, &App::bpmChanged);
     randomizeButton.addListener(this, &App::randomizeSequencer);
     resetButton.addListener(this, &App::resetSequencer);
+    reloadSoundPackButton.addListener(this, &App::reloadSoundPackClicked);
+    
+    // Load existing values
+    gui.loadFromFile("settings.xml");
+    
+    if (currentPackId > soundPackCount)
+        currentPackId = soundPackCount;
 }
 
 //--------------------------------------------------------------
-void App::load_Pack_1(){
-    currentPack = "soundbank/pack_1";
-    sequencer->loadSounds(currentPack);
-}
-
-//--------------------------------------------------------------
-void App::load_Pack_2(){
-    currentPack = "soundbank/pack_2";
-    sequencer->loadSounds(currentPack);
+void App::reloadSoundPackClicked(){
+    bReloadSoundPack = true;
 }
 
 
@@ -257,8 +262,7 @@ void App::clearGUI(){
     
     gui.saveToFile("settings.xml");
     
-    load_Pack_1_Button.removeListener(this, &App::load_Pack_1);
-    load_Pack_2_Button.removeListener(this, &App::load_Pack_2);
+    reloadSoundPackButton.removeListener(this, &App::reloadSoundPackClicked);
     
     columns.removeListener(this, &App::columnsChanged);
     rows.removeListener(this, &App::rowsChanged);
