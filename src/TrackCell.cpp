@@ -86,6 +86,7 @@ void TrackCell::loadSound(string path){
 
 //--------------------------------------------------------------
 void TrackCell::play(){
+#pragma mark @ TODO: prevent multiplay sound issue #5
     soundPlayer.loadSound(soundPath);
     soundPlayer.play();
 }
