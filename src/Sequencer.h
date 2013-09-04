@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 #include "ofxTuio.h"
-#include "Track.h"
+#include "SequencerTrack.h"
 
 
 using namespace std;
@@ -57,7 +57,7 @@ public:
     void                setStep(int val)  { currentStep = val; };
     int                 getStep()         { return currentStep; };
     
-    vector<Track>               tracks;
+    vector<SequencerTrack>      tracks;
     vector<ofxTuioCursor *>     existingCursors;
     
     bool bIsReady;

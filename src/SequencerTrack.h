@@ -1,5 +1,5 @@
 //
-//  Track.h
+//  SequencerTrack.h
 //  TUIOSequencer
 //
 //  Created by Serkan Sokmen on 14.08.2013.
@@ -12,14 +12,14 @@
 #include "TrackCell.h"
 
 
-class Track {
+class SequencerTrack {
     
     float                   trackHeight;
     int                     columns;
     int                     trackId;
     
 public:
-    ~Track();
+    ~SequencerTrack();
     
     void setup(int trackId, const ofRectangle &boundingBox, int columns, const ofColor &color);
     void update(int step);

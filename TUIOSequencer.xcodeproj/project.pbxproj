@@ -54,7 +54,7 @@
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */; };
-		FD18DBF85E822BEF71F6EF65 /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0E445196E5D775414FA336F /* Track.cpp */; };
+		FD18DBF85E822BEF71F6EF65 /* SequencerTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0E445196E5D775414FA336F /* SequencerTrack.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,7 +90,7 @@
 /* Begin PBXFileReference section */
 		00D6D32B84B099226431108C /* ofxOsc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOsc.h; path = ../../../addons/ofxOsc/src/ofxOsc.h; sourceTree = SOURCE_ROOT; };
 		029684CF678F70F6D3537A29 /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscOutboundPacketStream.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h; sourceTree = SOURCE_ROOT; };
-		05A17F204CEC6089612AF7D1 /* Track.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Track.h; path = src/Track.h; sourceTree = SOURCE_ROOT; };
+		05A17F204CEC6089612AF7D1 /* SequencerTrack.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = SequencerTrack.h; path = src/SequencerTrack.h; sourceTree = SOURCE_ROOT; };
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
 		0AED834CE4DEC5260AF302A2 /* ofxOscParameterSync.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscParameterSync.cpp; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.cpp; sourceTree = SOURCE_ROOT; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
@@ -178,7 +178,7 @@
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		EB0438839A770596793BB4E7 /* TrackCell.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = TrackCell.cpp; path = src/TrackCell.cpp; sourceTree = SOURCE_ROOT; };
 		ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxGuiGroup.cpp; path = ../../../addons/ofxGui/src/ofxGuiGroup.cpp; sourceTree = SOURCE_ROOT; };
-		F0E445196E5D775414FA336F /* Track.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Track.cpp; path = src/Track.cpp; sourceTree = SOURCE_ROOT; };
+		F0E445196E5D775414FA336F /* SequencerTrack.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = SequencerTrack.cpp; path = src/SequencerTrack.cpp; sourceTree = SOURCE_ROOT; };
 		F4F5B6B8BA2BD52C646ED908 /* OscException.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscException.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h; sourceTree = SOURCE_ROOT; };
 		F7FBC56859535E597B24BB91 /* NetworkingUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = NetworkingUtils.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h; sourceTree = SOURCE_ROOT; };
 		FB3707B9355D565E27B22C7B /* MSATimer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = MSATimer.h; path = ../../../addons/ofxMSATimer/src/MSATimer.h; sourceTree = SOURCE_ROOT; };
@@ -479,8 +479,8 @@
 				A72A9CCF86C5B616747F4214 /* App.h */,
 				E282FEFB97E3684440CD75CE /* Sequencer.cpp */,
 				4324679E4DB7F91DE15A2EAD /* Sequencer.h */,
-				F0E445196E5D775414FA336F /* Track.cpp */,
-				05A17F204CEC6089612AF7D1 /* Track.h */,
+				F0E445196E5D775414FA336F /* SequencerTrack.cpp */,
+				05A17F204CEC6089612AF7D1 /* SequencerTrack.h */,
 				EB0438839A770596793BB4E7 /* TrackCell.cpp */,
 				CE406C3157D262685D572863 /* TrackCell.h */,
 			);
@@ -610,7 +610,7 @@
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				5F3744A26D0041D0C0FC246A /* App.cpp in Sources */,
 				9DEC2A3DA042F3B7086F06C6 /* Sequencer.cpp in Sources */,
-				FD18DBF85E822BEF71F6EF65 /* Track.cpp in Sources */,
+				FD18DBF85E822BEF71F6EF65 /* SequencerTrack.cpp in Sources */,
 				E65DCA7C48467728B0F73C54 /* TrackCell.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,

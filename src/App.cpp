@@ -75,7 +75,7 @@ void App::update(){
     
     // Check on/off states and play cell sound
     for (int i=0; i<sequencer->tracks.size(); i++) {
-        Track *track = &sequencer->tracks[i];
+        SequencerTrack *track = &sequencer->tracks[i];
         if (track->cellStates[currentStep] > 0 && lastStep != currentStep && sequencer->bIsReady){
             track->cells[currentStep].play();
         }

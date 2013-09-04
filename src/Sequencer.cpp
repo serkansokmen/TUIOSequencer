@@ -47,7 +47,7 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
     // Clear and re-assign tracks
     tracks.clear();
-    tracks.assign(rows, Track());
+    tracks.assign(rows, SequencerTrack());
     
     // Create tracks
     for (int i = 0; i < rows; i++) {

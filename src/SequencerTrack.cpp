@@ -1,16 +1,16 @@
 //
-//  Track.cpp
+//  SequencerTrack.cpp
 //  TUIOSequencer
 //
 //  Created by Serkan Sokmen on 14.08.2013.
 //
 //
 
-#include "Track.h"
+#include "SequencerTrack.h"
 
 
 //--------------------------------------------------------------
-Track::~Track(){
+SequencerTrack::~SequencerTrack(){
     
     cells.clear();
     cellStates.clear();
@@ -19,7 +19,7 @@ Track::~Track(){
 
 
 //--------------------------------------------------------------
-void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color){
+void SequencerTrack::setup(int id, const ofRectangle &bb, int cols, const ofColor &color){
     
     trackId = id;
     columns = cols;
@@ -37,7 +37,7 @@ void Track::setup(int id, const ofRectangle &bb, int cols, const ofColor &color)
 }
 
 //--------------------------------------------------------------
-void Track::update(int step){
+void SequencerTrack::update(int step){
     
     for (int i=0; i<cells.size(); i++){
         
@@ -61,28 +61,28 @@ void Track::update(int step){
 }
 
 //--------------------------------------------------------------
-void Track::draw(){
+void SequencerTrack::draw(){
 	for(int i=0; i<cells.size(); i++){
         cells[i].draw();
 	}
 }
 
 //--------------------------------------------------------------
-void Track::on(int x, int y){
+void SequencerTrack::on(int x, int y){
 	for(int i=0; i<cells.size(); i++){
 		cells[i].on(x, y);
 	}
 }
 
 //--------------------------------------------------------------
-void Track::offAll(){
+void SequencerTrack::offAll(){
 	for(int i=0; i<cells.size(); i++){
 		cells[i].setState(cellOff);
 	}
 }
 
 //--------------------------------------------------------------
-void Track::toggle(int x, int y){
+void SequencerTrack::toggle(int x, int y){
 	for(int i=0; i<cells.size(); i++){
 		cells[i].toggle(x, y);
 	}
