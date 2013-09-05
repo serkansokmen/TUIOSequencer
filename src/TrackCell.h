@@ -11,18 +11,13 @@
 #include "ofMain.h"
 #include "ofxTweener.h"
 
-
-#define TRACK_CELL_OFF       0
-#define TRACK_CELL_ACTIVE    1
-#define TRACK_CELL_ON        2
-
 #define INNER_STROKE_COUNT   8
 
 
 enum TrackCellState {
-    cellOff = TRACK_CELL_OFF,
-    cellActive = TRACK_CELL_ACTIVE,
-    cellOn = TRACK_CELL_ON
+    cellOff,
+    cellActive,
+    cellOn,
 };
 
 

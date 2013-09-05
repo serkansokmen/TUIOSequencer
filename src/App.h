@@ -19,6 +19,27 @@
 using namespace msa;
 
 
+class AppTheme {
+    
+public:
+    
+    void setup(string soundPath, float bpm, const ofRectangle &rect, string bgPath){
+        
+        this->soundPath = soundPath;
+        this->bpm = bpm;
+        
+        gridRect.set(rect);
+        background.loadImage(bgPath);
+    };
+    
+    string      soundPath;
+    float       bpm;
+    ofRectangle gridRect;
+    ofImage     background;
+};
+
+
+
 class App : public ofBaseApp {
     
 public:
@@ -43,13 +64,16 @@ public:
     void setupGUI();
     void clearGUI();
     
+    void setTheme0();
+    void setTheme1();
+    void currentThemeIdChanged(int &newThemeId);
+    
     void columnsChanged(int &newColumns);
     void rowsChanged(int &newRows);
     void bpmChanged(float &newBpm);
-    void randomizeSequencer();
-    void resetSequencer();
     
-    void reloadSoundPackClicked();
+//    void randomizeSequencer();
+//    void resetSequencer();
     
     // Sequencer
     Sequencer     *sequencer;
@@ -57,25 +81,23 @@ public:
     ofFbo         sequencerFbo;
     int           lastStep;
     
-    ofParameter<ofVec2f>    sequencerPosition;
-    ofParameter<float>      randomizeRate;
-    ofParameter<float>      bpm;
     ofParameter<int>        columns;
     ofParameter<int>        rows;
-    ofParameter<bool>       bDebugMode;
-    ofParameter<bool>       bResetGrid;
-    ofParameter<string>     currentPack;
-    ofParameter<int>        currentPackId;
+    ofParameter<float>      bpm;
+    ofParameter<bool>       bPlay;
     
-    ofxButton               randomizeButton;
-    ofxButton               resetButton;
-    ofxButton               reloadSoundPackButton;
+    ofParameter<int>        currentThemeId;
+    AppTheme                *currentTheme;
+    vector<AppTheme>        themes;
+    ofxButton               themeButton0, themeButton1;
+    
+//    ofParameter<float>      randomizeRate;
+//    ofxButton               randomizeButton;
+//    ofxButton               resetButton;
     
     ofxPanel                gui;
     
-    bool                bReloadSoundPack;
-    bool                bHideGui;
-    
     int         totalSteps;
     int         currentStep;
+    bool        bHideGui;
 };
