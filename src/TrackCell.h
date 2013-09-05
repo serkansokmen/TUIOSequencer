@@ -35,6 +35,9 @@ class TrackCell {
     vector<float>   rectSizes;
     
 public:
+    
+    ~TrackCell();
+    
     void setup(const ofRectangle &boundingBox, int step, const ofColor &color);
     void update();
     void draw();
