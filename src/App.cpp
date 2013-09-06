@@ -80,8 +80,10 @@ void App::update(){
         // Check on/off states and play cell sound
         for (int i=0; i<sequencer->tracks.size(); i++) {
             SequencerTrack *track = &sequencer->tracks[i];
-            if (track->cellStates[currentStep] > 0 && lastStep != currentStep && sequencer->bIsReady){
-                track->cells[currentStep].play();
+            if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
+                int j = currentStep + i * columns;
+                if (themes[currentThemeId].players[j].isLoaded())
+                    themes[currentThemeId].players[j].play();
             }
         }
         lastStep = currentStep;
@@ -215,9 +217,7 @@ void App::currentThemeIdChanged(int &newThemeId){
     ofClear(0, 0, 0, 0);
     sequencerFbo.end();
     
-    // Load sounds after setting up the Sequencer
     sequencer->setup(currentTheme->gridRect, columns, rows);
-    sequencer->loadSounds(currentTheme->soundPath);
     
     bpmTapper.setBpm(currentTheme->bpm);
 }

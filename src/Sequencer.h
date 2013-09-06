@@ -46,8 +46,6 @@ public:
 	void tuioRemoved(ofxTuioCursor &tuioCursor);
 	void tuioUpdated(ofxTuioCursor &tuioCursor);
     
-    void loadSounds(string soundBankDir);
-    
     void refreshCells();
     
     void toggle(int x, int y);
@@ -59,6 +57,4 @@ public:
     
     vector<SequencerTrack>      tracks;
     vector<ofxTuioCursor *>     existingCursors;
-    
-    bool bIsReady;
 };

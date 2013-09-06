@@ -9,11 +9,6 @@
 #include "TrackCell.h"
 
 
-TrackCell::~TrackCell(){
-    soundPlayer.unloadSound();
-}
-
-
 //--------------------------------------------------------------
 void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
     
@@ -82,19 +77,6 @@ void TrackCell::draw(){
     }
     ofPopMatrix();
 };
-
-//--------------------------------------------------------------
-void TrackCell::loadSound(string path){
-    soundPlayer.loadSound(path, true);
-    soundPath = path;
-}
-
-//--------------------------------------------------------------
-void TrackCell::play(){
-#pragma mark @ TODO: prevent multiplay sound issue #5
-    soundPlayer.loadSound(soundPath, true);
-    soundPlayer.play();
-}
 
 //--------------------------------------------------------------
 void TrackCell::setState(TrackCellState s){

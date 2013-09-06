@@ -32,7 +32,6 @@ Sequencer::~Sequencer(){
 //--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
-    bIsReady = false;
     diffTime = 0;
     
     columns = columCount;
@@ -186,47 +185,5 @@ void Sequencer::refreshCells(){
             ofxTuioCursor *cursor = *it;
             tracks[i].on(cursor->getX() * boundingBox.getWidth(), cursor->getY() * boundingBox.getHeight());
         }
-    }
-}
-
-#pragma mark - Sound
-//--------------------------------------------------------------
-void Sequencer::loadSounds(string soundBankDir){
-    // Sound
-    ofDirectory dir;
-    dir.listDir(soundBankDir);
-    
-    bIsReady = false;
-    
-    if (dir.size()){
-        dir.sort();
-        
-        int trackIndex = -1;
-        int cellIndex = -1;
-        for (int i=0; i<columns*rows; i++){
-            int soundPathIndex = i % dir.numFiles();
-            
-            if (i % rows == 0)
-                trackIndex++;
-            
-            if (cellIndex == columns - 1)   cellIndex = 0;
-            else                            cellIndex++;
-            
-            tracks[trackIndex].cells[cellIndex].loadSound(dir.getPath(soundPathIndex));
-            ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(trackIndex) + ", cell " + ofToString(cellIndex));
-        }
-        
-        bIsReady = true;
-        
-//        for (int j=0; j<columns; j++){
-//            for (int i=0; i<rows; i++){
-//                int cellIndex = i + j * rows;
-//                int soundPathIndex = cellIndex % dir.numFiles();
-//                cout << cellIndex << ":" << soundPathIndex << endl;
-//                tracks[i].cells[j].loadSound(dir.getPath(soundPathIndex));
-//                
-//                ofLog(OF_LOG_NOTICE, dir.getPath(soundPathIndex) + " loaded into track " + ofToString(i + 1) + ", cell " + ofToString(j + 1));
-//            }
-//        }
     }
 }
