@@ -41,8 +41,10 @@ void App::setup(){
     
     AppTheme    theme0, theme1;
     
-    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(257, 138, 502, 494), "themes/pack_1/images/interface.png");
-    theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(259, 140, 502, 494), "themes/pack_2/images/interface.png");
+//    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(257, 138, 502, 494), "themes/pack_1/images/interface.png");
+//    theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(259, 140, 502, 494), "themes/pack_2/images/interface.png");
+    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(360, 162, 707, 582), "themes/pack_1/images/interface.png");
+    theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(364, 162, 707, 582), "themes/pack_2/images/interface.png");
     
     themes.push_back(theme0);
     themes.push_back(theme1);
