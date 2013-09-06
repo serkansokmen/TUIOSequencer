@@ -18,8 +18,6 @@ using namespace std;
 
 class Sequencer {
     
-    ofxTuioClient       tuioClient;
-    
     ofRectangle         boundingBox;
     
     float               stepButtonWidth;
@@ -33,18 +31,12 @@ class Sequencer {
     
 public:
     
-    Sequencer();
-    ~Sequencer();
-    
     void setup(const ofRectangle rect, int columns, int rows);
-    
     void update(int step);
     void draw();
-    void reset();
+    void clear();
     
-    void tuioAdded(ofxTuioCursor &tuioCursor);
-	void tuioRemoved(ofxTuioCursor &tuioCursor);
-	void tuioUpdated(ofxTuioCursor &tuioCursor);
+    void reset();
     
     void refreshCells();
     

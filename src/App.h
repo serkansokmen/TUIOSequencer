@@ -78,36 +78,32 @@ public:
     void setupGUI();
     void clearGUI();
     
-    void setTheme0();
-    void setTheme1();
     void currentThemeIdChanged(int &newThemeId);
-    
-    void columnsChanged(int &newColumns);
-    void rowsChanged(int &newRows);
     void bpmChanged(float &newBpm);
     
-//    void randomizeSequencer();
-//    void resetSequencer();
+    
+    void tuioAdded(ofxTuioCursor &tuioCursor);
+	void tuioRemoved(ofxTuioCursor &tuioCursor);
+	void tuioUpdated(ofxTuioCursor &tuioCursor);
+    
+    ofxTuioClient       tuioClient;
     
     // Sequencer
-    Sequencer     *sequencer;
+    Sequencer           *currentSequencer;
+    vector<Sequencer>   sequencers;
+    
     BPMTapper     bpmTapper;
     ofFbo         sequencerFbo;
-    int           lastStep;
     
-    ofParameter<int>        columns;
-    ofParameter<int>        rows;
+    int        lastStep;
+    int        columns;
+    int        rows;
+
     ofParameter<float>      bpm;
-    ofParameter<bool>       bPlay;
     
     ofParameter<int>        currentThemeId;
     AppTheme                *currentTheme;
     vector<AppTheme>        themes;
-    ofxButton               themeButton0, themeButton1;
-    
-//    ofParameter<float>      randomizeRate;
-//    ofxButton               randomizeButton;
-//    ofxButton               resetButton;
     
     ofxPanel                gui;
 	

@@ -1,6 +1,5 @@
 ofxGui
 ofxOsc
-ofxMaxim
 ofxMSABPMTapper
 ofxMSATimer
 ofxTuio

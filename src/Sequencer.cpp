@@ -8,27 +8,6 @@
 
 #include "Sequencer.h"
 
-#pragma mark Sequencer
-//--------------------------------------------------------------
-Sequencer::Sequencer(){
-    // Setup TUIO
-    tuioClient.start(3333);
-    
-    ofAddListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
-	ofAddListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
-	ofAddListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
-}
-
-//--------------------------------------------------------------
-Sequencer::~Sequencer(){
-    tracks.clear();
-    existingCursors.clear();
-    
-    ofRemoveListener(tuioClient.cursorAdded, this, &Sequencer::tuioAdded);
-	ofRemoveListener(tuioClient.cursorRemoved, this, &Sequencer::tuioRemoved);
-	ofRemoveListener(tuioClient.cursorUpdated, this, &Sequencer::tuioUpdated);
-}
-
 //--------------------------------------------------------------
 void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
     
@@ -62,9 +41,6 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
 
 //--------------------------------------------------------------
 void Sequencer::update(int step){
-    
-    // Get TUIO messages
-    tuioClient.getMessage();
     
     currentStep = step;
     
@@ -107,6 +83,12 @@ void Sequencer::draw(){
 };
 
 //--------------------------------------------------------------
+void Sequencer::clear(){
+    tracks.clear();
+    existingCursors.clear();
+}
+
+//--------------------------------------------------------------
 void Sequencer::reset(){
     diffTime = 0;
     setup(boundingBox, columns, rows);
@@ -130,48 +112,6 @@ void Sequencer::randomize(float rate){
         
         toggle(x, y);
     }
-}
-
-#pragma mark - TUIO
-//--------------------------------------------------------------
-void Sequencer::tuioAdded(ofxTuioCursor &tuioCursor){
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
-    float y = tuioCursor.getY()*boundingBox.getHeight();
-    
-	ofPoint loc = ofPoint(x, y);
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
-    
-    existingCursors.push_back(&tuioCursor);
-    refreshCells();
-}
-
-//--------------------------------------------------------------
-void Sequencer::tuioUpdated(ofxTuioCursor &tuioCursor){
-    
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
-    float y = tuioCursor.getY()*boundingBox.getHeight();
-    
-	ofPoint loc = ofPoint(x, y);
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
-    
-    refreshCells();
-}
-
-//--------------------------------------------------------------
-void Sequencer::tuioRemoved(ofxTuioCursor &tuioCursor){
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * boundingBox.getWidth();
-    float y = tuioCursor.getY()*boundingBox.getHeight();
-    
-	ofPoint loc = ofPoint(x, y);
-	ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
-    
-    for (int i=0; i<existingCursors.size(); i++) {
-        if (tuioCursor.getSessionId() == existingCursors[i]->getSessionId()){
-            existingCursors.erase(existingCursors.begin() + i);
-        }
-    }
-    
-    refreshCells();
 }
 
 //--------------------------------------------------------------
