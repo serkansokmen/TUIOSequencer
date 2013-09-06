@@ -44,13 +44,14 @@ public:
     void on(int x, int y);
     void off(int x, int y);
     void toggle(int x, int y);
+    
     void loadSound(string path);
     void play();
     
     void setState(TrackCellState s);
     const TrackCellState &getState();
     
-    void setColor(ofColor c);
+    void    setColor(ofColor c);
     ofColor &getColor();
     
     ofRectangle     boundingBox;

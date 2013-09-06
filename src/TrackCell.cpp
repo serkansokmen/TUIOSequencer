@@ -37,7 +37,6 @@ void TrackCell::setup(const ofRectangle &bb, int s, const ofColor &c){
 
 //--------------------------------------------------------------
 void TrackCell::update(){
-    ofSoundUpdate();
     color.set(hue, saturation, brightness);
 }
 
@@ -86,7 +85,7 @@ void TrackCell::draw(){
 
 //--------------------------------------------------------------
 void TrackCell::loadSound(string path){
-//    soundPlayer.loadSound(path, true);
+    soundPlayer.loadSound(path, true);
     soundPath = path;
 }
 

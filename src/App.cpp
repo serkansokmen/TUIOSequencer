@@ -27,8 +27,6 @@ void App::setup(){
     
     ofSetWindowTitle("Body Sequencer");
     
-    cout << ofGetScreenWidth() << ":" << ofGetScreenHeight() << endl;
-    
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
     

@@ -1,7 +1,7 @@
 ofxGui
 ofxOsc
+ofxMaxim
 ofxMSABPMTapper
 ofxMSATimer
-ofxTSPSReceiver
 ofxTuio
 ofxTweener

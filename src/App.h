@@ -12,7 +12,6 @@
 #include "ofxGui.h"
 #include "ofxTweener.h"
 #include "MSABPMTapper.h"
-
 #include "Sequencer.h"
 
 
@@ -96,7 +95,7 @@ public:
 //    ofxButton               resetButton;
     
     ofxPanel                gui;
-    
+	
     int         totalSteps;
     int         currentStep;
     bool        bHideGui;
