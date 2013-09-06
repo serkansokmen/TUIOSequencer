@@ -217,20 +217,21 @@ void App::tuioAdded(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(x, y);
     ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
     
-    currentSequencer->existingCursors.push_back(&tuioCursor);
-    currentSequencer->refreshCells();
+    for (int i=0; i<sequencers.size(); i++) {
+        sequencers[i].existingCursors.push_back(&tuioCursor);
+        sequencers[i].refreshCells();
+    }
 }
 
 //--------------------------------------------------------------
 void App::tuioUpdated(ofxTuioCursor &tuioCursor){
-    
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * currentSequencer->getBoundingBox().getWidth();
-    float y = tuioCursor.getY()*currentSequencer->getBoundingBox().getHeight();
-    
-	ofPoint loc = ofPoint(x, y);
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
-    
-    currentSequencer->refreshCells();
+//    
+//    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * currentSequencer->getBoundingBox().getWidth();
+//    float y = tuioCursor.getY()*currentSequencer->getBoundingBox().getHeight();
+//    
+//	ofPoint loc = ofPoint(x, y);
+//    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
+//    
 }
 
 //--------------------------------------------------------------
@@ -241,13 +242,14 @@ void App::tuioRemoved(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(x, y);
 	ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
     
-    for (int i=0; i<currentSequencer->existingCursors.size(); i++) {
-        if (tuioCursor.getSessionId() == currentSequencer->existingCursors[i]->getSessionId()){
-            currentSequencer->existingCursors.erase(currentSequencer->existingCursors.begin() + i);
+    for (int i=0; i<sequencers.size(); i++) {
+        for (int j=0; j<sequencers[i].existingCursors.size(); j++) {
+            if (tuioCursor.getSessionId() == sequencers[i].existingCursors[j]->getSessionId()){
+                sequencers[i].existingCursors.erase(sequencers[i].existingCursors.begin() + j);
+            }
         }
+        sequencers[i].refreshCells();
     }
-    
-    currentSequencer->refreshCells();
 }
 
 
