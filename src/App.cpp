@@ -23,7 +23,7 @@ void App::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
-    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetLogLevel(OF_LOG_SILENT);
     
     ofSetWindowTitle("Body Sequencer");
     
@@ -48,7 +48,7 @@ void App::setup(){
     
     AppTheme    theme0, theme1;
     
-    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(360, 162, 707, 582), "themes/pack_1/images/interface.png");
+    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(364, 162, 707, 582), "themes/pack_1/images/interface.png");
     theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(364, 162, 707, 582), "themes/pack_2/images/interface.png");
     
     themes.push_back(theme0);
