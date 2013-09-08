@@ -46,17 +46,27 @@ void Sequencer::update(int step){
     
     currentStep = step;
     
-    // Update tracks
-    for (int i=0; i<tracks.size(); i++){
-        tracks[i].update(step);
-//        tracks[i].offAll();
-    }
-    
-    if (people.size() > 0) {
-        for(int p=0; p < people.size(); p++){
-            for (int i=0; i<tracks.size(); i++){
-                ofPoint loc(people[p]->centroid.x * boundingBox.getWidth(), people[p]->centroid.y * boundingBox.getHeight());
-                tracks[i].on(loc.x, loc.y);
+    for (int trackIndex=0; trackIndex<tracks.size(); trackIndex++){
+
+        tracks[trackIndex].update(step);
+        
+        for (int cellIndex=0; cellIndex<tracks[trackIndex].cells.size(); cellIndex++){
+            
+            TrackCell &cell = tracks[trackIndex].cells[cellIndex];
+            
+            cell.update();
+            cell.setState(cellOff);
+            
+            for(int personIndex=0; personIndex<people.size(); personIndex++){
+                ofPoint cursorPos(people[personIndex]->centroid.x * boundingBox.getWidth(), people[personIndex]->centroid.y * boundingBox.getHeight());
+                
+                if (cell.boundingBox.inside(cursorPos)){
+                    if (step == cell.step){
+                        cell.setState(cellOn);
+                    } else {
+                        cell.setState(cellActive);
+                    }
+                }
             }
         }
     }
@@ -100,11 +110,4 @@ void Sequencer::clear(){
     people.clear();
 }
 
-
-//--------------------------------------------------------------
-void Sequencer::toggle(int x, int y){
-    for (int i=0; i<tracks.size(); i++){
-        tracks[i].toggle(x, y);
-    }
-}
 

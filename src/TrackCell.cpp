@@ -38,7 +38,6 @@ void TrackCell::update(){
 //--------------------------------------------------------------
 void TrackCell::draw(){
     
-    ofPushMatrix();
     ofSetLineWidth(1.0f);
     
     switch (state) {
@@ -75,7 +74,6 @@ void TrackCell::draw(){
         default:
             break;
     }
-    ofPopMatrix();
 };
 
 //--------------------------------------------------------------
@@ -117,33 +115,4 @@ void TrackCell::setColor(ofColor c){
 //--------------------------------------------------------------
 ofColor &TrackCell::getColor(){
     return color;
-}
-
-//--------------------------------------------------------------
-void TrackCell::on(int x, int y){
-    if (boundingBox.inside(x, y)){
-        setState(cellActive);
-    }
-}
-
-//--------------------------------------------------------------
-void TrackCell::off(int x, int y){
-    if (boundingBox.inside(x, y)){
-        setState(cellOff);
-    }
-}
-
-//--------------------------------------------------------------
-void TrackCell::toggle(int x, int y){
-    if (boundingBox.inside(x, y)){
-        switch (getState()) {
-            case cellOff:
-                setState(cellActive);
-                break;
-            case cellOn:
-            case cellActive:
-                setState(cellOff);
-                break;
-        }
-    }
 }

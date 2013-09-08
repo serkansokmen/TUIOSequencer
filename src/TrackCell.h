@@ -38,9 +38,6 @@ public:
     void setup(const ofRectangle &boundingBox, int step, const ofColor &color);
     void update();
     void draw();
-    void on(int x, int y);
-    void off(int x, int y);
-    void toggle(int x, int y);
     
     void setState(TrackCellState s);
     const TrackCellState &getState();

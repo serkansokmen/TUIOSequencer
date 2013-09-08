@@ -29,7 +29,7 @@ void App::setup(){
     
     // Setup OpenTSPS
     tspsReceiver.connect(12000);
-    ofxAddTSPSListeners(this);
+//    ofxAddTSPSListeners(this);
     
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
@@ -81,10 +81,14 @@ void App::update(){
     }
     
     vector<ofxTSPS::Person*> people = tspsReceiver.getPeople();
-    
-    for (int p=0; p<people.size(); p++) {
-        for (int i=0; i<sequencers.size(); i++) {
-            sequencers[i].people.clear();
+//    ofxTSPS::Scene *scene = tspsReceiver.getScene();
+//    for (int i=0; i<scene->getGridValues().size(); i++) {
+//        cout << "Scene value " << scene->getGridValues()[i] << endl;
+//    }
+
+    for (int i=0; i<sequencers.size(); i++) {
+        sequencers[i].people.clear();
+        for (int p=0; p<people.size(); p++) {
             sequencers[i].people.push_back(people[p]);
         }
     }
@@ -95,7 +99,7 @@ void App::update(){
     // Check on/off states and play cell sound
     for (int i=0; i<currentSequencer->tracks.size(); i++) {
         SequencerTrack *track = &currentSequencer->tracks[i];
-        if (track->cellStates[currentStep] > 0 && lastStep != currentStep){
+        if (track->cells[currentStep].getState() != cellOff && lastStep != currentStep){
             int j = currentStep + i * columns;
             if (themes[currentThemeId].players[j].isLoaded())
                 themes[currentThemeId].players[j].play();
@@ -155,14 +159,7 @@ void App::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void App::mousePressed(int x, int y, int button){
-    
-    if (currentTheme->gridRect.inside(x, y)){
-        float rx = x - currentTheme->gridRect.getX();
-        float ry = y - currentTheme->gridRect.getY();
-        for (int i=0; i<sequencers.size(); i++) {
-            sequencers[i].toggle(rx, ry);
-        }
-    }
+
 }
 
 //--------------------------------------------------------------
@@ -217,7 +214,7 @@ void App::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
     float x = tspsEvent.person->centroid.x;
     float y = tspsEvent.person->centroid.y;
     
-    ofLog(OF_LOG_NOTICE, "Person updated!");
+//    ofLog(OF_LOG_NOTICE, "Person updated!");
 }
 
 //--------------------------------------------------------------

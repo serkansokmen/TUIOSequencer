@@ -25,11 +25,5 @@ public:
     void update(int step);
     void draw();
     
-    void on(int x, int y);
-    void offAll();
-    void toggle(int x, int y);
-    
     vector<TrackCell>   cells;
-    vector<bool>        cellStates;
-    bool                bIsReady = false;
 };

@@ -36,8 +36,6 @@ public:
     void draw();
     void clear();
     
-    void toggle(int x, int y);
-    
     const ofRectangle   &getBoundingBox() { return boundingBox; };
     void                setStep(int val)  { currentStep = val; };
     int                 getStep()         { return currentStep; };
