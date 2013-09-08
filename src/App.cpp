@@ -23,16 +23,13 @@ void App::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(ofColor::black);
-    ofSetLogLevel(OF_LOG_SILENT);
+    ofSetLogLevel(OF_LOG_NOTICE);
     
     ofSetWindowTitle("Body Sequencer");
     
-    // Setup TUIO
-    tuioClient.start(3333);
-    
-    ofAddListener(tuioClient.cursorAdded, this, &App::tuioAdded);
-	ofAddListener(tuioClient.cursorRemoved, this, &App::tuioRemoved);
-	ofAddListener(tuioClient.cursorUpdated, this, &App::tuioUpdated);
+    // Setup OpenTSPS
+    tspsReceiver.connect(12000);
+    ofxAddTSPSListeners(this);
     
     // Setup Tweener
     Tweener.setMode(TWEENMODE_OVERRIDE);
@@ -40,16 +37,16 @@ void App::setup(){
     columns         = 4;
     rows            = 4;
     
-    // Setup GUI
-    setupGUI();
+    currentThemeId.addListener(this, &App::currentThemeIdChanged);
+    bpm.addListener(this, &App::bpmChanged);
     
     // Initialize themes
     themes.clear();
     
     AppTheme    theme0, theme1;
     
-    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(364, 162, 707, 582), "themes/pack_1/images/interface.png");
-    theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(364, 162, 707, 582), "themes/pack_2/images/interface.png");
+    theme0.setup("themes/pack_1/sounds/", 224.0f, ofRectangle(322, 174, 632, 620), "themes/pack_1/images/interface.png");
+    theme1.setup("themes/pack_2/sounds/", 192.0f, ofRectangle(322, 174, 632, 620), "themes/pack_2/images/interface.png");
     
     themes.push_back(theme0);
     themes.push_back(theme1);
@@ -65,8 +62,6 @@ void App::setup(){
     currentThemeId = 0;
     
     // Set initial values
-    bHideGui = true;
-    
     totalSteps = columns;
     currentStep = 0;
     lastStep = 0;
@@ -74,9 +69,6 @@ void App::setup(){
 
 //--------------------------------------------------------------
 void App::update(){
-    
-    // Get TUIO messages
-    tuioClient.getMessage();
     
     // Update Tweener
     Tweener.update();
@@ -86,6 +78,15 @@ void App::update(){
     currentStep = (int)bpmTapper.beatTime() % totalSteps;
     if (currentStep > totalSteps){
         currentStep = 0;
+    }
+    
+    vector<ofxTSPS::Person*> people = tspsReceiver.getPeople();
+    
+    for (int p=0; p<people.size(); p++) {
+        for (int i=0; i<sequencers.size(); i++) {
+            sequencers[i].people.clear();
+            sequencers[i].people.push_back(people[p]);
+        }
     }
     
     // Update sequencer
@@ -119,10 +120,6 @@ void App::draw(){
     // Draw sequencer
     sequencerFbo.draw(currentTheme->gridRect.getX(),
                       currentTheme->gridRect.getY());
-    
-    if (!bHideGui) {
-        gui.draw();
-    }
 }
 
 //--------------------------------------------------------------
@@ -136,10 +133,6 @@ void App::keyPressed(int key){
         case '2':
             currentThemeId = 1;
             break;
-        case 'd':
-            bHideGui = !bHideGui;
-            break;
-            
         default:
             break;
     }
@@ -166,7 +159,9 @@ void App::mousePressed(int x, int y, int button){
     if (currentTheme->gridRect.inside(x, y)){
         float rx = x - currentTheme->gridRect.getX();
         float ry = y - currentTheme->gridRect.getY();
-        currentSequencer->toggle(rx, ry);
+        for (int i=0; i<sequencers.size(); i++) {
+            sequencers[i].toggle(rx, ry);
+        }
     }
 }
 
@@ -193,12 +188,10 @@ void App::dragEvent(ofDragInfo dragInfo){
 //--------------------------------------------------------------
 void App::exit(){
     
-    ofRemoveListener(tuioClient.cursorAdded, this, &App::tuioAdded);
-	ofRemoveListener(tuioClient.cursorRemoved, this, &App::tuioRemoved);
-	ofRemoveListener(tuioClient.cursorUpdated, this, &App::tuioUpdated);
+    currentThemeId.removeListener(this, &App::currentThemeIdChanged);
+    bpm.removeListener(this, &App::bpmChanged);
     
-    clearGUI();
-    
+    ofxRemoveTSPSListeners(this);
     themes.clear();
     
     currentTheme = 0;
@@ -208,52 +201,37 @@ void App::exit(){
     delete currentSequencer;
 }
 
-#pragma mark - TUIO
-//--------------------------------------------------------------
-void App::tuioAdded(ofxTuioCursor &tuioCursor){
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * currentSequencer->getBoundingBox().getWidth();
-    float y = tuioCursor.getY()*currentSequencer->getBoundingBox().getHeight();
+#pragma mark - OpenTSPS Listeners
+
+void App::onPersonEntered( ofxTSPS::EventArgs & tspsEvent ){
+    float x = tspsEvent.person->centroid.x;
+    float y = tspsEvent.person->centroid.y;
     
 	ofPoint loc = ofPoint(x, y);
-    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " add at " + ofToString(loc));
+    ofLog(OF_LOG_NOTICE, "Person entered");
+}
+
+//--------------------------------------------------------------
+void App::onPersonUpdated( ofxTSPS::EventArgs & tspsEvent ){
     
-    for (int i=0; i<sequencers.size(); i++) {
-        sequencers[i].existingCursors.push_back(&tuioCursor);
-        sequencers[i].refreshCells();
-    }
+    float x = tspsEvent.person->centroid.x;
+    float y = tspsEvent.person->centroid.y;
+    
+    ofLog(OF_LOG_NOTICE, "Person updated!");
 }
 
 //--------------------------------------------------------------
-void App::tuioUpdated(ofxTuioCursor &tuioCursor){
-//    
-//    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * currentSequencer->getBoundingBox().getWidth();
-//    float y = tuioCursor.getY()*currentSequencer->getBoundingBox().getHeight();
-//    
-//	ofPoint loc = ofPoint(x, y);
-//    ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " updated at " + ofToString(loc));
-//    
-}
-
-//--------------------------------------------------------------
-void App::tuioRemoved(ofxTuioCursor &tuioCursor){
-    float x = ofMap(tuioCursor.getX(), 0.0, 1.0, 1.0, 0.0) * currentSequencer->getBoundingBox().getWidth();
-    float y = tuioCursor.getY()*currentSequencer->getBoundingBox().getHeight();
+void App::onPersonWillLeave( ofxTSPS::EventArgs & tspsEvent ){
+    
+    float x = tspsEvent.person->centroid.x;
+    float y = tspsEvent.person->centroid.y;
     
 	ofPoint loc = ofPoint(x, y);
-	ofLog(OF_LOG_NOTICE, "Point n" + ofToString(tuioCursor.getSessionId()) + " remove at " + ofToString(loc));
-    
-    for (int i=0; i<sequencers.size(); i++) {
-        for (int j=0; j<sequencers[i].existingCursors.size(); j++) {
-            if (tuioCursor.getSessionId() == sequencers[i].existingCursors[j]->getSessionId()){
-                sequencers[i].existingCursors.erase(sequencers[i].existingCursors.begin() + j);
-            }
-        }
-        sequencers[i].refreshCells();
-    }
+	ofLog(OF_LOG_NOTICE, "Person left");
 }
 
 
-#pragma mark - Themes
+#pragma mark - ofParameter Event Listeners
 
 //--------------------------------------------------------------
 void App::currentThemeIdChanged(int &newThemeId){
@@ -268,32 +246,6 @@ void App::currentThemeIdChanged(int &newThemeId){
     sequencerFbo.end();
     
     bpmTapper.setBpm(currentTheme->bpm);
-}
-
-
-#pragma mark - GUI
-
-//--------------------------------------------------------------
-void App::setupGUI(){
-    
-    gui.setup("Themes");
-    
-    currentThemeId.addListener(this, &App::currentThemeIdChanged);
-    
-    gui.add(bpm.set("BPM", 192.0f, 20.0f, 240.0f));
-    bpm.addListener(this, &App::bpmChanged);
-    
-    // Load existing values
-    gui.loadFromFile("settings.xml");
-}
-
-//--------------------------------------------------------------
-void App::clearGUI(){
-    
-    gui.saveToFile("settings.xml");
-    
-    currentThemeId.removeListener(this, &App::currentThemeIdChanged);
-    bpm.removeListener(this, &App::bpmChanged);
 }
 
 //--------------------------------------------------------------

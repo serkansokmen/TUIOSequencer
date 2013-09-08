@@ -1,6 +1,5 @@
-ofxGui
 ofxOsc
 ofxMSABPMTapper
 ofxMSATimer
-ofxTuio
+ofxTSPSReceiver
 ofxTweener

@@ -37,6 +37,8 @@ void Sequencer::setup(const ofRectangle rect, int columCount, int rowCount){
                         columns,
                         ofColor(val, 255, 255));
     }
+    
+    people.clear();
 };
 
 //--------------------------------------------------------------
@@ -47,6 +49,16 @@ void Sequencer::update(int step){
     // Update tracks
     for (int i=0; i<tracks.size(); i++){
         tracks[i].update(step);
+//        tracks[i].offAll();
+    }
+    
+    if (people.size() > 0) {
+        for(int p=0; p < people.size(); p++){
+            for (int i=0; i<tracks.size(); i++){
+                ofPoint loc(people[p]->centroid.x * boundingBox.getWidth(), people[p]->centroid.y * boundingBox.getHeight());
+                tracks[i].on(loc.x, loc.y);
+            }
+        }
     }
 };
 
@@ -85,14 +97,9 @@ void Sequencer::draw(){
 //--------------------------------------------------------------
 void Sequencer::clear(){
     tracks.clear();
-    existingCursors.clear();
+    people.clear();
 }
 
-//--------------------------------------------------------------
-void Sequencer::reset(){
-    diffTime = 0;
-    setup(boundingBox, columns, rows);
-}
 
 //--------------------------------------------------------------
 void Sequencer::toggle(int x, int y){
@@ -101,29 +108,3 @@ void Sequencer::toggle(int x, int y){
     }
 }
 
-//--------------------------------------------------------------
-void Sequencer::randomize(float rate){
-    
-    reset();
-    
-    for (int r=0; r<(int)rate; r++) {
-        int x = (int)ofRandom(0, boundingBox.getX() + boundingBox.getWidth());
-        int y = (int)ofRandom(0, boundingBox.getY() + boundingBox.getHeight());
-        
-        toggle(x, y);
-    }
-}
-
-//--------------------------------------------------------------
-void Sequencer::refreshCells(){
-    for (int i=0; i<tracks.size(); i++){
-        tracks[i].offAll();
-    }
-    for (int i=0; i<tracks.size(); i++){
-        vector<ofxTuioCursor *>::iterator it = existingCursors.begin();
-        for(; it != existingCursors.end(); ++it){
-            ofxTuioCursor *cursor = *it;
-            tracks[i].on(cursor->getX() * boundingBox.getWidth(), cursor->getY() * boundingBox.getHeight());
-        }
-    }
-}

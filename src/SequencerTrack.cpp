@@ -44,7 +44,6 @@ void SequencerTrack::update(int step){
         cells[i].update();
         
         if (step == cells[i].step){
-            // Current step column
             if (cells[i].getState() == cellActive){
                 cells[i].setState(cellOn);
             }

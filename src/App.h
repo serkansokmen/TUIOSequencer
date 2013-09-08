@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "ofxTSPSReceiver.h"
 #include "ofxTweener.h"
 #include "MSABPMTapper.h"
 #include "Sequencer.h"
@@ -75,18 +75,16 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    void setupGUI();
-    void clearGUI();
-    
     void currentThemeIdChanged(int &newThemeId);
     void bpmChanged(float &newBpm);
     
     
-    void tuioAdded(ofxTuioCursor &tuioCursor);
-	void tuioRemoved(ofxTuioCursor &tuioCursor);
-	void tuioUpdated(ofxTuioCursor &tuioCursor);
+    ofxTSPS::Receiver tspsReceiver;
     
-    ofxTuioClient       tuioClient;
+    // event listeners
+    void onPersonEntered(ofxTSPS::EventArgs & tspsEvent);
+    void onPersonUpdated(ofxTSPS::EventArgs & tspsEvent);
+    void onPersonWillLeave(ofxTSPS::EventArgs & tspsEvent);
     
     // Sequencer
     Sequencer           *currentSequencer;
@@ -94,10 +92,6 @@ public:
     
     BPMTapper     bpmTapper;
     ofFbo         sequencerFbo;
-    
-    int        lastStep;
-    int        columns;
-    int        rows;
 
     ofParameter<float>      bpm;
     
@@ -105,9 +99,9 @@ public:
     AppTheme                *currentTheme;
     vector<AppTheme>        themes;
     
-    ofxPanel                gui;
-	
+    int         lastStep;
+    int         columns;
+    int         rows;
     int         totalSteps;
     int         currentStep;
-    bool        bHideGui;
 };

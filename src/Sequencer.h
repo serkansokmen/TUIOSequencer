@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTuio.h"
+#include "ofxTSPSPerson.h"
 #include "SequencerTrack.h"
 
 
@@ -36,17 +36,12 @@ public:
     void draw();
     void clear();
     
-    void reset();
-    
-    void refreshCells();
-    
     void toggle(int x, int y);
-    void randomize(float rate);
     
     const ofRectangle   &getBoundingBox() { return boundingBox; };
     void                setStep(int val)  { currentStep = val; };
     int                 getStep()         { return currentStep; };
     
     vector<SequencerTrack>      tracks;
-    vector<ofxTuioCursor *>     existingCursors;
+    vector<ofxTSPS::Person *>   people;
 };
